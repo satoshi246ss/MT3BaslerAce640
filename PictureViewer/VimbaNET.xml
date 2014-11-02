@@ -1,0 +1,1010 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        "VimbaNET"
+    </assembly>
+    <members>
+        <member name="T:AVT.VmbAPINET.CameraCollectionEnumerator">
+            <summary> CameraCollectionEnumerator.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.CameraCollection.CopyTo(System.Array,System.Int32)">
+            <summary>Copies the elements of the ICollection to an Array, starting at a particular Array index.</summary>
+            <param name="items">The one-dimensional Array that is the destination of the elements copied from ICollection.</param>
+            <param name="index">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when index exceeds range.</exception>
+            <exception cref="T:System.ArgumentNullException">array is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">array is multidimensional.  -or- index is equal to or greater than the length
+    of array.  -or- The number of elements in the source System.Collections.ICollection
+    is greater than the available space from index to the end of the destination
+    array.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.CameraCollection.SyncRoot">
+            <summary>Gets an object that can be used to synchronize access to the ICollection.</summary>
+            <returns>Returns an object that can be used to synchronize access to the ICollection.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.CameraCollection.IsSynchronized">
+            <summary>Gets a value indicating whether access to the ICollection is synchronized (thread safe).</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.CameraCollection.Count">
+            <summary>Gets the number of elements contained in the ICollection.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.CameraCollection.GetEnumerator">
+            <summary>Returns an enumerator that iterates through a collection.</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.CameraCollection.default(System.String)">
+            <summary>Get the Camera of the selected input string ID.</summary>
+            <param name="cameraId">String of the camera id.</param>
+            <returns>Camera object.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when index exceeds range.</exception>
+            <exception cref="T:System.ArgumentNullException">cameraID is null.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.CameraCollection.Item(System.Int32)">
+            <summary>Get the Camera of the selected input index.</summary>
+            <param name="index">Number of camera list index to get.</param>
+            <returns>Camera object.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when index exceeds range.</exception>
+        </member>
+        <member name="T:AVT.VmbAPINET.CameraCollection">
+            <summary> CameraCollection.</summary>
+        </member>
+        <member name="E:AVT.VmbAPINET.Vimba.CreateCamera">
+            <summary>
+                <see cref="T:AVT.VmbAPINET.Vimba.CreateCameraHandler" /> for the expected signature of event subscribers.</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.Vimba.CreateCameraHandler">
+            <summary> delegate used for CreateCameraHandler events </summary>
+            <param name="cameraID"> Camera ID.</param>
+            <param name="cameraName"> Camera name.</param>
+            <param name="cameraModel"> Camera model.</param>
+            <param name="cameraSerialNumber"> Serial number of camera.</param>
+            <param name="interfaceID"> Interface ID.</param>
+            <param name="interfaceType"> Interface type.</param>
+            <param name="interfaceName"> Interface name.</param>
+            <param name="interfaceSerialNumber"> Serial number of interface.</param>
+            <param name="interfacePermittedAccess"> Permitted access of interface.</param>
+        </member>
+        <member name="E:AVT.VmbAPINET.Vimba.OnInterfaceListChanged">
+            <summary> Event will be triggered when the interface list changes. 
+<see cref="T:AVT.VmbAPINET.Vimba.OnInterfaceListChangeHandler" /> for the expected signature of event subscribers.</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.Vimba.OnInterfaceListChangeHandler">
+            <summary> delegate used for OnInterfaceListChanged events </summary>
+            <param name="reason"> VmbUpdateTriggerType enum.</param>
+        </member>
+        <member name="E:AVT.VmbAPINET.Vimba.OnCameraListChanged">
+            <summary> Event will be triggered when the camera list changes. 
+<see cref="T:AVT.VmbAPINET.Vimba.OnCameraListChangeHandler" /> for the expected signature of event subscribers.</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.Vimba.OnCameraListChangeHandler">
+            <summary> delegate used for OnCameraListChanged events </summary>
+            <param name="reason"> VmbUpdateTriggerType enum.</param>
+        </member>
+        <member name="M:AVT.VmbAPINET.Vimba.OpenInterfaceByID(System.String)">
+            <summary> Open an interface for feature access.</summary>
+            <returns>Interface object.</returns>
+            <param name="interfaceID"> ID string used to select the interface.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown when ID not found or function parameter invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Vimba.GetInterfaceByID(System.String)">
+            <summary> Gets a specific interface identified by an ID.</summary>
+            <returns>Interface object.</returns>
+            <param name="interfaceID"> ID string used to select the interface.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown when ID not found or function parameter invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Vimba.OpenCameraByID(System.String,AVT.VmbAPINET.VmbAccessModeType)">
+            <summary> Gets a specific camera identified by an ID. The returned camera is already open.</summary>
+            <returns>Camera object.</returns>
+            <param name="cameraID"> ID string used to select the camera.</param>
+            <param name="accessMode"> Parameter of type VmbAccessModeType to set the desired accessability.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown when ID not found or function parameter invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Vimba.GetCameraByID(System.String)">
+            <summary> Gets a specific camera identified by an ID. The returned camera is still closed.</summary>
+            <returns>Camera object.</returns>
+            <param name="cameraID"> ID string used to select the camera.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown when ID not found or function parameter invalid.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Vimba.Cameras">
+            <summary> Retrieve a list of all cameras.</summary>
+            <returns>CameraCollection.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Vimba.Interfaces">
+            <summary> List all the interfaces currently visible to Vimba API.</summary>
+            <returns>InterfaceCollection.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Vimba.Shutdown">
+            <summary> Perform a shutdown on the API module.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Vimba.Startup">
+            <summary> Initialize the Vimba API module.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Vimba.Version">
+            <summary> Retrieve the version number of Vimba API.</summary>
+            <returns>VmbVersionInfo_t structure.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="T:AVT.VmbAPINET.Vimba">
+            <summary> Vimba.</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.InterfaceCollectionEnumerator">
+            <summary> InterfaceCollectionEnumerator.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.InterfaceCollection.CopyTo(System.Array,System.Int32)">
+            <summary>Copies the elements of the ICollection to an Array, starting at a particular Array index.</summary>
+            <param name="items">The one-dimensional Array that is the destination of the elements copied from ICollection.</param>
+            <param name="index">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when index exceeds range.</exception>
+            <exception cref="T:System.ArgumentNullException">array is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">array is multidimensional.  -or- index is equal to or greater than the length
+    of array.  -or- The number of elements in the source System.Collections.ICollection
+    is greater than the available space from index to the end of the destination
+    array.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.InterfaceCollection.SyncRoot">
+            <summary>Gets an object that can be used to synchronize access to the ICollection.</summary>
+            <returns>Returns an object that can be used to synchronize access to the ICollection.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.InterfaceCollection.IsSynchronized">
+            <summary>Gets a value indicating whether access to the ICollection is synchronized (thread safe).</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.InterfaceCollection.Count">
+            <summary>Gets the number of elements contained in the ICollection.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.InterfaceCollection.GetEnumerator">
+            <summary>Returns an enumerator that iterates through a collection.</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.InterfaceCollection.default(System.String)">
+            <summary>Get the Interface of the selected input string ID.</summary>
+            <param name="interfaceId">String of the interface id.</param>
+            <returns>Interface object.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when index exceeds range.</exception>
+            <exception cref="T:System.ArgumentNullException">interfaceId is null.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.InterfaceCollection.Item(System.Int32)">
+            <summary>Get the Interface of the selected input index.</summary>
+            <param name="index">Number of the interface list index to get.</param>
+            <returns>Interface object.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when index exceeds range.</exception>
+        </member>
+        <member name="T:AVT.VmbAPINET.InterfaceCollection">
+            <summary> InterfaceCollection.</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntry.SFNCNamespace">
+            <summary> Gets the standard feature naming convention namespace of the enumeration.</summary>
+            <returns>String value.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntry.Visibility">
+            <summary> Gets the visibility of an enumeration.</summary>
+            <returns>VmbFeatureVisibilityType value.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntry.Value">
+            <summary> Gets the integer value of an enumeration.</summary>
+            <returns>Int64 value.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntry.Tooltip">
+            <summary> Gets a tooltip that can be used as pop up help in a GUI.</summary>
+            <returns>String value.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntry.Description">
+            <summary> Gets the description of an enumeration.</summary>
+            <returns>String value.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntry.DisplayName">
+            <summary> Gets a more declarative name of an enumeration.</summary>
+            <returns>String value.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntry.Name">
+            <summary> Gets the name of an enumeration.</summary>
+            <returns>String value.</returns>
+        </member>
+        <member name="T:AVT.VmbAPINET.EnumEntry">
+            <summary> EnumEntry.</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.EnumEntryCollectionEnumerator">
+            <summary> EnumEntryCollectionEnumerator.</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.FeatureCollectionEnumerator">
+            <summary> FeatureCollectionEnumerator.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.EnumEntryCollection.CopyTo(System.Array,System.Int32)">
+            <summary>Copies the elements of the ICollection to an Array, starting at a particular Array index.</summary>
+            <param name="items">The one-dimensional Array that is the destination of the elements copied from ICollection.</param>
+            <param name="index">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when index exceeds range.</exception>
+            <exception cref="T:System.ArgumentNullException">array is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">array is multidimensional.  -or- index is equal to or greater than the length
+    of array.  -or- The number of elements in the source System.Collections.ICollection
+    is greater than the available space from index to the end of the destination
+    array.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntryCollection.SyncRoot">
+            <summary>Gets an object that can be used to synchronize access to the ICollection.</summary>
+            <returns>Returns an object that can be used to synchronize access to the ICollection.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntryCollection.IsSynchronized">
+            <summary>Gets a value indicating whether access to the ICollection is synchronized (thread safe).</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntryCollection.Count">
+            <summary>Gets the number of elements contained in the ICollection.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.EnumEntryCollection.GetEnumerator">
+            <summary>Returns an enumerator that iterates through a collection.</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntryCollection.default(System.String)">
+            <summary>Get the EnumEntry of the selected input string ID.</summary>
+            <param name="enumEntry">String of the enum entry.</param>
+            <returns>EnumEntry object.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when index exceeds range.</exception>
+            <exception cref="T:System.ArgumentNullException">string is null.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.EnumEntryCollection.Item(System.Int32)">
+            <summary>Get the EnumEntry of the selected input index.</summary>
+            <param name="index">Number of EnumEntry list index to get.</param>
+            <returns>EnumEntry object.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when index exceeds range.</exception>
+        </member>
+        <member name="T:AVT.VmbAPINET.EnumEntryCollection">
+            <summary> EnumEntryCollection.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.FeatureCollection.CopyTo(System.Array,System.Int32)">
+            <summary>Copies the elements of the ICollection to an Array, starting at a particular Array index.</summary>
+            <param name="items">The one-dimensional Array that is the destination of the elements copied from ICollection.</param>
+            <param name="index">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when index exceeds range.</exception>
+            <exception cref="T:System.ArgumentNullException">array is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">array is multidimensional.  -or- index is equal to or greater than the length
+    of array.  -or- The number of elements in the source System.Collections.ICollection
+    is greater than the available space from index to the end of the destination
+    array.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.FeatureCollection.SyncRoot">
+            <summary>Gets an object that can be used to synchronize access to the ICollection.</summary>
+            <returns>Returns an object that can be used to synchronize access to the ICollection.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.FeatureCollection.IsSynchronized">
+            <summary>Gets a value indicating whether access to the ICollection is synchronized (thread safe).</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.FeatureCollection.Count">
+            <summary>Gets the number of elements contained in the ICollection.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.FeatureCollection.GetEnumerator">
+            <summary>Returns an enumerator that iterates through a collection.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.FeatureCollection.ContainsName(System.String)">
+            <summary>Check the existence of a feature by a feature name string.</summary>
+            <param name="name">String of the feature name.</param>
+            <returns>Boolean value.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if name string is null.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.FeatureCollection.default(System.String)">
+            <summary>Get the Feature of the selected input string name.</summary>
+            <param name="name">String of the feature name.</param>
+            <returns>Feature object.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when index exceeds range.</exception>
+            <exception cref="T:System.ArgumentNullException">featurename is null.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.FeatureCollection.Item(System.Int32)">
+            <summary>Get the Feature of the selected input index.</summary>
+            <param name="index">Number of feature list index to get.</param>
+            <returns>Feature object.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when index exceeds range.</exception>
+        </member>
+        <member name="T:AVT.VmbAPINET.FeatureCollection">
+            <summary> FeatureCollection.</summary>
+        </member>
+        <member name="M:VmbImageTransform(VmbImage!System.Runtime.CompilerServices.IsConst*,VmbImage*,VmbTransformInfo!System.Runtime.CompilerServices.IsConst*,System.UInt32)">
+transform source image to destination using the ImageInfo and parameter.
+* \param[in]     Source             source image of transform
+* \param[in,out] Destination        destination image of transform
+* \param[in]     Parameter          optional parameter for transform
+* \param[in]     ParameterCount     number of optional parameters
+* \note create the source and destination image info structure with VmbSetImageInfoFromPixelFormat or VmbSetimageInfoFromString and keep those structures as template.
+*       for calls to transform simply attache the image to the Data member.
+*       the optional parameters, when set, are constraints on the transform, if there is no transform using the parameter the function returns VmbErrorBadParameter
+
+</member>
+        <member name="M:VmbSetImageInfoFromString(System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte!System.Runtime.CompilerServices.IsConst*,System.UInt32,System.UInt32,System.UInt32,VmbImage*)">
+Set image info from pixel format string.
+* \param[in]     ImageFormat        pixel format string either as VmbPixelformat or format string
+* \param[in]     StringLength       length of the image format buffer
+* \param[in]     Width              width of the image in pixel
+* \param[in]     Height             height of the image in pixel
+* \param[in,out] Image              image to set the ImageInfo member 
+* \note function does not read or write to VmbImage::Data member
+
+</member>
+        <member name="M:VmbSetImageInfoFromPixelFormat(System.UInt32,System.UInt32,System.UInt32,VmbImage*)">
+Set image info from VmbPixelFormat.
+* \param[in]     PixelFormat    pixel format used in buffer assigned to the Data member
+* \param[in]     Width          width of the image in pixel
+* \param[in]     Height         height of the image in pixel
+* \param[in,out] Image          image to set the ImageInfo member
+* \note function does not read or write to VmbImage::Data member
+
+</member>
+        <member name="M:VmbSetGammaCorrection(System.Single,VmbTransformInfo*)">
+Set gamma correction to transform info structure.
+* \param[in]     Gamma          float gamma correction to set
+* \param[in,out] TransformInfo  transform info to set gamma correction to
+
+</member>
+        <member name="M:VmbSetColorCorrectionMatrix3x3(System.Single!System.Runtime.CompilerServices.IsConst*,VmbTransformInfo*)">
+Set color correction matrix 3x3 to transform info structure.
+* \param[in]     Matrix         row order floating point matrix to set as color correction
+* \param[in,out] TransformInfo  transform info to set the matrix too
+
+</member>
+        <member name="M:VmbSetDebayerMode(System.UInt32,VmbTransformInfo*)">
+Set a debayer mode to a transform info structure.
+* \param[in]     DebayerMode    mode to set
+* \param[in,out] TransformInfo  pointer to a TransformInfo to set the mode
+
+</member>
+        <member name="M:VmbGetApiInfoString(System.UInt32,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte*,System.UInt32)">
+Get information about the build parameters of the API.
+* \param[in]     info_type      type of info to inquire
+* \param[in,out] InfoString     will contain API information up to MaxInfoLength characters minus terminating zero
+* \param[in]     MaxInfoLength  max length of the info string buffer
+
+</member>
+        <member name="M:VmbGetErrorInfo(System.Int32,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte*,System.UInt32)">
+Get information about received result code.
+* \param[in]     ErrorCode      code to get the info for
+* \param[in,out] InfoString     will contain as much info as MaxInfoLength allows minus terminating zero
+* \param[in]     MaxInfoLength  length of the info string buffer
+
+</member>
+        <member name="M:VmbGetTechnoInfo(VmbTechInfo_t*)">
+Get information about processor supported features.
+* \param[in,out] TechnoInfo returns the supported SIMD technologies
+* \note This should be called before using any SIMD (MMX,SSE) optimmized functions
+
+</member>
+        <member name="M:VmbGetVersion(System.UInt32*)">
+ Get library version.
+* \param[in,out] Version  pointer, returns the library version (Major,Minor,SubMinor,Build)
+* \return will always return vmbErrorSuccess
+
+</member>
+        <member name="T:VmbTransformInfo">
+transform info interface structure
+</member>
+        <member name="T:VmbTransformParameter">
+transform info variant
+</member>
+        <member name="T:VmbTransformParameteDebayer">
+transform info for special debayering modes
+</member>
+        <member name="T:VmbTransformParameterGamma">
+transform info for gama correcting the immage, currently unsuported
+</member>
+        <member name="T:VmbTransformParameterMatrix3x3">
+transform info for color correction using a 3x3 matrix multiplication
+</member>
+        <member name="T:VmbTransformType">
+transform info types
+</member>
+        <member name="T:VmbDebayerMode">
+transform info for special debayering modes
+</member>
+        <member name="T:VmbImage">
+wimba image type
+</member>
+        <member name="T:VmbImageInfo">
+image information
+</member>
+        <member name="T:VmbPixelInfo">
+image pixel information
+</member>
+        <member name="T:VmbColorSpace">
+image color space information
+</member>
+        <member name="T:VmbPixelLayout">
+image pixel layout information
+</member>
+        <member name="T:VmbYUV444_t">
+Structure for accessing data in the YUV 4:4:4 format (YUV)
+    prosilica component order
+
+</member>
+        <member name="T:VmbBGRA8_t">
+Structure for accessing Windows RGBA data.
+</member>
+        <member name="T:VmbRGBA8_t">
+Structure for accessing non-Windows RGB data 
+</member>
+        <member name="T:VmbBGR8_t">
+Structure for accessing Windows RGB data 
+</member>
+        <member name="T:VmbRGB8_t">
+Structure for accessing Windows RGB data 
+</member>
+        <member name="T:VmbAPIInfo">
+api info types
+</member>
+        <member name="T:VmbTechInfo_t">
+states of the support for different multimedia technologies
+</member>
+        <member name="T:VmbSupportState_t">
+states of the multi media technology support for operating system and processor.
+
+</member>
+        <member name="P:AVT.VmbAPINET.AncillaryData.Features">
+            <summary> Returns a collection of Feature(s) dependent on this object.</summary>
+            <returns> FeatureCollection object</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.AncillaryData.Buffer">
+            <summary> Returns the chunk data.</summary>
+            <returns> array of Bytes</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.AncillaryData.Close">
+            <summary> Closes the ancillary data inside a frame.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.AncillaryData.Open">
+            <summary> Opens the ancillary data to allow access to the elements of the ancillary data via feature access.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="T:AVT.VmbAPINET.AncillaryData">
+            <summary> AncillaryData.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.Feature.ToString">
+            <summary> returns name of feature.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.Feature.IsStreamable">
+            <summary> checks if it is streamable.</summary>
+            <returns>Boolean value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Feature.IsWritable">
+            <summary> checks if it is writable.</summary>
+            <returns>Boolean value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Feature.IsReadable">
+            <summary> checks if it is readable.</summary>
+            <returns>Boolean value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.SelectedFeatures">
+            <summary> get collection of Features.</summary>
+            <returns>FeatureCollection object.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.AffectedFeatures">
+            <summary> get collection of Features.</summary>
+            <returns>FeatureCollection object.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.SFNCNamespace">
+            <summary> get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.Description">
+            <summary> get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.ToolTip">
+            <summary> get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.Visibility">
+            <summary> get value of Feature.</summary>
+            <returns>VmbFeatureVisibilityType value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.Representation">
+            <summary> get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.Unit">
+            <summary> get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.PollingTime">
+            <summary> get value of Feature.</summary>
+            <returns>int value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.Category">
+            <summary> get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.Flags">
+            <summary> get value of Feature.</summary>
+            <returns>VmbFeatureFlagsType value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.DataType">
+            <summary> get value of Feature.</summary>
+            <returns>VmbFeatureDataType value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.DisplayName">
+            <summary> get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.Name">
+            <summary> get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.RawValue">
+            <summary> set/get value of Feature.</summary>
+            <returns>Byte[] value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Feature.IsCommandDone">
+            <summary> Checks if command Feature is done.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Feature.RunCommand">
+            <summary> Executes a command Feature.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.BoolValue">
+            <summary> set/get value of Feature.</summary>
+            <returns>Boolean value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.StringValue">
+            <summary> set/get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Feature.IsEnumValueAvailable(System.Int64)">
+            <summary>
+                <para>Indicates whether an existing enumeration-value is currently available.</para>
+                <para>An enumeration-value might not be selectable due to the camera's current configuration.</para>
+            </summary>
+            <param name="enumValue"> int64 enum value to test.</param>
+            <returns>Boolean value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">
+                <para>Thrown on issues in the environment. Possible ReturnCodes are:</para>
+                <para>  - VmbErrorSuccess:       If no error</para>
+                <para>  - VmbErrorInvalidValue:  If the given value is not a valid enumeration-value for this enum</para>
+                <para>  - VmbErrorApiNotStarted: Startup() was not called before the current command</para>
+                <para>  - VmbErrorInvalidAccess: Operation is invalid with the current access mode</para>
+                <para>  - VmbErrorWrongType:     The feature is not an enumeration</para>
+            </exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Feature.IsEnumValueAvailable(System.String)">
+            <summary>
+                <para>Indicates whether an existing enumeration-value is currently available.</para>
+                <para>An enumeration-value might not be selectable due to the camera's current configuration.</para>
+            </summary>
+            <param name="enumValue"> String enum value to test.</param>
+            <returns>Boolean value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">
+                <para>Thrown on issues in the environment. Possible ReturnCodes are:</para>
+                <para>  - VmbErrorSuccess:       If no error</para>
+                <para>  - VmbErrorInvalidValue:  If the given value is not a valid enumeration-value for this enum</para>
+                <para>  - VmbErrorApiNotStarted: Startup() was not called before the current command</para>
+                <para>  - VmbErrorInvalidAccess: Operation is invalid with the current access mode</para>
+                <para>  - VmbErrorWrongType:     The feature is not an enumeration</para>
+            </exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.EnumIntValues">
+            <summary> get all possible Int64 enums of Feature range in an array of Int64.</summary>
+            <returns>Int64[] value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.EnumValues">
+            <summary> get all possible string enums of Feature range in an array of strings.</summary>
+            <returns>String[] value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.EnumEntries">
+            <summary> get collection of EnumEntries.</summary>
+            <returns>EnumEntryCollection object.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.EnumIntValue">
+            <summary> set/get int value of Feature.</summary>
+            <returns>int value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.EnumValue">
+            <summary> set/get value of Feature.</summary>
+            <returns>String value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.FloatRangeMax">
+            <summary> get maximum value of Feature range.</summary>
+            <returns>Double value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.FloatRangeMin">
+            <summary> get minimum value of Feature range.</summary>
+            <returns>Double value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.FloatValue">
+            <summary> set/get value of Feature.</summary>
+            <returns>Double value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.IntIncrement">
+            <summary> get int increment value of Feature.</summary>
+            <returns>long value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.IntRangeMax">
+            <summary> get maximum value of Feature range.</summary>
+            <returns>long value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.IntRangeMin">
+            <summary> get minimum value of Feature range.</summary>
+            <returns>long value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Feature.IntValue">
+            <summary> set/get value of Feature.</summary>
+            <returns>long value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="E:AVT.VmbAPINET.Feature.OnFeatureChanged">
+            <summary> Event will be triggered when the feature changes. 
+<see cref="T:AVT.VmbAPINET.Feature.OnFeatureChangeHandler" /> for the expected signature of event subscribers.</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.Feature.OnFeatureChangeHandler">
+            <summary> delegate used for OnFeatureChanged events </summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.Feature">
+            <summary> Feature.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.Interface.ToString">
+            <summary> returns name of interface.</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.Interface.Features">
+            <summary> Returns a feature collection of the interface.</summary>
+            <returns>FeatureCollection object.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Interface.PermittedAccess">
+            <summary> Gets the access mode of an interface.</summary>
+            <returns>VmbAccessModeType.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Interface.SerialNumber">
+            <summary> Gets the serial number of an interface.</summary>
+            <returns>string.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Interface.Name">
+            <summary> Gets the name of an interface.</summary>
+            <returns>string.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Interface.Type">
+            <summary> Gets the type, e.g. FireWire, Ethernet, USB, of an interface.</summary>
+            <returns>VmbInterfaceType.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Interface.Id">
+            <summary> Gets the ID of an interface.</summary>
+            <returns>string.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Interface.Close">
+            <summary> Close an Interface. Will free the access to this interface.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Interface.Open">
+            <summary> Open an Interface. Will provide access to an interface.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="T:AVT.VmbAPINET.Interface">
+            <summary> Interface.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.ToString">
+            <summary> returns name of camera.</summary>
+            <returns>Name of the camera as string.</returns>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.StopContinuousImageAcquisition">
+            <summary> Stops streaming and frees the needed frames</summary>
+            <remarks> This is a convenience function. Deregister the FrameObserver again. </remarks>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.StartContinuousImageAcquisition(System.Int32)">
+            <summary> Starts streaming and allocates the needed frames.</summary>
+            <remarks> This is a convenience function. Register a FrameObserver and queue the received Frame(s). </remarks>
+            <param name="frameCount"> count of Frame(s) which should be used for this function.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the passed frame count is invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.AcquireMultipleImages(AVT.VmbAPINET.Frame[]@,System.Int32,System.Int32@)">
+            <summary> Get multiple images synchronously and return the amount of valid frames.</summary>
+            <remarks> This is a convenience function.</remarks>
+            <param name="frames"> Reference to array of empty Frame objects. The size of the array determines the maximum number of images to grab.</param>
+            <param name="timeout"> timeout how long it should wait for the image (in milliseconds). The timeout is used for each image, not for the whole sequence.</param>
+            <param name="numFramesCompleted"> number of frames with valid frame data.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the passed Frame array is invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.AcquireMultipleImages(AVT.VmbAPINET.Frame[]@,System.Int32)">
+            <summary> Get multiple images synchronously.</summary>
+            <remarks> This is a convenience function.</remarks>
+            <remarks> If a timeout is encountered, the function is aborted.</remarks>
+            <param name="frames"> Reference to array of empty Frame objects. The size of the array determines the exact number of images to grab.</param>
+            <param name="timeout"> timeout how long the function should wait for the image (in milliseconds). The timeout is used for each image, not for the whole sequence.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the passed Frame array is invalid.</exception>
+            <exception cref="T:System.TimeoutException">Thrown if acquisition times out.</exception>
+            <exception cref="T:System.ExecutionEngineException">Thrown on issues in the system environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.AcquireSingleImage(AVT.VmbAPINET.Frame@,System.Int32)">
+            <summary> Get one image in a Frame synchronously.</summary>
+            <remarks> This is a convenience function.</remarks>
+            <param name="frame"> Reference to an empty Frame object. It will contain the image after the call.</param>
+            <param name="timeout"> timeout how long it should wait for the image (in milliseconds).</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the vimba environment.</exception>
+            <exception cref="T:System.TimeoutException">Thrown if acquisition times out.</exception>
+            <exception cref="T:System.ExecutionEngineException">Thrown on issues in the system environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Camera.Features">
+            <summary> Returns a feature collection of the camera.</summary>
+            <returns>FeatureCollection object.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="E:AVT.VmbAPINET.Camera.OnFrameReceived">
+            <summary> Event will be triggered when the a Frame buffer is filled with some kind of data. 
+<see cref="T:AVT.VmbAPINET.Camera.OnFrameReceivedHandler" /> for the expected signature of event subscribers.</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.Camera.OnFrameReceivedHandler">
+            <summary> Delegate used for OnFrameReceived events </summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.EndCapture">
+            <summary> Stop the API from being able to receive frames from this camera.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.StartCapture">
+            <summary> Prepare the API for incoming frames from this camera.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.FlushQueue">
+            <summary> Flushes the capture queue.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.QueueFrame(AVT.VmbAPINET.Frame)">
+            <summary> Queues a frame that may be filled during frame capturing.</summary>
+            <param name="frame"> Frame to queue.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the passed Frame is invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.RevokeAllFrames">
+            <summary> Revoke all frames assigned to this certain camera.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.RevokeFrame(AVT.VmbAPINET.Frame)">
+            <summary> Revoke a frame from the API.</summary>
+            <param name="frame"> Frame to revoke.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the passed Frame is invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.AnnounceFrame(AVT.VmbAPINET.Frame)">
+            <summary> Announces a frame to the API that may be queued for frame capturing later.</summary>
+            <param name="frame"> Frame to announce.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the passed Frame is invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.WriteMemory(System.UInt64,System.Byte[],System.UInt32@)">
+            <summary> Writes a block of memory. The number of bytes to write is determined by the size of the provided buffer.</summary>
+            <param name="address"> start address to write.</param>
+            <param name="bufferArray"> array of data buffer.</param>
+            <param name="completedWrites"> Reference to an uint. Amount of read memory bytes will be saved to this variable.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the length is invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.ReadMemory(System.UInt64,System.Byte[]@,System.UInt32,System.UInt32@)">
+            <summary> Reads a block of memory. The number of bytes to read is determined by the size of the provided buffer.</summary>
+            <param name="address"> start address to read.</param>
+            <param name="bufferArray"> Reference to array of data buffer. Memory will be saved to this array.</param>
+            <param name="readLength"> uiReadLength determines how many bytes to read.</param>
+            <param name="completedReads"> Reference to an uint. Amount of read memory bytes will be saved to this variable.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the length is invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.WriteRegisters(System.UInt64[],System.UInt64[],System.UInt32@)">
+            <summary> Writes one or more registers consecutively. The amount of registers to write is determined by the amount of provided addresses.</summary>
+            <param name="addressArray"> Array of addresses. Size of address buffer determines how many registers to write.</param>
+            <param name="dataArray"> Array of register data.</param>
+            <param name="completedWrites"> Reference to an uint. Amount of written registers will be saved to this variable.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the address/data array is invalid.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.ReadRegisters(System.UInt64[],System.UInt64[]@,System.UInt32@)">
+            <summary>  Reads one or more registers consecutively. The amount of registers to read is determined by the amount of provided addresses.</summary>
+            <param name="addressArray"> Array of addresses. Size of address buffer determines how many registers to read.</param>
+            <param name="dataArray"> Reference to array of data. Registers will be saved to this array.</param>
+            <param name="completedReads"> Reference to an uint. Amount of read registers will be saved to this variable.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or when the address array is invalid.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Camera.PermittedAccess">
+            <summary> Get the permitted access of the camera.</summary>
+            <returns>VmbAccessModeType.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Camera.InterfaceType">
+            <summary> Gets the type of the interface the camera is connected to. And therefore the type of the camera itself.</summary>
+            <returns>VmbInterfaceType.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Camera.InterfaceID">
+            <summary> Get the camera interface id string.</summary>
+            <returns>string.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Camera.SerialNumber">
+            <summary> Get the camera serial number string.</summary>
+            <returns>string.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Camera.Model">
+            <summary> Get the camera model string.</summary>
+            <returns>string.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Camera.Name">
+            <summary> Get the camera name string.</summary>
+            <returns>string.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Camera.Id">
+            <summary> Get the camera id string.</summary>
+            <returns>string.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.Close">
+            <summary> Close a Camera. Will free the access to this camera.</summary>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.Open(AVT.VmbAPINET.VmbAccessModeType)">
+            <summary> Open a Camera. Will provide access to a camera.</summary>
+            <param name="accessMode"> Parameter of type VmbAccessModeType to set the desired accessability.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Camera.#ctor(System.String,System.String,System.String,System.String,System.String,AVT.VmbAPINET.VmbInterfaceType,System.String,System.String,AVT.VmbAPINET.VmbAccessModeType)">
+            <summary> protected constructor.</summary>
+            <param name="cameraID"> .</param>
+            <param name="cameraName"> .</param>
+            <param name="cameraModel"> .</param>
+            <param name="cameraSerialNumber"> .</param>
+            <param name="interfaceID"> .</param>
+            <param name="interfaceType"> .</param>
+            <param name="interfaceName"> .</param>
+            <param name="interfaceSerialNumber"> .</param>
+            <param name="interfacePermittedAccess"> .</param>
+        </member>
+        <member name="T:AVT.VmbAPINET.Camera">
+            <summary> Camera.</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.Timestamp">
+            <summary> Returns the time stamp.</summary>
+            <returns>ulong value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.FrameID">
+            <summary> Returns the frame ID.</summary>
+            <returns>ulong value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.OffsetY">
+            <summary> Returns the y offset of the image.</summary>
+            <returns>uint value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.OffsetX">
+            <summary> Returns the x offset of the image.</summary>
+            <returns>uint value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.Height">
+            <summary> Returns the height of the image.</summary>
+            <returns>uint value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.Width">
+            <summary> Returns the width of the image.</summary>
+            <returns>uint value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.PixelFormat">
+            <summary> Returns the GeV compliant pixel format.</summary>
+            <returns>VmbPixelFormatType value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.BufferSize">
+            <summary> Returns the memory size of the frame buffer holding both the image data and the ancillary data.</summary>
+            <returns>uint value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.AncillarySize">
+            <summary> Returns memory size of the chunk data.</summary>
+            <returns>uint value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.ImageSize">
+            <summary> Returns the memory size of the image.</summary>
+            <returns>uint value.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.ReceiveStatus">
+            <summary> Returns the receive status of a frame.</summary>
+            <returns>VmbFrameStatusType.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Frame.Fill(System.Drawing.Bitmap@)">
+            <summary> Fills bitmap with current buffer data in appropriate pixel format.</summary>
+            <summary> if bitmap is null bitmap will be created and filled with appropriate frame data.</summary>
+            <summary> if bitmap is not null existing bitmap will only be filled with appropriate data.</summary>
+            <param name="bitmap"> reference to a bitmap.</param>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment or bitmap failure.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.Buffer">
+            <summary> Returns the complete buffer including image and chunk data.</summary>
+            <returns>Byte[] array.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="P:AVT.VmbAPINET.Frame.AncillaryData">
+            <summary> Returns the part of a frame that describes the chunk data as an object.</summary>
+            <returns>AncillaryData object.</returns>
+            <exception cref="T:AVT.VmbAPINET.VimbaException">Thrown on issues in the environment.</exception>
+        </member>
+        <member name="M:AVT.VmbAPINET.Frame.#ctor(System.Byte[])">
+            <summary> Creates an instance of class Frame.</summary>
+            <param name="buffer"> Buffer array to use.</param>
+        </member>
+        <member name="M:AVT.VmbAPINET.Frame.#ctor(System.Int64)">
+            <summary> Creates an instance of class Frame.</summary>
+            <param name="bufferSize"> Size of internal buffer.</param>
+        </member>
+        <member name="T:AVT.VmbAPINET.Frame">
+            <summary> Frame.</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.IFrame.Buffer">
+            <summary> Interface Buffer used by Frame</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.IFrame.PixelFormat">
+            <summary> Interface PixelFormat used by Frame</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.IFrame.Width">
+            <summary> Interface Width used by Frame</summary>
+        </member>
+        <member name="P:AVT.VmbAPINET.IFrame.Height">
+            <summary> Interface Heigth used by Frame</summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.IFrame">
+            <summary> IFrame for Frame.</summary>
+        </member>
+        <member name="M:AVT.VmbAPINET.VimbaException.MapReturnCodeToString">
+            <summary> Maps current return code to a message.</summary>
+            <returns>string message.</returns>
+        </member>
+        <member name="P:AVT.VmbAPINET.VimbaException.ReturnCode">
+            <summary> return code which triggered the exception.</summary>
+            <returns>int value.</returns>
+        </member>
+        <member name="M:AVT.VmbAPINET.VimbaException.#ctor(System.Int32,System.String)">
+            <summary> default constructor. </summary>
+            <param name="returnCode"> exception/result value</param>
+            <param name="message"> exception/result text</param>
+        </member>
+        <member name="M:AVT.VmbAPINET.VimbaException.#ctor">
+            <summary> default constructor. </summary>
+        </member>
+        <member name="T:AVT.VmbAPINET.VimbaException">
+            <summary> Exception.</summary>
+            <summary> Exception thrown by all VimbaNET functions to report unexpected function results.</summary>
+        </member>
+    </members>
+</doc>
