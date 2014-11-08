@@ -75,7 +75,7 @@ namespace MT3
         IplImage img2 = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 1);
         IplImage imgLabel = new IplImage(WIDTH, HEIGHT, CvBlobLib.DepthLabel, 1);
         CvBlobs blobs = new CvBlobs();
-        CvFont font = new CvFont(FontFace.HersheyComplex, 3.0, 3.0);
+        CvFont font = new CvFont(FontFace.HersheyComplex, 0.50, 0.50);
 
         //CvWindow window1 = new CvWindow("DMK2", WindowMode.AutoSize);
         //int id_fr = 0;
@@ -661,6 +661,7 @@ namespace MT3
             this.States = STOP;
             timerDisplay.Enabled = false;
             this.ObsEndButton.BackColor = Color.Red;
+            avt_cam_end();
 
             // Stop IDS Live Video
             /*
@@ -689,7 +690,7 @@ namespace MT3
             this.ObsStart.BackColor = Color.Red;
 
             //AVT
-            //avt_cam_init();
+            avt_cam_start();
         
 
             // Basler
@@ -741,7 +742,7 @@ namespace MT3
                 ImgSaveFlag = TRUE;
                 this.States = SAVE;
                 this.timerSave.Enabled = true;
-                fifo.Saveflag_true_Last(5);  // 1fr=0.2s  -> 5fr=1s 
+               // fifo.Saveflag_true_Last(5);  // 1fr=0.2s  -> 5fr=1s 
             }
         }
 
@@ -877,7 +878,7 @@ namespace MT3
                 Cv.Rectangle(img_dmk3, new CvRect(xoa - 13, yoa - 10, 13 + 13, 10 + 10), new CvColor(0, 190, 40));  // QHY
 
                 String str = String.Format("ID:{4,7:D1} ({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00})", gx, gy, max_val, max_label, id);
-                img_dmk3.PutText(str, new CvPoint(6, 64), font, new CvColor(0, 50, 250));
+                img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 50, 250));
                 img_dmk3.Circle(new CvPoint((int)(gx + 0.5), (int)(gy + 0.5)), 15, new CvColor(0, 100, 255));
 
                 try
@@ -901,23 +902,9 @@ namespace MT3
                     //System.Console.WriteLine(ex.Message);
                     return;
                 }
-
-                //    Bitmap bitmap = BitmapConverter.ToBitmap(imgdata.img);
-                //    pictureBox1.Image = bitmap;
-                //BitmapConverter.ToBitmap(img_dmk, pictureBox1.Image);
-
-                // icImagingControl1.Display();
-
-                // 保存用データをキューへ
-                if (ImgSaveFlag == FALSE && this.States == RUN)//&& CurrentBuffer != null)
-                {
-                    gx = gy = max_val = 0.0;
-                    imgdata_push_FIFO();
-                }
-
-
             }
-            fr_str = GetFrameRate().ToString("00.00") ;
+
+            fr_str = StatFrameRate().ToString("00.00") ;
             label_frame_rate.Text = fr_str;
             label_ID.Text = max_label.ToString("0");
 
@@ -925,22 +912,23 @@ namespace MT3
             // Double dFramerate=0;
             // cam.Timing.Framerate.GetCurrentFps(out dFramerate); //IDS
             //  dFramerate = m_imageProvider.GetFrameRate(); // Basler
-            toolStripStatusLabelFramerate.Text = "Fps: " + GetFrameRate().ToString("00.00"); //dFramerate.ToString("000.00");
+            toolStripStatusLabelFramerate.Text = "Fps: " + StatFrameRate().ToString("000.0");
 
             uEye.Types.CaptureStatus captureStatus;
             cam.Information.GetCaptureStatus(out captureStatus);
-            toolStripStatusLabelFailed.Text = "Failed: " + captureStatus.Total;
+            toolStripStatusLabelFailed.Text = "Failed: " + StatFrameUnderrun().ToString("000");
             double err_rate = 100.0 * (captureStatus.Total / (double)id);
-            toolStripStatusLabelID.Text = "Frames: " + id + " " + err_rate.ToString("00.00");
+            
+            toolStripStatusLabelID.Text = "Frames: " +StatFrameDelivered() + " " + err_rate.ToString("00.00");
 
             //Int32 s32Value;
             //statusRet = cam.Timing.PixelClock.Get(out s32Value);
             //toolStripStatusLabelPixelClock.Text = "PixelClock: " + s32Value;
-            toolStripStatusLabelPixelClock.Text = "Gain: " + GetGain();
+            toolStripStatusLabelPixelClock.Text = "Gain: " + GainRaw();
 
             //Double dValue;
             //statusRet = cam.Timing.Exposure.Get(out dValue);
-            toolStripStatusLabelExposure.Text = "Exposure: " + GetExposureTime().ToString("000.0");
+            toolStripStatusLabelExposure.Text = "Exposure: " + ExposureTimeAbs().ToString("00.00");
 
             // 最大保存タイマーチェック
             if (ImgSaveFlag == TRUE && timerSave.Enabled == false)

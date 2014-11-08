@@ -137,7 +137,7 @@ namespace MT3
             // 保存用データをキューへ
             if (ImgSaveFlag == TRUE)
             {
-                imgdata_push_FIFO();
+                //imgdata_push_FIFO();
             }
 
             elapsed2 = sw.ElapsedTicks; sw.Stop(); sw.Reset();

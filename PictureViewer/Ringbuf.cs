@@ -83,7 +83,7 @@ namespace MT3
 
         CvVideoWriter vw;
         int width, height;
-        int NoCapDev = 9;  // file ID
+        int NoCapDev = 12;  // file ID
         string savedir;
         IplImage imgR;
         //IplImage imgBGR = new IplImage(640, 480, BitDepth.U8, 3);
@@ -324,7 +324,7 @@ namespace MT3
                 {
                     System.IO.Directory.CreateDirectory(fn);
                 }
-                fn += string.Format("{00}_", NoCapDev) + this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + ".avi";
+                fn += this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".avi";
                 VideoWriterInit(fn);
             }
             // 書き込みチェック

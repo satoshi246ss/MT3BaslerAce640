@@ -34,8 +34,8 @@ namespace MT3
         DateTime TBASE = new DateTime(1899, 12, 30, 0, 0, 0);
 
         // メイン装置光軸座標
-        int xoa_mes = 2456 / 2; //329;  //320  2013/11/23 MT3QHYの中心に変更
-        int yoa_mes = 2058 / 2; //256;  //240
+        int xoa_mes = 640 / 2; //320  2013/11/23 MT3QHYの中心に変更
+        int yoa_mes = 480 / 2; //256;  //240
         double test_start_id = 0;
         double xoa_test_start = 70;
         double yoa_test_start = 70;
@@ -130,7 +130,7 @@ namespace MT3
             if (AVT.VmbAPINET.VmbFrameStatusType.VmbFrameStatusComplete == frame.ReceiveStatus)
             {
                 str = "/// Frame status complete";
-                Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
+              //  Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
             }
 
             try
@@ -150,9 +150,54 @@ namespace MT3
                 Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
             }
 
+            detect();
             imgdata_push_FIFO();
         }
-    
+
+        public double StatFrameRate()
+        {
+            feature = features["StatFrameRate"];
+            return feature.FloatValue;
+        }
+        public double ExposureTimeAbs()
+        {
+            feature = features[" ExposureTimeAbs"];
+            return feature.FloatValue;
+        }
+        public long StatFrameDelivered()
+        {
+            feature = features["StatFrameDelivered"];
+            return feature.IntValue;
+        }
+        //DESCRIPTION:
+        //Number of frames missed due to the non-availibity of a user supplied buffer.
+        public long StatFrameUnderrun()
+        {
+            feature = features["StatFrameUnderrun"];
+            return feature.IntValue;
+        }
+        public long GainRaw()
+        {
+            feature = features[" GainRaw"];
+            return feature.IntValue;
+        }
+ 
+        public long AcquisitionFrameCount
+        {
+            get { return AcquisitionFrameCountFeature.IntValue; }
+            set { AcquisitionFrameCountFeature.IntValue = value; }
+        }
+        public AVT.VmbAPINET.Feature AcquisitionFrameCountFeature
+        {
+            get
+            {
+                if (m_AcquisitionFrameCountFeature == null)
+                    m_AcquisitionFrameCountFeature = camera.Features["AcquisitionFrameCount"];
+                return m_AcquisitionFrameCountFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_AcquisitionFrameCountFeature = null;
+
         #endregion
     }  
 }
