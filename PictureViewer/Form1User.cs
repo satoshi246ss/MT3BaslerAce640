@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace MT3
 {
@@ -121,7 +122,9 @@ namespace MT3
 
         private void OnFrameReceived(AVT.VmbAPINET.Frame frame)
         {
-            String str=null;
+            sw.Start();
+            elapsed0 = sw.ElapsedTicks; // 0.1ms
+            String str = null;
             try
             {
                 if (InvokeRequired) // if not from this thread invoke it in our context
@@ -156,9 +159,12 @@ namespace MT3
                 str = ve.MapReturnCodeToString();
                 Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
             }
+            elapsed1 = sw.ElapsedTicks; // 0.1ms
 
             // detect();
             imgdata_push_FIFO();
+            elapsed2 = sw.ElapsedTicks; // 0.1ms
+            sw.Stop();
         }
 
         public double StatFrameRate()

@@ -923,7 +923,7 @@ namespace MT3
 
             //Int32 s32Value;
             //statusRet = cam.Timing.PixelClock.Get(out s32Value);
-            //toolStripStatusLabelPixelClock.Text = "PixelClock: " + s32Value;
+            toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed1-elapsed0)/Stopwatch.Frequency +" "+ 10000*(elapsed2-elapsed0)/Stopwatch.Frequency;
  //           toolStripStatusLabelPixelClock.Text = "Gain: " + GainRaw().ToString("00");
 
             //Double dValue;
