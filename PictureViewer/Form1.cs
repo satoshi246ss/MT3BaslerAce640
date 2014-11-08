@@ -924,11 +924,11 @@ namespace MT3
             //Int32 s32Value;
             //statusRet = cam.Timing.PixelClock.Get(out s32Value);
             //toolStripStatusLabelPixelClock.Text = "PixelClock: " + s32Value;
-            toolStripStatusLabelPixelClock.Text = "Gain: " + GainRaw();
+ //           toolStripStatusLabelPixelClock.Text = "Gain: " + GainRaw().ToString("00");
 
             //Double dValue;
             //statusRet = cam.Timing.Exposure.Get(out dValue);
-            toolStripStatusLabelExposure.Text = "Exposure: " + ExposureTimeAbs().ToString("00.00");
+ //           toolStripStatusLabelExposure.Text = "Exposure: " + ExposureTimeAbs().ToString("00.00");
 
             // 最大保存タイマーチェック
             if (ImgSaveFlag == TRUE && timerSave.Enabled == false)

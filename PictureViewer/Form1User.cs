@@ -76,7 +76,7 @@ namespace MT3
             try
             {
                 camera = sys.OpenCameraByID(avtcam_ip, AVT.VmbAPINET.VmbAccessModeType.VmbAccessModeFull);
-                str = "/// Camera opened";
+                str = "/// Camera opened\n";
             }
             catch (AVT.VmbAPINET.VimbaException ve)
             {
@@ -87,7 +87,7 @@ namespace MT3
             try
             {
                 camera.OnFrameReceived += new AVT.VmbAPINET.Camera.OnFrameReceivedHandler(OnFrameReceived);
-                str = "/// +OnFrameReceived";
+                str = "/// +OnFrameReceived\n";
             }
             catch (AVT.VmbAPINET.VimbaException ve)
             {
@@ -122,9 +122,16 @@ namespace MT3
         private void OnFrameReceived(AVT.VmbAPINET.Frame frame)
         {
             String str=null;
-            if (InvokeRequired) // if not from this thread invoke it in our context
+            try
             {
-                Invoke(new AVT.VmbAPINET.Camera.OnFrameReceivedHandler(OnFrameReceived), frame);
+                if (InvokeRequired) // if not from this thread invoke it in our context
+                {
+                    Invoke(new AVT.VmbAPINET.Camera.OnFrameReceivedHandler(OnFrameReceived), frame);
+                }
+            }
+            catch (ObjectDisposedException e)
+            {
+                Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, e.Message });
             }
 
             if (AVT.VmbAPINET.VmbFrameStatusType.VmbFrameStatusComplete == frame.ReceiveStatus)
@@ -150,7 +157,7 @@ namespace MT3
                 Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
             }
 
-            detect();
+            // detect();
             imgdata_push_FIFO();
         }
 

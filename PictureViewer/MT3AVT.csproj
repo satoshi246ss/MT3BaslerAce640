@@ -8,8 +8,8 @@
     <ProjectGuid>{2513BD12-B4D3-4D27-9C4B-563D29EF7705}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MT3Wide</RootNamespace>
-    <AssemblyName>MT3Wide</AssemblyName>
+    <RootNamespace>MT3</RootNamespace>
+    <AssemblyName>MT3AVT</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
