@@ -22,100 +22,6 @@ namespace MT3
 {
     public partial class Form1 : Form
     {
-
-        // メイン装置光軸座標
-        int xoa ;  //320
-        int yoa ;  //240
-        int roa = 10;
-        double xoad, yoad;
-
-        const double fl = 12.5, ccdpx = 0.0074, ccdpy = 0.0074;
-        public double dx, dy, theta_c = 0, dt = 1.0 / 12.0;
-        public double az0, alt0, vaz0, valt0; // 流星位置、速度（前フレームの値）
-        public double az, alt, vaz, valt; // 流星位置、速度
-        public double az1, alt1, vaz1, valt1; // 流星位置、速度（次フレームの値）
-        public double daz, dalt, dvaz, dvalt; // 流星位置差、速度差（前フレームからの）
-
-        // 観測開始からのフレーム番号
-        int id = 0;
-        DateTime LiveStartTime;
-
-        const int MaxFrame = 128;  //512
-        //const int WIDTH = 2456; // 2456 max piA2400-12gm
-        //const int HEIGHT = 2058; // 2058 max
-        const int WIDTH  = 640; // 2456 max piA2400-12gm
-        const int HEIGHT = 480; // 2058 max
-
-        ImageData imgdata = new ImageData(WIDTH, HEIGHT);
-        CircularBuffer fifo = new CircularBuffer(MaxFrame, WIDTH, HEIGHT);
-
-        private ImageProvider m_imageProvider = new ImageProvider(); /* Create one image provider. */
-        //private Bitmap m_bitmap = null; /* The bitmap is used for displaying the image. */
-        
-
-        //TIS.Imaging.ImageBuffer CurrentBuffer = null;
-
-        // IDS
-        private Int32 u32DisplayID = 0;
-        uEye.Camera cam;
-        uEye.Defines.Status statusRet = 0;
-        uEye.Types.ImageInfo imageInfo;
-        Int32 s32MemID;
-        int cameraID = 2;  // 1:UI5240   2:UI2410
-        Int32 set_pixelclock = 30; // [MHz]
-        double set_framerate = 12;// [fps]
-        Double set_exposure = 80; // [ms]
-        Double set_exposure1 = 0.2; // [ms]
-        Int32 set_gain = 1000;//[0-1000]
-
-
-        IplImage img_dmk3 = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 3);
-        IplImage img_dmk = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 1);
-       // IplImage img_dark8 = Cv.LoadImage(@"C:\Users\Public\piccolo\dark00.bmp", LoadMode.GrayScale);
-        IplImage img2 = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 1);
-        IplImage imgLabel = new IplImage(WIDTH, HEIGHT, CvBlobLib.DepthLabel, 1);
-        CvBlobs blobs = new CvBlobs();
-        CvFont font = new CvFont(FontFace.HersheyComplex, 0.50, 0.50);
-
-        //CvWindow window1 = new CvWindow("DMK2", WindowMode.AutoSize);
-        //int id_fr = 0;
-        double gx, gy, max_val, kgx, kgy, kvx, kvy, sgx, sgy;
-        int threshold_blob = 128; // 検出閾値（０－２５５）
-        double threshold_min_area = 0.25; // 最小エリア閾値（最大値ｘ0.25)
-        CvPoint2D64f max_centroid;
-        uint max_label;
-        CvBlob maxBlob;
-        CvRect blob_rect;
-        double distance, distance_min, d_val;
-        CvKalman kalman = Cv.CreateKalman(4, 2);
-        int kalman_id = 0;
-        // 観測値(kalman)
-        CvMat measurement = new CvMat(2, 1, MatrixType.F32C1);
-        CvMat correction;
-        CvMat prediction;
-
-        Stopwatch sw = new Stopwatch();
-        Stopwatch sw2 = new Stopwatch();
-        long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
-        long elapsed20 = 0, elapsed21 = 0, elapsed22 = 0;
-        double lap0 = 0, lap1 = 0, lap2 = 0, alpha = 0.01;
-        string fr_str;
-        private BackgroundWorker worker;
-        private BackgroundWorker worker_udp;
-        Udp_kv udpkv = new Udp_kv();
-
-        FSI_PID_DATA pid_data = new FSI_PID_DATA();
-        MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
-        int mmFsiUdpPortMT3Basler   = 24424;            // （受信）
-        int mmFsiUdpPortMT3BaslerS  = 24425;            // （送信）
-        int mmFsiUdpPortMTmonitor = 24415;
-        string mmFsiCore_i5 = "192.168.1.211";
-        int mmFsiUdpPortSpCam = 24410;   // SpCam（受信）
-        string mmFsiSC440   = "192.168.1.206";
-        System.Net.Sockets.UdpClient udpc3 = null;
-        DriveInfo cDrive = new DriveInfo("C");
-        long diskspace;
-
         public Form1()
         {
             InitializeComponent();
@@ -909,7 +815,7 @@ namespace MT3
             }
 
  //           fr_str = StatFrameRate().ToString("00.00") ;
-            label_frame_rate.Text = (1000*1000 * (elapsed22 - elapsed20) / (double)(Stopwatch.Frequency)).ToString("0000.0")+"[us]";
+            label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " +(1000 * lap22).ToString("0000");
             label_ID.Text = max_label.ToString("0");
 
             // Status表示
@@ -920,7 +826,7 @@ namespace MT3
 
             uEye.Types.CaptureStatus captureStatus;
             cam.Information.GetCaptureStatus(out captureStatus);
-            toolStripStatusLabelFailed.Text = "Failed: " + StatFrameUnderrun().ToString("000");
+            toolStripStatusLabelFailed.Text = "Failed U:" + StatFrameUnderrun().ToString("0000") + " S:" + StatFrameShoved().ToString("0000") + " D:" + StatFrameDropped().ToString("0000");
             double err_rate = 100.0 * (captureStatus.Total / (double)id);
             
             toolStripStatusLabelID.Text = "Frames: " +StatFrameDelivered() + " " + err_rate.ToString("00.00");
