@@ -273,6 +273,19 @@ namespace MT3
             this.data[this.top] = elem;
             Cv.Copy(elem.img, this.img[this.top]);
         }
+        /// <summary>
+        /// 先頭に新しい要素を追加。
+        /// </summary>
+        /// <param name="elem">追加する要素</param>
+        public void InsertFirst(ImageData elem, byte [] buf)
+        {
+            if (this.Count >= this.data.Length - 1)
+                this.Extend();
+
+            this.top = (this.top - 1) & this.mask;
+            this.data[this.top] = elem;
+            System.Runtime.InteropServices.Marshal.Copy(buf, 0, this.img[this.top].ImageDataOrigin, buf.Length);
+        }
 
         /// <summary>
         /// 末尾に新しい要素を追加。

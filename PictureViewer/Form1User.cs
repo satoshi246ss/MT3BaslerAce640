@@ -147,9 +147,8 @@ namespace MT3
         DriveInfo cDrive = new DriveInfo("C");
         long diskspace;
         
-        [DllImport("kernel32.dll")]
-        static extern unsafe void CopyMemory(void* dst, void* src, int size);
-        
+        //[DllImport("kernel32.dll")]
+        //static extern unsafe void CopyMemory(void* dst, void* src, int size);        
         
         [DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
         public static extern uint timeBeginPeriod(uint uMilliseconds);
@@ -182,7 +181,7 @@ namespace MT3
 
         public void avt_cam_start()
         {
-            String str;
+            String str=null;
             //AVT
             sys.Startup();
             //cameras = sys.Cameras;
@@ -195,7 +194,7 @@ namespace MT3
             }
             catch (AVT.VmbAPINET.VimbaException ve)
             {
-                str = ve.MapReturnCodeToString();
+                str += ve.MapReturnCodeToString();
             }
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
 
@@ -206,7 +205,7 @@ namespace MT3
             }
             catch (AVT.VmbAPINET.VimbaException ve)
             {
-                str = ve.MapReturnCodeToString();
+                str += ve.MapReturnCodeToString();
             }
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
 
@@ -238,24 +237,24 @@ namespace MT3
 
         private void OnFrameReceived(AVT.VmbAPINET.Frame frame)
         {
-            // 処理速度
-            double sf = (double)Stopwatch.Frequency / 1000; //msec
-            lap21 = (1 - alpha) * lap21 + alpha * (sw2.ElapsedTicks - elapsed20) / sf;
-
-            elapsed20 = sw2.ElapsedTicks; // 0.1ms
-
-            String str = null;
-            try
+ /*           try
             {
                 if (InvokeRequired) // if not from this thread invoke it in our context
                 {
                     Invoke(new AVT.VmbAPINET.Camera.OnFrameReceivedHandler(OnFrameReceived), frame);
+                    return;
                 }
             }
             catch (ObjectDisposedException e)
             {
                 Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, e.Message });
             }
+*/
+            // 処理速度
+            double sf = (double)Stopwatch.Frequency / 1000; //msec
+            lap21 = (1 - alpha) * lap21 + alpha * (sw2.ElapsedTicks - elapsed20) / sf;
+            elapsed20 = sw2.ElapsedTicks; // 0.1ms
+            String str = null;
 
             if (AVT.VmbAPINET.VmbFrameStatusType.VmbFrameStatusComplete == frame.ReceiveStatus)
             {
@@ -267,9 +266,12 @@ namespace MT3
             {
                 camera.QueueFrame(frame);
 
-                System.Object lockThis = new System.Object();
-                lock (lockThis)
+                //System.Object lockThis = new System.Object();
+                //lock (lockThis)
+                lock (frame)
                 {
+                    //imgdata_push_FIFO(frame.Buffer);
+                    
                     //img_dmk は使わず、直接imgdata.imgにコピー (0.3ms)
                     System.Runtime.InteropServices.Marshal.Copy(frame.Buffer, 0, imgdata.img.ImageDataOrigin, frame.Buffer.Length);
 
@@ -290,13 +292,51 @@ namespace MT3
             }
             elapsed21 = sw2.ElapsedTicks; // 0.1ms
             
-            // detect();
-            id++;
+            detect();
+            //id++;
             imgdata_push_FIFO();
             elapsed22 = sw2.ElapsedTicks; // 0.1ms
             // 処理速度
             //double sf = (double)Stopwatch.Frequency / 1000; //msec
             lap22 = (1 - alpha) * lap22 + alpha * (elapsed22 - elapsed20) / sf;
+        }
+
+        /// <summary>
+        /// FIFO pushルーチン
+        /// </summary>
+        private void imgdata_push_FIFO(byte [] buf)
+        {
+            // 文字入れ
+            //String str = String.Format("ID:{0,6:D1} ", imgdata.id) + imgdata.t.ToString("yyyyMMdd_HHmmss_fff") + String.Format(" ({0,6:F1},{1,6:F1})({2,6:F1})", gx, gy, max_val);
+            //img_dmk.PutText(str, new CvPoint(10, 460), font, new CvColor(255, 100, 100));
+
+            //try
+            //{
+            imgdata.id = (int)id;     // (int)imageInfo.FrameNumber;
+            imgdata.t = DateTime.Now; //imageInfo.TimestampSystem;   //  LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime);
+            imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
+            imgdata.gx = gx;
+            imgdata.gy = gy;
+            imgdata.kgx = kgx;
+            imgdata.kgy = kgy;
+            imgdata.kvx = kvx;
+            imgdata.kvy = kvy;
+            imgdata.vmax = max_val;
+            imgdata.blobs = blobs;
+            imgdata.udpkv1 = (Udp_kv)udpkv.Clone();
+            imgdata.az = az;
+            imgdata.alt = alt;
+            imgdata.vaz = vaz;
+            imgdata.valt = valt;
+            if (fifo.Count == MaxFrame - 1) fifo.EraseLast();
+            fifo.InsertFirst(imgdata, buf);
+            /*}
+            catch (Exception ex)
+            {
+                //匿名デリゲートで表示する
+                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                System.Diagnostics.Trace.WriteLine(ex.Message);
+            }*/
         }
 
         public double StatFrameRate()
