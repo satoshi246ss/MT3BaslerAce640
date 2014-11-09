@@ -47,6 +47,10 @@ namespace MT3
 
         #endregion
 
+        [DllImport("kernel32.dll")]
+        static extern unsafe void CopyMemory(void* dst, void* src, int size);
+        
+        
         [DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
         public static extern uint timeBeginPeriod(uint uMilliseconds);
 
@@ -159,7 +163,16 @@ namespace MT3
                 lock (lockThis)
                 {
                     //img_dmk は使わず、直接imgdata.imgにコピー
-                    System.Runtime.InteropServices.Marshal.Copy(frame.Buffer, 0, imgdata.img.ImageDataOrigin, frame.Buffer.Length);
+               //     System.Runtime.InteropServices.Marshal.Copy(frame.Buffer, 0, imgdata.img.ImageDataOrigin, frame.Buffer.Length);
+
+                    // unsafeバージョン
+                    unsafe
+                    {
+                        fixed (byte* pbytes = frame.Buffer)
+                        {
+                            CopyMemory(imgdata.img.ImageDataPtr, pbytes, frame.Buffer.Length);
+                        }
+                    }
                 }
             }
             catch (AVT.VmbAPINET.VimbaException ve)
