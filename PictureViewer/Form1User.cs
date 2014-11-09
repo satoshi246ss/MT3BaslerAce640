@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MT3
 {
@@ -45,6 +46,13 @@ namespace MT3
         //int roa_mes = 10;
 
         #endregion
+
+        [DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
+        public static extern uint timeBeginPeriod(uint uMilliseconds);
+
+        [DllImport("winmm.dll", EntryPoint = "timeEndPeriod")]
+        public static extern uint timeEndPeriod(uint uMilliseconds);
+        uint time_period = 1;
 
         # region AVT
         //AVT
@@ -122,8 +130,8 @@ namespace MT3
 
         private void OnFrameReceived(AVT.VmbAPINET.Frame frame)
         {
-            sw.Start();
-            elapsed0 = sw.ElapsedTicks; // 0.1ms
+            sw2.Start();
+            elapsed20 = sw2.ElapsedTicks; // 0.1ms
             String str = null;
             try
             {
@@ -159,12 +167,12 @@ namespace MT3
                 str = ve.MapReturnCodeToString();
                 Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
             }
-            elapsed1 = sw.ElapsedTicks; // 0.1ms
+            elapsed21 = sw2.ElapsedTicks; // 0.1ms
 
             // detect();
             imgdata_push_FIFO();
-            elapsed2 = sw.ElapsedTicks; // 0.1ms
-            sw.Stop();
+            elapsed22 = sw2.ElapsedTicks; // 0.1ms
+            sw2.Stop();
         }
 
         public double StatFrameRate()

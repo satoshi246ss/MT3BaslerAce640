@@ -95,7 +95,9 @@ namespace MT3
         CvMat prediction;
 
         Stopwatch sw = new Stopwatch();
+        Stopwatch sw2 = new Stopwatch();
         long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
+        long elapsed20 = 0, elapsed21 = 0, elapsed22 = 0;
         double lap0 = 0, lap1 = 0, lap2 = 0, alpha = 0.01;
         string fr_str;
         private BackgroundWorker worker;
@@ -117,6 +119,7 @@ namespace MT3
         public Form1()
         {
             InitializeComponent();
+            timeBeginPeriod(time_period);
 
             worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
@@ -184,6 +187,31 @@ namespace MT3
 
             ObsEndButton.Enabled = false;
             diskspace = cDrive.TotalFreeSpace;
+        }
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            // IDS open
+            //ShowButton.PerformClick();
+
+            //Basler
+            //            m_imageProvider.Open(0);
+            //    m_imageProvider.Setup(WIDTH, HEIGHT);
+            //    m_imageProvider.SetupExposureTimeAbs(set_exposure*1000.0); // [usec]
+            //    m_imageProvider.SetupGain(set_gain); //0-1000
+            //    m_imageProvider.SetupFrameRate(set_framerate);
+
+            //    double exp = m_imageProvider.GetExposureTime();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //this.Close(); 
+            cam.Exit();
+            //AVT
+            avt_cam_end();
+            //Basler
+            //            m_imageProvider.Close();
+            timeEndPeriod(16);
         }
 
         #region UDP
@@ -608,30 +636,6 @@ namespace MT3
         }
         #endregion
 
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            // IDS open
-            //ShowButton.PerformClick();
-
-            //Basler
-//            m_imageProvider.Open(0);
-        //    m_imageProvider.Setup(WIDTH, HEIGHT);
-        //    m_imageProvider.SetupExposureTimeAbs(set_exposure*1000.0); // [usec]
-        //    m_imageProvider.SetupGain(set_gain); //0-1000
-        //    m_imageProvider.SetupFrameRate(set_framerate);
-
-        //    double exp = m_imageProvider.GetExposureTime();
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //this.Close(); 
-            cam.Exit();
-            //AVT
-            avt_cam_end();
-            //Basler
-//            m_imageProvider.Close();
-        }
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
@@ -904,8 +908,8 @@ namespace MT3
                 }
             }
 
-            fr_str = StatFrameRate().ToString("00.00") ;
-            label_frame_rate.Text = fr_str;
+ //           fr_str = StatFrameRate().ToString("00.00") ;
+            label_frame_rate.Text = (1000*1000 * (elapsed22 - elapsed20) / (double)(Stopwatch.Frequency)).ToString("0000.0")+"[us]";
             label_ID.Text = max_label.ToString("0");
 
             // Status表示
@@ -923,7 +927,7 @@ namespace MT3
 
             //Int32 s32Value;
             //statusRet = cam.Timing.PixelClock.Get(out s32Value);
-            toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed1-elapsed0)/Stopwatch.Frequency +" "+ 10000*(elapsed2-elapsed0)/Stopwatch.Frequency;
+            toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed21-elapsed20)/(double)(Stopwatch.Frequency) +" "+ 10000*(elapsed22-elapsed21)/(double)(Stopwatch.Frequency);
  //           toolStripStatusLabelPixelClock.Text = "Gain: " + GainRaw().ToString("00");
 
             //Double dValue;
