@@ -292,8 +292,8 @@ namespace MT3
             }
             elapsed21 = sw2.ElapsedTicks; // 0.1ms
             
-            detect();
-            //id++;
+            //detect();
+            id++;
             imgdata_push_FIFO();
             elapsed22 = sw2.ElapsedTicks; // 0.1ms
             // 処理速度
