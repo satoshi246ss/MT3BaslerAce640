@@ -185,6 +185,8 @@ namespace MT3
                         {
                             ImgSaveFlag = TRUE;
                             this.States = SAVE;
+                            kalman_init();
+                            pos_mes.init();
                         }
                     }
                     else if (kmd3.cmd == 90) //mmPidTest:90
@@ -516,7 +518,7 @@ namespace MT3
                 Cv.Line(image, new CvPoint((int)xoa + roa, (int)yoa + roa), new CvPoint((int)xoa - roa, (int)yoa - roa), new CvColor(0, 255, 0));
                 Cv.Line(image, new CvPoint((int)xoa - roa, (int)yoa + roa), new CvPoint((int)xoa + roa, (int)yoa - roa), new CvColor(0, 255, 0));
 
-                pictureBox1.Image = image.ToBitmap();
+                pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
             }
         }
 
@@ -793,7 +795,7 @@ namespace MT3
 
                 try
                 {
-                    pictureBox1.Image = img_dmk3.ToBitmap();
+                    pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(img_dmk3);
                 }
                 catch (System.ArgumentException)
                 {

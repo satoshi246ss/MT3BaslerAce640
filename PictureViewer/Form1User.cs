@@ -66,6 +66,7 @@ namespace MT3
         public double az, alt, vaz, valt; // 流星位置、速度
         public double az1, alt1, vaz1, valt1; // 流星位置、速度（次フレームの値）
         public double daz, dalt, dvaz, dvalt; // 流星位置差、速度差（前フレームからの）
+        position_mesure pos_mes = new position_mesure();
 
         // 観測開始からのフレーム番号
         int id = 0;
@@ -114,10 +115,9 @@ namespace MT3
         int threshold_blob = 128; // 検出閾値（０－２５５）
         double threshold_min_area = 0.25; // 最小エリア閾値（最大値ｘ0.25)
         CvPoint2D64f max_centroid;
-        uint max_label;
+        int max_label;
         CvBlob maxBlob;
         CvRect blob_rect;
-        double distance, distance_min, d_val;
         CvKalman kalman = Cv.CreateKalman(4, 2);
         int kalman_id = 0;
         // 観測値(kalman)
@@ -171,6 +171,13 @@ namespace MT3
         AVT.VmbAPINET.Frame[] frameArray = new AVT.VmbAPINET.Frame[3];
 
         String avtcam_ip = "192.168.1.150";
+
+        static void CopyMemory(IntPtr dst, IntPtr src, int size)
+        {
+            byte[] temp = new byte[size];
+            Marshal.Copy(src, temp, 0, size);
+            Marshal.Copy(temp, 0, dst, size);
+        }
 
         public void avt_cam_end()
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using OpenCvSharp;
 
 namespace MT3
@@ -129,7 +130,7 @@ namespace MT3
             uEye.Types.ImageInfo imageInfo;
             cam.Information.GetImageInfo(s32MemID, out imageInfo);
             cam.Memory.ToIntPtr(s32MemID, out ptr);
-            img_dmk.ImageData = ptr;
+            CopyMemory( img_dmk.ImageDataOrigin, ptr,img_dmk.ImageSize);
             Cv.Copy(img_dmk, imgdata.img);
             elapsed0 = sw.ElapsedTicks; // 0.1ms
 
@@ -159,7 +160,7 @@ namespace MT3
                 uEye.Types.ImageInfo imageInfo;
                 cam.Information.GetImageInfo(s32MemID, out imageInfo);
                 cam.Memory.ToIntPtr(s32MemID, out ptr);
-                img_dmk3.ImageData = ptr;
+                CopyMemory(img_dmk3.ImageDataOrigin, ptr, img_dmk3.ImageSize);
                 Cv.CvtColor(img_dmk3, img_dmk, ColorConversion.BgrToGray);
                 cam.Memory.Unlock(s32MemID);
 

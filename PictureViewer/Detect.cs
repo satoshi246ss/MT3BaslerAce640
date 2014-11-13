@@ -19,51 +19,13 @@ namespace MT3
 
             #region 位置検出2  //Blob
             Cv.Threshold(imgdata.img, img2, threshold_blob, 255, ThresholdType.Binary); //2ms
-            blobs.Label(img2, imgLabel); //1.4ms
-            max_label = blobs.GreaterBlob();
-            elapsed1 = sw.ElapsedTicks; //1.3ms
-
-            if (blobs.Count > 1 && gx >= 0)
+            blobs.Label(img2); //1.4ms
+            maxBlob = blobs.LargestBlob();
+            if (blobs.Count > 0)
             {
-                uint min_area = (uint)(threshold_min_area * blobs[max_label].Area);
-                blobs.FilterByArea(min_area, uint.MaxValue); //0.001ms
-
-                // 最適blobの選定（area大　かつ　前回からの距離小）
-                double x = blobs[max_label].Centroid.X;
-                double y = blobs[max_label].Centroid.Y;
-                uint area = blobs[max_label].Area;
-                //CvRect rect;
-                distance_min = ((x - gx) * (x - gx) + (y - gy) * (y - gy)); //Math.Sqrt()
-                foreach (var item in blobs)
-                {
-                    //Console.WriteLine("{0} | Centroid:{1} Area:{2}", item.Key, item.Value.Centroid, item.Value.Area);
-                    x = item.Value.Centroid.X;
-                    y = item.Value.Centroid.Y;
-                    //rect = item.Value.Rect;
-                    distance = ((x - gx) * (x - gx) + (y - gy) * (y - gy)); //将来はマハラノビス距離
-                    if (distance < distance_min)
-                    {
-                        d_val = (item.Value.Area) / max_val;
-                        if (distance <= 25) //近距離(5pix)
-                        {
-                            if (d_val >= 0.4)//&& d_val <= 1.2)
-                            {
-                                max_label = item.Key;
-                                distance_min = distance;
-                            }
-                        }
-                        else
-                        {
-                            if (d_val >= 0.8 && d_val <= 1.5)
-                            {
-                                max_label = item.Key;
-                                distance_min = distance;
-                            }
-                        }
-                    }
-                    //w.WriteLine("{0} {1} {2} {3} {4}", dis, dv, i, item.Key, item.Value.Area);
-                }
-                //gx = x; gy = y; max_val = area;
+                int min_area = Math.Max(2, (int)(threshold_min_area * maxBlob.Area));
+                blobs.FilterByArea(min_area, int.MaxValue); //0.001ms   面積がmin_area未満のblobを削除
+                max_label = pos_mes.mesure(blobs);
             }
 
             if (max_label > 0)
