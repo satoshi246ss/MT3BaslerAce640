@@ -343,6 +343,9 @@
     <Content Include="Pylon.NETSupportLibrary.csproj" />
     <Content Include="PylonC.NET.dll" />
     <Content Include="PylonC.NET.XML" />
+    <Content Include="PylonC_MD_VC100.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Red_button.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

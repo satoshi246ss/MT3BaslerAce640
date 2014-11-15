@@ -121,14 +121,14 @@ namespace MT3
         }
 
         #region UDP
-        // 別スレッド処理（UDP） //IP 192.168.1.209
+        // 別スレッド処理（UDP） //IP 192.168.1.212
         private void worker_udp_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bw = (BackgroundWorker)sender;
 
             //バインドするローカルポート番号
-            //int localPort = 24410;// broadcast
-            int localPort = mmFsiUdpPortMT3Basler; // broadcast mmFsiUdpPortMT3Basler;
+            int localPort = 24410;// broadcast
+            //int localPort = mmFsiUdpPortMT3Basler; // broadcast mmFsiUdpPortMT3Basler;
             System.Net.Sockets.UdpClient udpc = null; ;
             try
             {

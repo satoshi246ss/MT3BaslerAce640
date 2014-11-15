@@ -137,8 +137,8 @@ namespace MT3
 
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
         MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
-        int mmFsiUdpPortMT3Basler = 24424;            // （受信）
-        int mmFsiUdpPortMT3BaslerS = 24425;            // （送信）
+        int mmFsiUdpPortMT3Basler = 24428;            // （受信）
+        int mmFsiUdpPortMT3BaslerS = 24429;            // （送信）
         int mmFsiUdpPortMTmonitor = 24415;
         string mmFsiCore_i5 = "192.168.1.211";
         int mmFsiUdpPortSpCam = 24410;   // SpCam（受信）
