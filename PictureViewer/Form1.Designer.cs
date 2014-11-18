@@ -45,11 +45,12 @@
             this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_ID = new System.Windows.Forms.Label();
             this.deviceListView = new System.Windows.Forms.ListView();
+            this.label_X2Y2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.timerSavePostTime = new System.Windows.Forms.Timer(this.components);
+            this.timerSaveTimeOver = new System.Windows.Forms.Timer(this.components);
             this.timerSaveMainTime = new System.Windows.Forms.Timer(this.components);
             this.timerDisplay = new System.Windows.Forms.Timer(this.components);
             this.timerObsOnOff = new System.Windows.Forms.Timer(this.components);
@@ -118,6 +119,7 @@
             this.flowLayoutPanel1.Controls.Add(this.label_frame_rate);
             this.flowLayoutPanel1.Controls.Add(this.label_ID);
             this.flowLayoutPanel1.Controls.Add(this.deviceListView);
+            this.flowLayoutPanel1.Controls.Add(this.label_X2Y2);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 487);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -263,6 +265,15 @@
             this.deviceListView.TabIndex = 12;
             this.deviceListView.UseCompatibleStateImageBehavior = false;
             // 
+            // label_X2Y2
+            // 
+            this.label_X2Y2.AutoSize = true;
+            this.label_X2Y2.Location = new System.Drawing.Point(369, 29);
+            this.label_X2Y2.Name = "label_X2Y2";
+            this.label_X2Y2.Size = new System.Drawing.Size(41, 12);
+            this.label_X2Y2.TabIndex = 13;
+            this.label_X2Y2.Text = "(X2,Y2)";
+            // 
             // textBox1
             // 
             tableLayoutPanel1.SetColumnSpan(this.textBox1, 2);
@@ -289,10 +300,10 @@
     "s (*.*)|*.* ";
             this.openFileDialog1.Title = "Select a picture file ";
             // 
-            // timerSavePostTime
+            // timerSaveTimeOver
             // 
-            this.timerSavePostTime.Interval = 1000;
-            this.timerSavePostTime.Tick += new System.EventHandler(this.timerSavePostTime_Tick);
+            this.timerSaveTimeOver.Interval = 45000;
+            this.timerSaveTimeOver.Tick += new System.EventHandler(this.timerSaveTimeOver_Tick);
             // 
             // timerSaveMainTime
             // 
@@ -318,40 +329,40 @@
             this.toolStripStatusLabelID,
             this.toolStripStatusLabelPixelClock,
             this.toolStripStatusLabelExposure});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 594);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 595);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(652, 23);
+            this.statusStrip1.Size = new System.Drawing.Size(652, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabelFramerate
             // 
             this.toolStripStatusLabelFramerate.Name = "toolStripStatusLabelFramerate";
-            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(28, 18);
+            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(27, 17);
             this.toolStripStatusLabelFramerate.Text = "Fps";
             // 
             // toolStripStatusLabelFailed
             // 
             this.toolStripStatusLabelFailed.Name = "toolStripStatusLabelFailed";
-            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(134, 18);
+            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(133, 17);
             this.toolStripStatusLabelFailed.Text = "toolStripStatusLabel2";
             // 
             // toolStripStatusLabelID
             // 
             this.toolStripStatusLabelID.Name = "toolStripStatusLabelID";
-            this.toolStripStatusLabelID.Size = new System.Drawing.Size(60, 18);
+            this.toolStripStatusLabelID.Size = new System.Drawing.Size(59, 17);
             this.toolStripStatusLabelID.Text = "FrameID";
             // 
             // toolStripStatusLabelPixelClock
             // 
             this.toolStripStatusLabelPixelClock.Name = "toolStripStatusLabelPixelClock";
-            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(134, 18);
+            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(133, 17);
             this.toolStripStatusLabelPixelClock.Text = "toolStripStatusLabel3";
             // 
             // toolStripStatusLabelExposure
             // 
             this.toolStripStatusLabelExposure.Name = "toolStripStatusLabelExposure";
-            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(29, 18);
+            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(28, 17);
             this.toolStripStatusLabelExposure.Text = "Exp";
             // 
             // timerMTmonSend
@@ -423,7 +434,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Timer timerSavePostTime;
+        private System.Windows.Forms.Timer timerSaveTimeOver;
         private System.Windows.Forms.Timer timerSaveMainTime;
         private System.Windows.Forms.Button buttonMakeDark;
         private System.Windows.Forms.Timer timerDisplay;
@@ -445,6 +456,7 @@
         private System.Windows.Forms.Timer timerSave;
         private System.Windows.Forms.Timer updateDeviceListTimer;
         private System.Windows.Forms.ListView deviceListView;
+        private System.Windows.Forms.Label label_X2Y2;
     }
 }
 

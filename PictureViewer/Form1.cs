@@ -140,20 +140,8 @@ namespace MT3
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
             }
 
-
             //文字コードを指定する
             System.Text.Encoding enc = System.Text.Encoding.UTF8;
-            //データを送信するリモートホストとポート番号
-            //string remoteHost = "localhost";
-            //   string remoteHost = mmFsiSC440;
-            //   int remotePort = 24404;
-            //送信するデータを読み込む
-            //string sendMsg = "test送信するデータ";
-            //byte[] sendBytes = enc.GetBytes(sendMsg);
-
-            //リモートホストを指定してデータを送信する
-            // udpc.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
-
 
             string str;
             MOTOR_DATA_KV_SP kmd3 = new MOTOR_DATA_KV_SP();
@@ -178,8 +166,8 @@ namespace MT3
                     if (kmd3.cmd == 1) //mmMove:1
                     {
                         Mode = DETECT;
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, RUN });
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSave, RUN });
+                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, RUN });
+                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveTimeOver, RUN });
                         //保存処理開始
                         if (this.States == RUN)
                         {
@@ -193,8 +181,8 @@ namespace MT3
                     {
                         Mode = PID_TEST;
                         test_start_id = pid_data.id;
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, RUN });
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSave, RUN });
+                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, RUN });
+                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveTimeOver, RUN });
                         //保存処理開始
                         if (this.States == RUN)
                         {
@@ -204,11 +192,11 @@ namespace MT3
                     }
                     else if (kmd3.cmd == 16) //mmLost:16
                     {
-                        Mode = LOST;
+                        //Mode = LOST;
                         //ButtonSaveEnd_Click(sender, e);
                         //匿名デリゲートで表示する
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSavePostTime, RUN });
+                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
+                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSavePostTime, RUN });
                     }
                     else if (kmd3.cmd == 17) // mmMoveEnd             17  // 位置決め完了
                     {
@@ -216,17 +204,16 @@ namespace MT3
                     }
                     else if (kmd3.cmd == 18) // mmTruckEnd            18  // 追尾完了
                     {
-                        Mode = LOST;
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSavePostTime, RUN });
                         //保存処理終了
-                        //ImgSaveFlag = FALSE;
+                        timerSaveTimeOver.Stop();
+                        Mode = LOST;
+                        ButtonSaveEnd_Click(sender, e);
                     }
                     else if (kmd3.cmd == 20) //mmData  20  // send fish pos data
                     {
                         //匿名デリゲートで表示する
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, RUN }); // main timer 延長
+                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
+                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, RUN }); // main timer 延長
                     }
 
                     str = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " UDP " + kmd3.cmd.ToString("CMD:00") + " Az:" + kmd3.az + " Alt:" + kmd3.alt + " VAz:" + kmd3.vaz + " VAlt:" + kmd3.valt + "\n";
@@ -259,8 +246,8 @@ namespace MT3
                 udpkv.kd = (KV_DATA)e.UserState;
                 udpkv.cal_mt3();
 
-                string s = string.Format("KV:[x2:{0} y2:{1} x2v:{2} y2v:{3} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
-                textBox1.Text = s;
+                string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
+                label_X2Y2.Text = s;
             }
         }
 
@@ -675,7 +662,6 @@ namespace MT3
         {
             timerSave.Stop();
             timerSaveMainTime.Stop();
-            timerSavePostTime.Stop();
             Mode = LOST;
             ButtonSaveEnd_Click(sender, e);
         }
@@ -683,7 +669,6 @@ namespace MT3
         {
             timerSave.Stop();
             timerSaveMainTime.Stop();
-            timerSavePostTime.Stop();
             Mode = LOST;
             ButtonSaveEnd_Click(sender, e);
         }
@@ -691,7 +676,6 @@ namespace MT3
         private void timerSaveMainTime_Tick(object sender, EventArgs e)
         {
             timerSaveMainTime.Stop();
-            timerSavePostTime.Start();
         }
 
         private void buttonMakeDark_Click(object sender, EventArgs e)
@@ -841,19 +825,6 @@ namespace MT3
             //Double dValue;
             //statusRet = cam.Timing.Exposure.Get(out dValue);
  //           toolStripStatusLabelExposure.Text = "Exposure: " + ExposureTimeAbs().ToString("00.00");
-
-            // 最大保存タイマーチェック
-            if (ImgSaveFlag == TRUE && timerSave.Enabled == false)
-            {
-                timerSave.Enabled = true;
-            }
-
-            //mode check
-            if (ImgSaveFlag == TRUE && Mode == LOST && (timerSaveMainTime.Enabled == true))
-            {
-                timerSaveMainTime.Stop();
-                timerSavePostTime.Start();
-            }
 
             if (this.States == SAVE)
             {
@@ -1058,6 +1029,13 @@ namespace MT3
         private void checkBoxGainBoost_CheckedChanged(object sender, EventArgs e)
         {
             cam.Gain.Hardware.Boost.SetEnable(checkBoxGainBoost.Checked);
+        }
+
+        private void timerSaveTimeOver_Tick(object sender, EventArgs e)
+        {
+            timerSaveTimeOver.Stop();
+            Mode = LOST;
+            ButtonSaveEnd_Click(sender, e);
         }
     }
 }

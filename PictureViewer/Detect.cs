@@ -76,17 +76,6 @@ namespace MT3
                 //diff_vaz = (az - az_pre1) / dt; diff_valt = (alt - alt_pre1) / dt; //速度差
 
                 az0 = az; alt0 = alt;
-
-                if (ImgSaveFlag == TRUE)
-                {
-                    // 観測データ送信
-                    //Pid_Data_Send();
-
-                    // 保存時間延長
-                    timerSavePostTime.Stop();
-                    timerSaveMainTime.Stop();
-                    timerSaveMainTime.Start();
-                }
             }
             else
             {

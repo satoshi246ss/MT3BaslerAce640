@@ -20,6 +20,7 @@ namespace MT3
         public Byte yy1, yy0, yy3, yy2;   //unsigned char  y2pos 
         public Byte v11, v10, v13, v12;   //unsigned short x1v, y1v 
         public Byte v21, v20, v23, v22;   //unsigned short x2v, y2v 
+        public UInt16 UdpTimeCode;   //unsigned short x2v, y2v
         //public UInt16 x1v, y1v, x2v, y2v;    //unsigned short v
     }
 
@@ -35,6 +36,7 @@ namespace MT3
 
         public KV_DATA kd = new KV_DATA();
         public Int32 xpos, ypos, x2pos, y2pos;
+        public UInt16 udp_time_code;
         public Int32 x1v, y1v, x2v, y2v;
         public UInt16 kv_status, data_request;
         public double vaz2_kv, valt2_kv, az2_c, alt2_c;
@@ -70,6 +72,24 @@ namespace MT3
             kd = (KV_DATA)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(KV_DATA));
             gch.Free();
         }
+        /// <summary>
+        /// KV1000用 エンディアン変換
+        /// </summary>
+        public short EndianChange(short obj)
+        {
+            //int size = Marshal.SizeOf(obj);
+            //IntPtr ptr = Marshal.AllocHGlobal(size);
+            //Marshal.StructureToPtr(obj, ptr, false);
+            byte[] bytes = (BitConverter.GetBytes(obj));
+            Array.Reverse(bytes);
+            return BitConverter.ToInt16(bytes, 0);
+        }
+        public ushort EndianChange(ushort obj)
+        {
+            byte[] bytes = (BitConverter.GetBytes(obj));
+            Array.Reverse(bytes);
+            return BitConverter.ToUInt16(bytes, 0);
+        }
 
         /// <summary>
         /// MT3 dataの計算
@@ -87,6 +107,7 @@ namespace MT3
             data_request = (UInt16)((kd.x3 << 8) + kd.x2);   //KV1000 DM499
             binStr_status = Convert.ToString(kv_status, 2);
             binStr_request = Convert.ToString(data_request, 2);
+            //udp_time_code = EndianChange(kd.UdpTimeCode);
             Pos2AzAlt2();
 
             if ((int)(kv_status & (1 << 10)) != 0) vaz2_kv = -x2v / 1000.0;
