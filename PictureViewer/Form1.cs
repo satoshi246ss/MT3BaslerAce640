@@ -48,27 +48,31 @@ namespace MT3
 
 
             //Basler
-            /* Register for the events of the image provider needed for proper operation. */
-            m_imageProvider.GrabErrorEvent += new ImageProvider.GrabErrorEventHandler(OnGrabErrorEventCallback);
-            m_imageProvider.DeviceRemovedEvent += new ImageProvider.DeviceRemovedEventHandler(OnDeviceRemovedEventCallback);
-            m_imageProvider.DeviceOpenedEvent += new ImageProvider.DeviceOpenedEventHandler(OnDeviceOpenedEventCallback);
-            m_imageProvider.DeviceClosedEvent += new ImageProvider.DeviceClosedEventHandler(OnDeviceClosedEventCallback);
-            m_imageProvider.GrabbingStartedEvent += new ImageProvider.GrabbingStartedEventHandler(OnGrabbingStartedEventCallback);
-            m_imageProvider.ImageReadyEvent += new ImageProvider.ImageReadyEventHandler(OnImageReadyEventCallback);
-            m_imageProvider.GrabbingStoppedEvent += new ImageProvider.GrabbingStoppedEventHandler(OnGrabbingStoppedEventCallback);
+            if (cam_maker == Camera_Maker.Basler)
+            {
+                /* Register for the events of the image provider needed for proper operation. */
+                m_imageProvider.GrabErrorEvent += new ImageProvider.GrabErrorEventHandler(OnGrabErrorEventCallback);
+                m_imageProvider.DeviceRemovedEvent += new ImageProvider.DeviceRemovedEventHandler(OnDeviceRemovedEventCallback);
+                m_imageProvider.DeviceOpenedEvent += new ImageProvider.DeviceOpenedEventHandler(OnDeviceOpenedEventCallback);
+                m_imageProvider.DeviceClosedEvent += new ImageProvider.DeviceClosedEventHandler(OnDeviceClosedEventCallback);
+                m_imageProvider.GrabbingStartedEvent += new ImageProvider.GrabbingStartedEventHandler(OnGrabbingStartedEventCallback);
+                m_imageProvider.ImageReadyEvent += new ImageProvider.ImageReadyEventHandler(OnImageReadyEventCallback);
+                m_imageProvider.GrabbingStoppedEvent += new ImageProvider.GrabbingStoppedEventHandler(OnGrabbingStoppedEventCallback);
 
-            /* Provide the controls in the lower left area with the image provider object. */
-       //     sliderExposureTime.MyImageProvider = m_imageProvider;
+                /* Provide the controls in the lower left area with the image provider object. */
+                //     sliderExposureTime.MyImageProvider = m_imageProvider;
 
-            /*    sliderGain.MyImageProvider = m_imageProvider;
-                sliderExposureTime.MyImageProvider = m_imageProvider;
-                sliderHeight.MyImageProvider = m_imageProvider;
-                sliderWidth.MyImageProvider = m_imageProvider;
-                comboBoxTestImage.MyImageProvider = m_imageProvider;
-                comboBoxPixelFormat.MyImageProvider = m_imageProvider;
-    */
-            /* Update the list of available devices in the upper left area. */
-            UpdateDeviceList();
+                /*    sliderGain.MyImageProvider = m_imageProvider;
+                    sliderExposureTime.MyImageProvider = m_imageProvider;
+                    sliderHeight.MyImageProvider = m_imageProvider;
+                    sliderWidth.MyImageProvider = m_imageProvider;
+                    comboBoxTestImage.MyImageProvider = m_imageProvider;
+                    comboBoxPixelFormat.MyImageProvider = m_imageProvider;
+                */
+
+                /* Update the list of available devices in the upper left area. */
+                UpdateDeviceList();
+            }
 
             Pid_Data_Send_Init();
         }
@@ -107,8 +111,11 @@ namespace MT3
             //AVT
             avt_cam_end();
             //Basler
-            BaslerEnd();
-            
+            if (cam_maker == Camera_Maker.Basler)
+            {
+                BaslerEnd();
+            }
+
             timeEndPeriod(16);
         }
 
@@ -587,9 +594,12 @@ namespace MT3
         
 
             // Basler
-            BaslerStart();
-            ContinuousShot(); /* Start the grabbing of images until grabbing is stopped. */
-            
+            if (cam_maker == Camera_Maker.Basler)
+            {
+                BaslerStart();
+                ContinuousShot(); /* Start the grabbing of images until grabbing is stopped. */
+            }
+ 
             // Start IDS Live Video
             /*
             statusRet = cam.Acquisition.Capture();
@@ -642,12 +652,6 @@ namespace MT3
 
         private void ButtonSaveEnd_Click(object sender, EventArgs e)
         {
-            /*
-            if (this.States == SAVE)
-            {
-                ///icImagingControl1.AviStopCapture();
-                this.buttonSave.BackColor = Color.FromKnownColor(KnownColor.Control);
-            } */
             ImgSaveFlag = FALSE;
             this.States = RUN;
             this.timerSave.Enabled = false;
@@ -760,8 +764,14 @@ namespace MT3
             //OpenCV　表示ルーチン
             if (imgdata.img != null)
             {
-                //Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.GrayToBgr);
-                Cv.CvtColor(fifo.FirstImage(), img_dmk3, ColorConversion.BayerGbToBgr );
+                if (cam_color == Camera_Color.mono)
+                {
+                    Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.GrayToBgr);
+                }
+                else
+                {
+                    Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.BayerGbToBgr);
+                }
                 Cv.Circle(img_dmk3, new CvPoint((int)xoa, (int)yoa), roa, new CvColor(0, 255, 0));
                 Cv.Line(img_dmk3, new CvPoint(xoa + roa, yoa + roa), new CvPoint(xoa - roa, yoa - roa), new CvColor(0, 255, 0));
                 Cv.Line(img_dmk3, new CvPoint(xoa - roa, yoa + roa), new CvPoint(xoa + roa, yoa - roa), new CvColor(0, 255, 0));

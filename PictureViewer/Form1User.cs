@@ -17,6 +17,19 @@ namespace MT3
     public partial class Form1 : Form
     {
         #region 定数
+        enum Camera_Maker
+        {
+            analog,
+            ImagingSouce,
+            IDS,
+            AVT,
+            Basler
+        }
+        enum Camera_Color
+        {mono,color}
+        const Camera_Maker cam_maker = Camera_Maker.Basler ;
+        const Camera_Color cam_color = Camera_Color.mono;
+
         //状態を表す定数
         const int TRUE = 0;
         const int FALSE = 1;
@@ -97,9 +110,9 @@ namespace MT3
         Int32 set_pixelclock = 30;  // [MHz]
 
         double set_framerate = 120; // [fps]
-        double set_exposure  = 8;   // [ms]
+        double set_exposure  = 18;   // [ms]            F1.8:F4  exp same  gain 1024: 100  約４０倍
         double set_exposure1 = 0.2; // [ms]
-        Int32 set_gain = 100;       // [100-1023]
+        Int32 set_gain = 1000;       // [100-1023]
 
         IplImage img_dmk3 = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 3);
         IplImage img_dmk = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 1);

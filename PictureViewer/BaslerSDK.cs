@@ -153,6 +153,7 @@ namespace MT3
                     /* The buffer can be used for the next image grabs. */
 
                     detect();
+                    imgdata_push_FIFO();
                 }                 
             }
             catch (Exception e)

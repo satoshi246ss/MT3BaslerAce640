@@ -83,7 +83,7 @@ namespace MT3
 
         CvVideoWriter vw;
         int width, height;
-        int NoCapDev = 12;  // file ID
+        int NoCapDev = 9;  // file ID
         string savedir;
         IplImage imgR;
         //IplImage imgBGR = new IplImage(640, 480, BitDepth.U8, 3);
