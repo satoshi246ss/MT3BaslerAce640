@@ -60,7 +60,7 @@ namespace MT3
         int roa = 10;
         double xoad, yoad;
 
-        const double fl = 12.5, ccdpx = 0.0074, ccdpy = 0.0074;
+        const  double fl = 12.5, ccdpx = 0.0074, ccdpy = 0.0074;
         public double dx, dy, theta_c = 0, dt = 1.0 / 12.0;
         public double az0, alt0, vaz0, valt0; // 流星位置、速度（前フレームの値）
         public double az, alt, vaz, valt; // 流星位置、速度
@@ -75,7 +75,7 @@ namespace MT3
         const int MaxFrame = 128;  //512
         //const int WIDTH = 2456; // 2456 max piA2400-12gm
         //const int HEIGHT = 2058; // 2058 max
-        const int WIDTH = 640; // 2456 max piA2400-12gm
+        const int WIDTH  = 640; // 2456 max piA2400-12gm
         const int HEIGHT = 480; // 2058 max
 
         ImageData imgdata = new ImageData(WIDTH, HEIGHT);
@@ -95,11 +95,11 @@ namespace MT3
         Int32 s32MemID;
         int cameraID = 2;  // 1:UI5240   2:UI2410
         Int32 set_pixelclock = 30; // [MHz]
-        double set_framerate = 12;// [fps]
-        Double set_exposure = 80; // [ms]
-        Double set_exposure1 = 0.2; // [ms]
-        Int32 set_gain = 1000;//[0-1000]
 
+        double set_framerate = 120;// [fps]
+        double set_exposure  = 8; // [ms]
+        double set_exposure1 = 0.2; // [ms]
+        Int32 set_gain = 1000;//[0-1000]
 
         IplImage img_dmk3 = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 3);
         IplImage img_dmk = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 1);

@@ -12,6 +12,24 @@ namespace MT3
     partial class Form1 //BaslerSDK
     {
         /* Handles the click on the single frame button. */
+        public void BaslerStart()
+        {
+            //Basler
+            m_imageProvider.Open(0);
+            m_imageProvider.Setup(WIDTH, HEIGHT);
+            m_imageProvider.SetupExposureTimeAbs(set_exposure * 1000.0); // [usec]
+            m_imageProvider.SetupGain(set_gain); //0-1000
+            m_imageProvider.SetupFrameRate(set_framerate);
+
+            //double exp = 8000;
+        }
+        /* Handles the click on the single frame button. */
+        public void BaslerEnd()
+        {
+            //Basler
+            m_imageProvider.Close(); 
+        }
+        /* Handles the click on the single frame button. */
         private void toolStripButtonOneShot_Click(object sender, EventArgs e)
         {
             OneShot(); /* Starts the grabbing of one image. */

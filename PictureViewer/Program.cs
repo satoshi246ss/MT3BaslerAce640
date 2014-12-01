@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 using OpenCvSharp;
-//using PylonC.NET;
+using PylonC.NET;
 
 namespace MT3
 {
@@ -19,10 +19,10 @@ namespace MT3
             #if DEBUG
             /* This is a special debug setting needed only for GigE cameras.
                 See 'Building Applications with pylon' in the Programmer's Guide. */
-        //    Environment.SetEnvironmentVariable("PYLON_GIGE_HEARTBEAT", "300000" /*ms*/);
+                Environment.SetEnvironmentVariable("PYLON_GIGE_HEARTBEAT", "300000" /*ms*/);
             #endif
 
-        //    Pylon.Initialize();
+            Pylon.Initialize();
             try
             {
                 Application.EnableVisualStyles();
@@ -31,11 +31,10 @@ namespace MT3
             }
             catch
             {
-        //        Pylon.Terminate();
+                Pylon.Terminate();
                 throw;
             }
-        //    Pylon.Terminate();
- 
+            Pylon.Terminate();
         }
     }
 }

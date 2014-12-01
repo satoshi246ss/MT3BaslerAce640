@@ -49,16 +49,16 @@ namespace MT3
 
             //Basler
             /* Register for the events of the image provider needed for proper operation. */
-/*            m_imageProvider.GrabErrorEvent += new ImageProvider.GrabErrorEventHandler(OnGrabErrorEventCallback);
+            m_imageProvider.GrabErrorEvent += new ImageProvider.GrabErrorEventHandler(OnGrabErrorEventCallback);
             m_imageProvider.DeviceRemovedEvent += new ImageProvider.DeviceRemovedEventHandler(OnDeviceRemovedEventCallback);
             m_imageProvider.DeviceOpenedEvent += new ImageProvider.DeviceOpenedEventHandler(OnDeviceOpenedEventCallback);
             m_imageProvider.DeviceClosedEvent += new ImageProvider.DeviceClosedEventHandler(OnDeviceClosedEventCallback);
             m_imageProvider.GrabbingStartedEvent += new ImageProvider.GrabbingStartedEventHandler(OnGrabbingStartedEventCallback);
             m_imageProvider.ImageReadyEvent += new ImageProvider.ImageReadyEventHandler(OnImageReadyEventCallback);
             m_imageProvider.GrabbingStoppedEvent += new ImageProvider.GrabbingStoppedEventHandler(OnGrabbingStoppedEventCallback);
-*/
+
             /* Provide the controls in the lower left area with the image provider object. */
-            //sliderExposureTime.MyImageProvider = m_imageProvider;
+       //     sliderExposureTime.MyImageProvider = m_imageProvider;
 
             /*    sliderGain.MyImageProvider = m_imageProvider;
                 sliderExposureTime.MyImageProvider = m_imageProvider;
@@ -68,7 +68,7 @@ namespace MT3
                 comboBoxPixelFormat.MyImageProvider = m_imageProvider;
     */
             /* Update the list of available devices in the upper left area. */
-//            UpdateDeviceList();
+            UpdateDeviceList();
 
             Pid_Data_Send_Init();
         }
@@ -98,15 +98,6 @@ namespace MT3
         {
             // IDS open
             //ShowButton.PerformClick();
-
-            //Basler
-            //            m_imageProvider.Open(0);
-            //    m_imageProvider.Setup(WIDTH, HEIGHT);
-            //    m_imageProvider.SetupExposureTimeAbs(set_exposure*1000.0); // [usec]
-            //    m_imageProvider.SetupGain(set_gain); //0-1000
-            //    m_imageProvider.SetupFrameRate(set_framerate);
-
-            //    double exp = m_imageProvider.GetExposureTime();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -116,7 +107,8 @@ namespace MT3
             //AVT
             avt_cam_end();
             //Basler
-            //            m_imageProvider.Close();
+            BaslerEnd();
+            
             timeEndPeriod(16);
         }
 
@@ -560,7 +552,9 @@ namespace MT3
             this.States = STOP;
             timerDisplay.Enabled = false;
             this.ObsEndButton.BackColor = Color.Red;
+
             avt_cam_end();
+            BaslerEnd();
 
             // Stop IDS Live Video
             /*
@@ -589,11 +583,12 @@ namespace MT3
             this.ObsStart.BackColor = Color.Red;
 
             //AVT
-            avt_cam_start();
+          //  avt_cam_start();
         
 
             // Basler
-            //ContinuousShot(); /* Start the grabbing of images until grabbing is stopped. */
+            BaslerStart();
+            ContinuousShot(); /* Start the grabbing of images until grabbing is stopped. */
             
             // Start IDS Live Video
             /*
@@ -800,23 +795,26 @@ namespace MT3
                 }
             }
 
- //           fr_str = StatFrameRate().ToString("00.00") ;
-            label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " +(1000 * lap22).ToString("0000");
             label_ID.Text = max_label.ToString("0");
 
             // Status表示
-            // Double dFramerate=0;
+            
+            // Frame rate
+            double dFramerate=0;
             // cam.Timing.Framerate.GetCurrentFps(out dFramerate); //IDS
-            //  dFramerate = m_imageProvider.GetFrameRate(); // Basler
-            toolStripStatusLabelFramerate.Text = "Fps: " + StatFrameRate().ToString("000.0");
+              dFramerate = m_imageProvider.GetFrameRate(); // Basler
+            //dFramerate = StatFrameRate(); //AVT
+            toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
+            label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
 
-            uEye.Types.CaptureStatus captureStatus;
-            cam.Information.GetCaptureStatus(out captureStatus);
+            // Err rate
+/*            uEye.Types.CaptureStatus captureStatus;
+            cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
             toolStripStatusLabelFailed.Text = "Failed U:" + StatFrameUnderrun().ToString("0000") + " S:" + StatFrameShoved().ToString("0000") + " D:" + StatFrameDropped().ToString("0000");
             double err_rate = 100.0 * (captureStatus.Total / (double)id);
             
             toolStripStatusLabelID.Text = "Frames: " +StatFrameDelivered() + " " + err_rate.ToString("00.00");
-
+*/
             //Int32 s32Value;
             //statusRet = cam.Timing.PixelClock.Get(out s32Value);
             toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed21-elapsed20)/(double)(Stopwatch.Frequency) +" "+ 10000*(elapsed22-elapsed21)/(double)(Stopwatch.Frequency);
