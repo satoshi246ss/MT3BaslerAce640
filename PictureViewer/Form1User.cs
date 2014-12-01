@@ -94,12 +94,12 @@ namespace MT3
         uEye.Types.ImageInfo imageInfo;
         Int32 s32MemID;
         int cameraID = 2;  // 1:UI5240   2:UI2410
-        Int32 set_pixelclock = 30; // [MHz]
+        Int32 set_pixelclock = 30;  // [MHz]
 
-        double set_framerate = 120;// [fps]
-        double set_exposure  = 8; // [ms]
+        double set_framerate = 120; // [fps]
+        double set_exposure  = 8;   // [ms]
         double set_exposure1 = 0.2; // [ms]
-        Int32 set_gain = 1000;//[0-1000]
+        Int32 set_gain = 100;       // [100-1023]
 
         IplImage img_dmk3 = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 3);
         IplImage img_dmk = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 1);

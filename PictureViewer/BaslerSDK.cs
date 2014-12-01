@@ -18,7 +18,7 @@ namespace MT3
             m_imageProvider.Open(0);
             m_imageProvider.Setup(WIDTH, HEIGHT);
             m_imageProvider.SetupExposureTimeAbs(set_exposure * 1000.0); // [usec]
-            m_imageProvider.SetupGain(set_gain); //0-1000
+            m_imageProvider.SetupGain(set_gain); // 100-1023
             m_imageProvider.SetupFrameRate(set_framerate);
 
             //double exp = 8000;
@@ -527,6 +527,296 @@ namespace MT3
                     val = GenApi.IntegerGetValue(hNode);     /* Get the current value. */
 
                     return val ; 
+                }
+                return 0;
+            }
+            catch
+            {
+                // UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
+        /// Statistic_Total_Buffer_Count 読み出し
+        /// </summary>
+        public long Get_Statistic_Total_Buffer_Count()
+        {
+            try
+            {
+                NODE_HANDLE hNode;
+                EGenApiNodeType nodeType;
+                bool bval;                     /* Is the feature available? */
+                string featureName;  /* Name of the feature used in this sample: AOI Width. */
+                //bool isAvailable;              /* Is the feature available? */
+                //double val = 0;      /* Properties of the feature. */
+                long val, min, max, incr;      /* Properties of the feature. */
+                featureName = "Statistic_Total_Buffer_Count";
+
+                hNode = m_imageProvider.GetNodeFromDevice(featureName);
+                if (!hNode.IsValid)
+                {
+                    Console.WriteLine("There is no feature named '" + featureName + "'.");
+                    return 0;
+                }
+                /* We want a float feature node. */
+                nodeType = GenApi.NodeGetType(hNode);
+
+                if (EGenApiNodeType.FloatNode != nodeType)
+                {
+                    Console.WriteLine("'" + featureName + "' is not an floating-point feature.");
+                    return 0;
+                }
+
+                bval = GenApi.NodeIsReadable(hNode);
+
+                if (bval)
+                {
+                    min = GenApi.IntegerGetMin(hNode);       /* Get the minimum value. */
+                    max = GenApi.IntegerGetMax(hNode);       /* Get the maximum value. */
+                    incr = GenApi.IntegerGetInc(hNode);      /* Get the increment value. */
+                    val = GenApi.IntegerGetValue(hNode);     /* Get the current value. */
+
+                    return val;
+                }
+                return 0;
+            }
+            catch
+            {
+                // UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
+        /// Statistic_Failed_Buffer_Count 読み出し
+        /// </summary>
+        public long Get_Statistic_Failed_Buffer_Count()
+        {
+            try
+            {
+                NODE_HANDLE hNode;
+                EGenApiNodeType nodeType;
+                bool bval;                     /* Is the feature available? */
+                string featureName;  /* Name of the feature used in this sample: AOI Width. */
+                //bool isAvailable;              /* Is the feature available? */
+                //double val = 0;      /* Properties of the feature. */
+                long val, min, max, incr;      /* Properties of the feature. */
+                featureName = "Statistic_Failed_Buffer_Count";
+
+                hNode = m_imageProvider.GetNodeFromDevice(featureName);
+                if (!hNode.IsValid)
+                {
+                    Console.WriteLine("There is no feature named '" + featureName + "'.");
+                    return 0;
+                }
+                /* We want a float feature node. */
+                nodeType = GenApi.NodeGetType(hNode);
+
+                if (EGenApiNodeType.FloatNode != nodeType)
+                {
+                    Console.WriteLine("'" + featureName + "' is not an floating-point feature.");
+                    return 0;
+                }
+
+                bval = GenApi.NodeIsReadable(hNode);
+
+                if (bval)
+                {
+                    min = GenApi.IntegerGetMin(hNode);       /* Get the minimum value. */
+                    max = GenApi.IntegerGetMax(hNode);       /* Get the maximum value. */
+                    incr = GenApi.IntegerGetInc(hNode);      /* Get the increment value. */
+                    val = GenApi.IntegerGetValue(hNode);     /* Get the current value. */
+
+                    return val;
+                }
+                return 0;
+            }
+            catch
+            {
+                // UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
+        /// Statistic_Buffer_Underrun_Countt 読み出し
+        /// </summary>
+        public long Get_Statistic_Buffer_Underrun_Count()
+        {
+            try
+            {
+                NODE_HANDLE hNode;
+                EGenApiNodeType nodeType;
+                bool bval;                     /* Is the feature available? */
+                string featureName;  /* Name of the feature used in this sample: AOI Width. */
+                //bool isAvailable;              /* Is the feature available? */
+                //double val = 0;      /* Properties of the feature. */
+                long val, min, max, incr;      /* Properties of the feature. */
+                featureName = "Statistic_Buffer_Underrun_Count";
+
+                hNode = m_imageProvider.GetNodeFromDevice(featureName);
+                if (!hNode.IsValid)
+                {
+                    Console.WriteLine("There is no feature named '" + featureName + "'.");
+                    return 0;
+                }
+                /* We want a float feature node. */
+                nodeType = GenApi.NodeGetType(hNode);
+
+                if (EGenApiNodeType.FloatNode != nodeType)
+                {
+                    Console.WriteLine("'" + featureName + "' is not an floating-point feature.");
+                    return 0;
+                }
+
+                bval = GenApi.NodeIsReadable(hNode);
+
+                if (bval)
+                {
+                    min = GenApi.IntegerGetMin(hNode);       /* Get the minimum value. */
+                    max = GenApi.IntegerGetMax(hNode);       /* Get the maximum value. */
+                    incr = GenApi.IntegerGetInc(hNode);      /* Get the increment value. */
+                    val = GenApi.IntegerGetValue(hNode);     /* Get the current value. */
+
+                    return val;
+                }
+                return 0;
+            }
+            catch
+            {
+                // UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
+        /// Statistic_Total_Packet_Count 読み出し
+        /// </summary>
+        public long Get_Statistic_Total_Packet_Count()
+        {
+            try
+            {
+                NODE_HANDLE hNode;
+                EGenApiNodeType nodeType;
+                bool bval;                     /* Is the feature available? */
+                string featureName;  /* Name of the feature used in this sample: AOI Width. */
+                //bool isAvailable;              /* Is the feature available? */
+                //double val = 0;      /* Properties of the feature. */
+                long val, min, max, incr;      /* Properties of the feature. */
+                featureName = "Statistic_Total_Packet_Count";
+
+                hNode = m_imageProvider.GetNodeFromDevice(featureName);
+                if (!hNode.IsValid)
+                {
+                    Console.WriteLine("There is no feature named '" + featureName + "'.");
+                    return 0;
+                }
+                /* We want a float feature node. */
+                nodeType = GenApi.NodeGetType(hNode);
+
+                if (EGenApiNodeType.FloatNode != nodeType)
+                {
+                    Console.WriteLine("'" + featureName + "' is not an floating-point feature.");
+                    return 0;
+                }
+
+                bval = GenApi.NodeIsReadable(hNode);
+
+                if (bval)
+                {
+                    min = GenApi.IntegerGetMin(hNode);       /* Get the minimum value. */
+                    max = GenApi.IntegerGetMax(hNode);       /* Get the maximum value. */
+                    incr = GenApi.IntegerGetInc(hNode);      /* Get the increment value. */
+                    val = GenApi.IntegerGetValue(hNode);     /* Get the current value. */
+
+                    return val;
+                }
+                return 0;
+            }
+            catch
+            {
+                // UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
+        /// Statistic_Failed_Packet_Count 読み出し
+        /// </summary>
+        public long Get_Statistic_Failed_Packet_Count()
+        {
+            try
+            {
+                NODE_HANDLE hNode;
+                EGenApiNodeType nodeType;
+                bool bval;                     /* Is the feature available? */
+                string featureName;  /* Name of the feature used in this sample: AOI Width. */
+                //bool isAvailable;              /* Is the feature available? */
+                //double val = 0;      /* Properties of the feature. */
+                long val, min, max, incr;      /* Properties of the feature. */
+                featureName = "Statistic_Failed_Packet_Count";
+
+                hNode = m_imageProvider.GetNodeFromDevice(featureName);
+                if (!hNode.IsValid)
+                {
+                    Console.WriteLine("There is no feature named '" + featureName + "'.");
+                    return 0;
+                }
+                /* We want a float feature node. */
+                nodeType = GenApi.NodeGetType(hNode);
+
+                if (EGenApiNodeType.FloatNode != nodeType)
+                {
+                    Console.WriteLine("'" + featureName + "' is not an floating-point feature.");
+                    return 0;
+                }
+
+                bval = GenApi.NodeIsReadable(hNode);
+
+                if (bval)
+                {
+                    min = GenApi.IntegerGetMin(hNode);       /* Get the minimum value. */
+                    max = GenApi.IntegerGetMax(hNode);       /* Get the maximum value. */
+                    incr = GenApi.IntegerGetInc(hNode);      /* Get the increment value. */
+                    val = GenApi.IntegerGetValue(hNode);     /* Get the current value. */
+
+                    return val;
                 }
                 return 0;
             }
