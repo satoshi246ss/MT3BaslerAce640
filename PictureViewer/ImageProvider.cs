@@ -60,7 +60,7 @@ namespace PylonC.NETSupportLibrary
         private string GetLastErrorText()
         {
             string lastErrorMessage = GenApi.GetLastErrorMessage();
-            string lastErrorDetail  = GenApi.GetLastErrorDetail();
+            string lastErrorDetail = GenApi.GetLastErrorDetail();
 
             string lastErrorText = lastErrorMessage;
             if (lastErrorDetail.Length > 0)
@@ -126,7 +126,7 @@ namespace PylonC.NETSupportLibrary
                 /* Try to close the stream grabber. */
                 try
                 {
-                   
+
                     Pylon.StreamGrabberClose(m_hGrabber);
                 }
                 catch (Exception e) { lastException = e; UpdateLastError(); }
@@ -135,7 +135,7 @@ namespace PylonC.NETSupportLibrary
             if (m_hDevice.IsValid)
             {
                 /* Try to deregister the removal callback. */
-                try 
+                try
                 {
                     if (m_hRemovalCallback.IsValid)
                     {
@@ -154,7 +154,7 @@ namespace PylonC.NETSupportLibrary
                     }
                 }
                 catch (Exception e) { lastException = e; UpdateLastError(); }
-                
+
                 /* Try to destroy the device. */
                 try
                 {
@@ -254,7 +254,7 @@ namespace PylonC.NETSupportLibrary
         {
             lock (m_lockObject) /* Lock the grab result queue to avoid that two threads modify the same data. */
             {
-                if (m_grabbedBuffers.Count > 0 ) /* If images are available and grabbing is in progress.*/
+                if (m_grabbedBuffers.Count > 0) /* If images are available and grabbing is in progress.*/
                 {
                     if (m_grabThreadRun)
                     {
@@ -349,12 +349,12 @@ namespace PylonC.NETSupportLibrary
                 if (Pylon.DeviceFeatureIsWritable(m_hDevice, "Width"))
                 {
                     /* ... The device supports the packet size feature. Set a value. */
-         //           Pylon.DeviceSetIntegerFeature(m_hDevice, "Width", 2456);
+                    //           Pylon.DeviceSetIntegerFeature(m_hDevice, "Width", 2456);
                 }
                 if (Pylon.DeviceFeatureIsWritable(m_hDevice, "Height"))
                 {
                     /* ... The device supports the packet size feature. Set a value. */
-        //            Pylon.DeviceSetIntegerFeature(m_hDevice, "Height", 2058);
+                    //            Pylon.DeviceSetIntegerFeature(m_hDevice, "Height", 2058);
                 }
 
 
@@ -419,7 +419,7 @@ namespace PylonC.NETSupportLibrary
                 images continuously. */
                 Pylon.DeviceFeatureFromString(m_hDevice, "AcquisitionMode", "Continuous");
             }
-        
+
             /* Clear the grab buffers to assure proper operation (because they may
              still be filled if the last grab has thrown an exception). */
             foreach (KeyValuePair<PYLON_STREAMBUFFER_HANDLE, PylonBuffer<Byte>> pair in m_buffers)
@@ -531,7 +531,8 @@ namespace PylonC.NETSupportLibrary
                             m_grabThreadRun = false;
                             break;
                         }
-                    } else if (grabResult.Status == EPylonGrabStatus.Failed)
+                    }
+                    else if (grabResult.Status == EPylonGrabStatus.Failed)
                     {
                         /* 
                             Grabbing an image can fail if the used network hardware, i.e. network adapter, 
@@ -545,7 +546,7 @@ namespace PylonC.NETSupportLibrary
                         throw new Exception(string.Format("A grab failure occurred. See the method ImageProvider::Grab for more information. The error code is {0:X08}.", grabResult.ErrorCode));
                     }
                 }
-                
+
                 /* Tear down everything needed for grabbing. */
                 CleanUpGrab();
             }
@@ -607,7 +608,7 @@ namespace PylonC.NETSupportLibrary
                 /* Create a new format converter if needed. */
                 if (!m_hConverter.IsValid)
                 {
-                    m_convertedBuffers = new Dictionary<PYLON_STREAMBUFFER_HANDLE,PylonBuffer<byte>>(); /* Create a new dictionary for the converted buffers. */
+                    m_convertedBuffers = new Dictionary<PYLON_STREAMBUFFER_HANDLE, PylonBuffer<byte>>(); /* Create a new dictionary for the converted buffers. */
                     m_hConverter = Pylon.ImageFormatConverterCreate(); /* Create the converter. */
                     m_converterOutputFormatIsColor = !Pylon.IsMono(grabResult.PixelType) || Pylon.IsBayer(grabResult.PixelType);
                 }
@@ -778,7 +779,7 @@ namespace PylonC.NETSupportLibrary
             }
         }
 
-         /* Notify that the grabbing had errors and deliver the information. */
+        /* Notify that the grabbing had errors and deliver the information. */
         protected void OnGrabErrorEvent(Exception grabException, string additionalErrorMessage)
         {
             if (GrabErrorEvent != null)
@@ -862,7 +863,7 @@ namespace PylonC.NETSupportLibrary
             /* Notify that the ImageProvider is open and ready for grabbing and configuration. */
             //OnDeviceOpenedEvent();
         }
-         /// <summary>
+        /// <summary>
         /// ÉQÉCÉìÇÃê›íË
         /// </summary>
         public long SetupGain(long gain)
@@ -957,7 +958,7 @@ namespace PylonC.NETSupportLibrary
                 string featureName;  /* Name of the feature used in this sample: AOI Width. */
                 bool isAvailable;              /* Is the feature available? */
                 bool isWritable;               /* Is the feature writable? */
-                double val=0, min, max;      /* Properties of the feature. */
+                double val = 0, min, max;      /* Properties of the feature. */
 
                 featureName = "AcquisitionFrameRateAbs";
 
@@ -967,7 +968,7 @@ namespace PylonC.NETSupportLibrary
                     min = Pylon.DeviceGetFloatFeatureMin(m_hDevice, featureName);  /* Get the minimum value. */
                     max = Pylon.DeviceGetFloatFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
                     val = Pylon.DeviceGetFloatFeature(m_hDevice, featureName);     /* Get the current value. */
-                 
+
                     /* Set a new value. */
                     isWritable = Pylon.DeviceFeatureIsWritable(m_hDevice, featureName);
                     if (isWritable)
@@ -1081,6 +1082,13 @@ namespace PylonC.NETSupportLibrary
                 long val = 0;        /* Properties of the feature. */
 
                 featureName = "Statistic_Total_Buffer_Count";
+          /*      NODE_HANDLE hNode = GetNodeFromDevice(featureName);
+                bool bval = GenApi.NodeIsReadable(hNode);
+                if (bval)
+                {
+                    val = GenApi.IntegerGetValue(hNode);     // Get the current value. 
+                }
+           */
 
                 isAvailable = Pylon.DeviceFeatureIsAvailable(m_hDevice, featureName);
                 if (isAvailable)

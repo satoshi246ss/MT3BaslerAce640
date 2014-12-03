@@ -44,8 +44,8 @@
             this.checkBoxGainBoost = new System.Windows.Forms.CheckBox();
             this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_ID = new System.Windows.Forms.Label();
-            this.deviceListView = new System.Windows.Forms.ListView();
             this.label_X2Y2 = new System.Windows.Forms.Label();
+            this.deviceListView = new System.Windows.Forms.ListView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -118,8 +118,8 @@
             this.flowLayoutPanel1.Controls.Add(this.checkBoxGainBoost);
             this.flowLayoutPanel1.Controls.Add(this.label_frame_rate);
             this.flowLayoutPanel1.Controls.Add(this.label_ID);
-            this.flowLayoutPanel1.Controls.Add(this.deviceListView);
             this.flowLayoutPanel1.Controls.Add(this.label_X2Y2);
+            this.flowLayoutPanel1.Controls.Add(this.deviceListView);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 487);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -255,24 +255,24 @@
             this.label_ID.TabIndex = 10;
             this.label_ID.Text = "label1";
             // 
-            // deviceListView
-            // 
-            this.deviceListView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.deviceListView.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.deviceListView.Location = new System.Drawing.Point(242, 32);
-            this.deviceListView.Name = "deviceListView";
-            this.deviceListView.Size = new System.Drawing.Size(121, 16);
-            this.deviceListView.TabIndex = 12;
-            this.deviceListView.UseCompatibleStateImageBehavior = false;
-            // 
             // label_X2Y2
             // 
             this.label_X2Y2.AutoSize = true;
-            this.label_X2Y2.Location = new System.Drawing.Point(369, 29);
+            this.label_X2Y2.Location = new System.Drawing.Point(242, 29);
             this.label_X2Y2.Name = "label_X2Y2";
             this.label_X2Y2.Size = new System.Drawing.Size(41, 12);
             this.label_X2Y2.TabIndex = 13;
             this.label_X2Y2.Text = "(X2,Y2)";
+            // 
+            // deviceListView
+            // 
+            this.deviceListView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.deviceListView.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.deviceListView.Location = new System.Drawing.Point(289, 32);
+            this.deviceListView.Name = "deviceListView";
+            this.deviceListView.Size = new System.Drawing.Size(121, 16);
+            this.deviceListView.TabIndex = 12;
+            this.deviceListView.UseCompatibleStateImageBehavior = false;
             // 
             // textBox1
             // 

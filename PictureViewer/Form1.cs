@@ -40,12 +40,15 @@ namespace MT3
             worker_udp.DoWork += new DoWorkEventHandler(worker_udp_DoWork);
             worker_udp.ProgressChanged += new ProgressChangedEventHandler(worker_udp_ProgressChanged);
 
-            // IDS
-            u32DisplayID = pictureBox1.Handle.ToInt32();
-            cam = new uEye.Camera();
             xoa = xoa_mes;
             yoa = yoa_mes;
 
+            // IDS
+            if (cam_maker == Camera_Maker.IDS)
+            {
+                u32DisplayID = pictureBox1.Handle.ToInt32();
+                cam = new uEye.Camera();
+            }
 
             //Basler
             if (cam_maker == Camera_Maker.Basler)
@@ -106,10 +109,16 @@ namespace MT3
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //this.Close(); 
-            cam.Exit();
+            // IDS
+            if (cam_maker == Camera_Maker.IDS)
+            {
+                cam.Exit();
+            }
             //AVT
-            avt_cam_end();
+            if (cam_maker == Camera_Maker.AVT)
+            {
+                avt_cam_end();
+            }
             //Basler
             if (cam_maker == Camera_Maker.Basler)
             {
@@ -120,13 +129,13 @@ namespace MT3
         }
 
         #region UDP
-        // 別スレッド処理（UDP） //IP 192.168.1.212
+        // 別スレッド処理（UDP） //IP 192.168.1.214
         private void worker_udp_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bw = (BackgroundWorker)sender;
 
             //バインドするローカルポート番号
-            int localPort = 24410;// broadcast
+            int localPort = mmFsiUdpPortSpCam;// 24410 broadcast
             //int localPort = mmFsiUdpPortMT3Basler; // broadcast mmFsiUdpPortMT3Basler;
             System.Net.Sockets.UdpClient udpc = null; ;
             try
@@ -534,7 +543,11 @@ namespace MT3
         private void ShowButton_Click(object sender, EventArgs e)
         {
             //OpenIDScamera();
-            avt_cam_start();
+            //AVT
+            if (cam_maker == Camera_Maker.AVT)
+            {
+                avt_cam_start();
+            }
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -554,30 +567,40 @@ namespace MT3
 
         private void ObsEndButton_Click(object sender, EventArgs e)
         {
-            Stop(); /* Stops the grabbing of images. */
             this.ObsStart.BackColor = Color.FromKnownColor(KnownColor.Control);
             this.States = STOP;
             timerDisplay.Enabled = false;
             this.ObsEndButton.BackColor = Color.Red;
 
-            avt_cam_end();
-            BaslerEnd();
-
-            // Stop IDS Live Video
-            /*
-            if (cam.Acquisition.Stop() == uEye.Defines.Status.SUCCESS)
+            //AVT
+            if (cam_maker == Camera_Maker.AVT)
+            {
+                avt_cam_end();
+            }
+            //Basler
+            if (cam_maker == Camera_Maker.Basler)
+            {
+                Stop(); /* Stops the grabbing of images. */
+                BaslerEnd();
+            }
+            //IDS
+            if (cam_maker == Camera_Maker.IDS)
+            {
+                if (cam.Acquisition.Stop() == uEye.Defines.Status.SUCCESS)
+                {
+                    // BackgroundWorkerを停止.
+                    if (worker.IsBusy)
+                    {
+                        //this.worker.CancelAsync();
+                        this.ObsEndButton.BackColor = Color.Red;
+                    }
+                }
+            }
+            //ImaginSouse
+            if (cam_maker == Camera_Maker.ImagingSouce)
             {
                 //icImagingControl1.LiveStop();
-                this.ObsStart.BackColor = Color.FromKnownColor(KnownColor.Control);
-                this.States = STOP;
-                timerDisplay.Enabled = false;
-                // BackgroundWorkerを停止.
-                if (worker.IsBusy)
-                {
-                    //this.worker.CancelAsync();
-                    this.ObsEndButton.BackColor = Color.Red;
-                }
-            }  */
+            }
         }
 
         private void ObsStart_Click(object sender, EventArgs e)
@@ -590,9 +613,10 @@ namespace MT3
             this.ObsStart.BackColor = Color.Red;
 
             //AVT
-          //  avt_cam_start();
-        
-
+            if (cam_maker == Camera_Maker.AVT)
+            {
+                avt_cam_start();
+            }
             // Basler
             if (cam_maker == Camera_Maker.Basler)
             {
@@ -600,49 +624,36 @@ namespace MT3
                 ContinuousShot(); /* Start the grabbing of images until grabbing is stopped. */
             }
  
-            // Start IDS Live Video
-            /*
-            statusRet = cam.Acquisition.Capture();
-            if (statusRet != uEye.Defines.Status.SUCCESS)
+            //IDS
+            if (cam_maker == Camera_Maker.IDS)
             {
-                MessageBox.Show("Start Live Video failed");
-            }
-            else
-            {
-                LiveStartTime = DateTime.Now;
-                this.ObsStart.BackColor = Color.Red;
-                this.States = RUN;
-                this.ObsEndButton.Enabled = true;
-                timerDisplay.Enabled = true;
-                // BackgroundWorkerを開始
-                if (!worker.IsBusy)
+                statusRet = cam.Acquisition.Capture();
+                if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
-                    //this.worker.RunWorkerAsync();
+                    MessageBox.Show("Start Live Video failed");
+                }
+                else
+                {
+                    LiveStartTime = DateTime.Now;
                     this.ObsStart.BackColor = Color.Red;
                     this.States = RUN;
+                    this.ObsEndButton.Enabled = true;
+                    timerDisplay.Enabled = true;
+                    // BackgroundWorkerを開始
+                    if (!worker.IsBusy)
+                    {
+                        //this.worker.RunWorkerAsync();
+                        this.ObsStart.BackColor = Color.Red;
+                        this.States = RUN;
+                    }
                 }
-            }  */
+            }
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
             if (this.States == RUN)
             {
-                /*  int NoCapDev = 8;
-                  DateTime dtNow = DateTime.Now;
-                  string savedir = @"C:\piccolo\";
-                  string fn = savedir + dtNow.ToString("yyyyMMdd") + @"\";
-                  // フォルダ (ディレクトリ) が存在しているかどうか確認する
-                  if (!System.IO.Directory.Exists(fn))
-                  {
-                      System.IO.Directory.CreateDirectory(fn);
-                  }
-                  fn += string.Format("{00}_", NoCapDev) + dtNow.ToString("yyyyMMdd_HHmmss_fff") + ".avi";
-                  */
-                // AVI保存
-                //icImagingControl1.LiveDisplay = false;
-                ///icImagingControl1.AviStartCapture(fn, "RGB8");
-
                 ImgSaveFlag = TRUE;
                 this.States = SAVE;
                 this.timerSave.Enabled = true;
@@ -779,7 +790,7 @@ namespace MT3
                 Cv.Rectangle(img_dmk3, new CvRect(xoa - 13, yoa - 10, 13 + 13, 10 + 10), new CvColor(0, 190, 40));  // QHY
 
                 String str = String.Format("ID:{4,7:D1} ({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00})", gx, gy, max_val, max_label, id);
-                img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 50, 250));
+                img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
                 img_dmk3.Circle(new CvPoint((int)(gx + 0.5), (int)(gy + 0.5)), 15, new CvColor(0, 100, 255));
 
                 try
