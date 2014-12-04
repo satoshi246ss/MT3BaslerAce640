@@ -225,6 +225,7 @@
             this.checkBoxObsAuto.TabIndex = 7;
             this.checkBoxObsAuto.Text = "ObsAuto";
             this.checkBoxObsAuto.UseVisualStyleBackColor = true;
+            this.checkBoxObsAuto.CheckedChanged += new System.EventHandler(this.checkBoxObsAuto_CheckedChanged);
             // 
             // checkBoxGainBoost
             // 

@@ -109,6 +109,8 @@ namespace MT3
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            //UDP停止
+            worker_udp.CancelAsync();
             // IDS
             if (cam_maker == Camera_Maker.IDS)
             {
@@ -567,10 +569,12 @@ namespace MT3
 
         private void ObsEndButton_Click(object sender, EventArgs e)
         {
-            this.ObsStart.BackColor = Color.FromKnownColor(KnownColor.Control);
             this.States = STOP;
             timerDisplay.Enabled = false;
+            this.ObsEndButton.Enabled = false;
             this.ObsEndButton.BackColor = Color.Red;
+            this.ObsStart.Enabled = true;
+            this.ObsStart.BackColor = Color.FromKnownColor(KnownColor.Control);
 
             //AVT
             if (cam_maker == Camera_Maker.AVT)
@@ -592,7 +596,6 @@ namespace MT3
                     if (worker.IsBusy)
                     {
                         //this.worker.CancelAsync();
-                        this.ObsEndButton.BackColor = Color.Red;
                     }
                 }
             }
@@ -606,11 +609,12 @@ namespace MT3
         private void ObsStart_Click(object sender, EventArgs e)
         {
             LiveStartTime = DateTime.Now;
-            this.ObsStart.BackColor = Color.Red;
             this.States = RUN;
-            this.ObsEndButton.Enabled = true;
             timerDisplay.Enabled = true;
+            this.ObsStart.Enabled = false;
             this.ObsStart.BackColor = Color.Red;
+            this.ObsEndButton.Enabled = true;
+            this.ObsEndButton.BackColor = Color.FromKnownColor(KnownColor.Control);
 
             //AVT
             if (cam_maker == Camera_Maker.AVT)
@@ -751,6 +755,33 @@ namespace MT3
             }
         }
 
+        private void checkBoxObsAuto_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxObsAuto.Checked)
+            {
+                this.ObsStart.Enabled = false;
+                this.ObsEndButton.Enabled = false;
+            }
+            else
+            {
+                if (States == RUN)
+                {
+                    this.ObsStart.Enabled = false;
+                    this.ObsEndButton.Enabled = true;
+                }
+                if (States == SAVE)
+                {
+                    this.ObsStart.Enabled = false;
+                    this.ObsEndButton.Enabled = true;
+                }
+                if (States == STOP)
+                {
+                    this.ObsStart.Enabled = true;
+                    this.ObsEndButton.Enabled = false;
+                }
+            }
+        }
+ 
         private void timerWaitShutdown_Tick(object sender, EventArgs e)
         {
             shutdown(sender, e);
@@ -878,8 +909,11 @@ namespace MT3
                 this.buttonSave.Enabled = true;
                 this.ButtonSaveEnd.Enabled = false;
                 this.ObsStart.BackColor = Color.Red;
-                this.ObsStart.Enabled = false;
-                this.ObsEndButton.Enabled = true;
+                if (!checkBoxObsAuto.Checked)
+                {
+                    this.ObsStart.Enabled = false;
+                    this.ObsEndButton.Enabled = true;
+                }
             }
             if (this.States == STOP)
             {
