@@ -53,6 +53,7 @@ namespace MT3
             //Basler
             if (cam_maker == Camera_Maker.Basler)
             {
+                Text = "MT3BaslerAce";
                 /* Register for the events of the image provider needed for proper operation. */
                 m_imageProvider.GrabErrorEvent += new ImageProvider.GrabErrorEventHandler(OnGrabErrorEventCallback);
                 m_imageProvider.DeviceRemovedEvent += new ImageProvider.DeviceRemovedEventHandler(OnDeviceRemovedEventCallback);
@@ -98,11 +99,12 @@ namespace MT3
                   }
               } */
 
-            ObsEndButton.Enabled = false;
-            diskspace = cDrive.TotalFreeSpace;
         }
+        //Form起動後１回だけ発生
         private void Form1_Shown(object sender, EventArgs e)
         {
+            checkBoxObsAuto_CheckedChanged(sender, e);
+            diskspace = cDrive.TotalFreeSpace;
             // IDS open
             //ShowButton.PerformClick();
         }
@@ -825,8 +827,8 @@ namespace MT3
                 Cv.Circle(img_dmk3, new CvPoint((int)xoa, (int)yoa), roa, new CvColor(0, 255, 0));
                 Cv.Line(img_dmk3, new CvPoint(xoa + roa, yoa + roa), new CvPoint(xoa - roa, yoa - roa), new CvColor(0, 255, 0));
                 Cv.Line(img_dmk3, new CvPoint(xoa - roa, yoa + roa), new CvPoint(xoa + roa, yoa - roa), new CvColor(0, 255, 0));
-                Cv.Rectangle(img_dmk3, new CvRect(xoa - 60, yoa - 45, 60 + 60, 45 + 45), new CvColor(0, 255, 80));　// Fine
-                Cv.Rectangle(img_dmk3, new CvRect(xoa - 13, yoa - 10, 13 + 13, 10 + 10), new CvColor(0, 190, 40));  // QHY
+                Cv.Rectangle(img_dmk3, new CvRect(xoa - 70, yoa - 55, 70 + 70, 55 + 55), new CvColor(0, 255, 80));　// SF
+                Cv.Circle(   img_dmk3, new CvPoint((int)xoa, (int)yoa), 9, new CvColor(0, 200,100)); // 200um Fiber
 
                 String str = String.Format("ID:{4,7:D1} ({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00})", gx, gy, max_val, max_label, id);
                 img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
