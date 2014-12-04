@@ -12,10 +12,10 @@ namespace MT3
     partial class Form1 //BaslerSDK
     {
         /* Handles the click on the single frame button. */
-        public void BaslerStart()
+        public void BaslerStart(uint index)
         {
             //Basler
-            m_imageProvider.Open(0);
+            m_imageProvider.Open(index);
             m_imageProvider.Setup(WIDTH, HEIGHT);
             m_imageProvider.SetupExposureTimeAbs(set_exposure * 1000.0); // [usec]
             m_imageProvider.SetupGain(set_gain); // 100-1023

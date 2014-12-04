@@ -620,7 +620,7 @@ namespace MT3
             // Basler
             if (cam_maker == Camera_Maker.Basler)
             {
-                BaslerStart();
+                BaslerStart(0);
                 ContinuousShot(); /* Start the grabbing of images until grabbing is stopped. */
             }
  
@@ -690,8 +690,12 @@ namespace MT3
 
         private void buttonMakeDark_Click(object sender, EventArgs e)
         {
-            Double dFramerate;
-            cam.Timing.Framerate.GetCurrentFps(out dFramerate);
+            Double dFramerate=0;
+            // IDS
+            if (cam_maker == Camera_Maker.IDS)
+            {
+                cam.Timing.Framerate.GetCurrentFps(out dFramerate);
+            }
             toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("00.00");
             //            label_frame_rate.Text = String.Format("FrDrop:{0} / {1}", icImagingControl1.DeviceCountOfFramesDropped, icImagingControl1.DeviceCountOfFramesNotDropped);
             Pid_Data_Send();
@@ -729,7 +733,11 @@ namespace MT3
                         this.worker.CancelAsync();
                     }
 
-                    cam.Exit();
+                    // IDS
+                    if (cam_maker == Camera_Maker.IDS)
+                    {
+                        cam.Exit();
+                    }
                     timerWaitShutdown.Start();
                 }
             }
@@ -822,7 +830,11 @@ namespace MT3
             
             // Frame rate
             double dFramerate=0;
-            // cam.Timing.Framerate.GetCurrentFps(out dFramerate); //IDS
+            // IDS
+            if (cam_maker == Camera_Maker.IDS)
+            {
+                cam.Timing.Framerate.GetCurrentFps(out dFramerate); //IDS
+            }
             dFramerate = m_imageProvider.GetFrameRate(); // Basler
             //dFramerate = StatFrameRate(); //AVT
             toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
@@ -1056,7 +1068,11 @@ namespace MT3
 
         private void checkBoxGainBoost_CheckedChanged(object sender, EventArgs e)
         {
-            cam.Gain.Hardware.Boost.SetEnable(checkBoxGainBoost.Checked);
+            // IDS
+            if (cam_maker == Camera_Maker.IDS)
+            {
+                cam.Gain.Hardware.Boost.SetEnable(checkBoxGainBoost.Checked);
+            }
         }
 
         private void timerSaveTimeOver_Tick(object sender, EventArgs e)

@@ -109,11 +109,16 @@ namespace MT3
             // ワイドダイナミックレンジ用設定 Exp 100-1-100-1-
             if (checkBox_WideDR.Checked)
             {
-                statusRet = cam.Timing.Exposure.Get(out gx);
-                if (gx > set_exposure - 1)
-                    statusRet = cam.Timing.Exposure.Set(set_exposure1);
-                else
-                    statusRet = cam.Timing.Exposure.Set(set_exposure);
+                // IDS
+                if (cam_maker == Camera_Maker.IDS)
+                {
+
+                    statusRet = cam.Timing.Exposure.Get(out gx);
+                    if (gx > set_exposure - 1)
+                        statusRet = cam.Timing.Exposure.Set(set_exposure1);
+                    else
+                        statusRet = cam.Timing.Exposure.Set(set_exposure);
+                }
             }
         }
 
