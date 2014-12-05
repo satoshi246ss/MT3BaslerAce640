@@ -34,6 +34,7 @@ namespace PylonC.NETSupportLibrary
         {
             public Image ImageData; /* Holds the taken image. */
             public PYLON_STREAMBUFFER_HANDLE Handle; /* Holds the handle of the image registered at the stream grabber. It is used to queue the buffer associated with itself for the next grab. */
+            public long Timestamp;
         }
 
         /* The members of ImageProvider: */
@@ -213,6 +214,18 @@ namespace PylonC.NETSupportLibrary
                 m_grabThreadRun = false; /* Causes the grab thread to stop. */
                 m_grabThread.Join(); /* Wait for it to stop. */
             }
+        }
+
+        public long GetTimestamp()
+        {
+            lock (m_lockObject) /* Lock the grab result queue to avoid that two threads modify the same data. */
+            {
+                if (m_grabbedBuffers.Count > 0) /* If images available. */
+                {
+                    return m_grabbedBuffers[0].Timestamp;
+                }
+            }
+            return 0; /* No image available. */
         }
 
         /* Returns the next available image in the grab result queue. Null is returned if no result is available.
@@ -602,6 +615,7 @@ namespace PylonC.NETSupportLibrary
             if (grabResult.PixelType == EPylonPixelType.PixelType_Mono8 || grabResult.PixelType == EPylonPixelType.PixelType_RGBA8packed)   //PixelType_Mono12packed
             {
                 newGrabResultInternal.ImageData = new Image(grabResult.SizeX, grabResult.SizeY, buffer.Array, grabResult.PixelType == EPylonPixelType.PixelType_RGBA8packed);
+                newGrabResultInternal.Timestamp = grabResult.TimeStamp;
             }
             else /* Conversion is required. */
             {
@@ -625,6 +639,7 @@ namespace PylonC.NETSupportLibrary
                 }
                 /* Add the image data. */
                 newGrabResultInternal.ImageData = new Image(grabResult.SizeX, grabResult.SizeY, convertedBuffer.Array, m_converterOutputFormatIsColor);
+                newGrabResultInternal.Timestamp = grabResult.TimeStamp ;
             }
             lock (m_lockObject) /* Lock the grab result queue to avoid that two threads modify the same data. */
             {

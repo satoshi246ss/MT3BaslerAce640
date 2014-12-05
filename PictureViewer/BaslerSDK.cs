@@ -512,7 +512,7 @@ namespace MT3
                 /* We want a float feature node. */
                 nodeType = GenApi.NodeGetType(hNode);
 
-                if (EGenApiNodeType.FloatNode != nodeType)
+                if (EGenApiNodeType.IntegerNode != nodeType)
                 {
                     Console.WriteLine("'" + featureName + "' is not an floating-point feature.");
                     return 0;
@@ -528,6 +528,64 @@ namespace MT3
                     val = GenApi.IntegerGetValue(hNode);     /* Get the current value. */
 
                     return val ; 
+                }
+                return 0;
+            }
+            catch
+            {
+                // UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
+        /// Timestamp
+        /// </summary>
+        public long GetBaslerInt(string featureName)
+        {
+            try
+            {
+                NODE_HANDLE hNode;
+                EGenApiNodeType nodeType;
+                bool bval;                     /* Is the feature available? */
+                //string featureName;  /* Name of the feature used in this sample: AOI Width. */
+                //bool isAvailable;              /* Is the feature available? */
+                //double val = 0;      /* Properties of the feature. */
+                long val, min, max, incr;      /* Properties of the feature. */
+                //featureName = "Timestamp";
+
+                hNode = m_imageProvider.GetNodeFromDevice(featureName);
+                if (!hNode.IsValid)
+                {
+                    Console.WriteLine("There is no feature named '" + featureName + "'.");
+                    return 0;
+                }
+                /* We want a float feature node. */
+                nodeType = GenApi.NodeGetType(hNode);
+
+                if (EGenApiNodeType.IntegerNode != nodeType)
+                {
+                    Console.WriteLine("'" + featureName + "' is not an floating-point feature.");
+                    return 0;
+                }
+
+                bval = GenApi.NodeIsReadable(hNode);
+
+                if (bval)
+                {
+                    min = GenApi.IntegerGetMin(hNode);       /* Get the minimum value. */
+                    max = GenApi.IntegerGetMax(hNode);       /* Get the maximum value. */
+                    incr = GenApi.IntegerGetInc(hNode);      /* Get the increment value. */
+                    val = GenApi.IntegerGetValue(hNode);     /* Get the current value. */
+
+                    return val;
                 }
                 return 0;
             }

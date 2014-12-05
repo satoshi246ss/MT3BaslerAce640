@@ -65,6 +65,7 @@
             this.timerWaitShutdown = new System.Windows.Forms.Timer(this.components);
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripStatusLabelGain = new System.Windows.Forms.ToolStripStatusLabel();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -329,7 +330,8 @@
             this.toolStripStatusLabelFailed,
             this.toolStripStatusLabelID,
             this.toolStripStatusLabelPixelClock,
-            this.toolStripStatusLabelExposure});
+            this.toolStripStatusLabelExposure,
+            this.toolStripStatusLabelGain});
             this.statusStrip1.Location = new System.Drawing.Point(0, 595);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(652, 22);
@@ -394,6 +396,12 @@
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
             // 
+            // toolStripStatusLabelGain
+            // 
+            this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(33, 17);
+            this.toolStripStatusLabelGain.Text = "Gain";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -456,8 +464,9 @@
         private System.Windows.Forms.Timer timerWaitShutdown;
         private System.Windows.Forms.Timer timerSave;
         private System.Windows.Forms.Timer updateDeviceListTimer;
-        private System.Windows.Forms.ListView deviceListView;
         private System.Windows.Forms.Label label_X2Y2;
+        private System.Windows.Forms.ListView deviceListView;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGain;
     }
 }
 

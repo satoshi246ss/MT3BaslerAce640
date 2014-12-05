@@ -860,18 +860,34 @@ namespace MT3
             label_ID.Text = max_label.ToString("0");
 
             // Status表示
-            
-            // Frame rate
-            double dFramerate=0;
+
+
+            double dFramerate = 0; // Frame rate[fr/s]
+            double dExpo = 0; // Exposure[us]
+            long igain = 0; //Gain
             // IDS
             if (cam_maker == Camera_Maker.IDS)
             {
                 cam.Timing.Framerate.GetCurrentFps(out dFramerate); //IDS
+                statusRet = cam.Timing.Exposure.Get(out dExpo);
             }
-            dFramerate = m_imageProvider.GetFrameRate(); // Basler
-            //dFramerate = StatFrameRate(); //AVT
+            if (cam_maker == Camera_Maker.Basler)
+            {
+                dFramerate = m_imageProvider.GetFrameRate(); // Basler
+                dExpo = GetExposureTime();
+                igain = GetGain();
+                //igain = m_imageProvider.GetTimestamp();
+            }
+            if (cam_maker == Camera_Maker.AVT)
+            {
+                dFramerate = StatFrameRate(); //AVT
+                dExpo = ExposureTimeAbs();
+                igain = GainRaw();
+            }
             toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
             label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
+            toolStripStatusLabelExposure.Text = "Exposure: " + dExpo.ToString("00.00")+"[ms]";
+            toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
 
             // Error rate
             long frame_total=0, frame_error=0, frame_underrun = 0 ;
@@ -896,8 +912,7 @@ namespace MT3
  //           toolStripStatusLabelPixelClock.Text = "Gain: " + GainRaw().ToString("00");
 
             //Double dValue;
-            //statusRet = cam.Timing.Exposure.Get(out dValue);
- //           toolStripStatusLabelExposure.Text = "Exposure: " + ExposureTimeAbs().ToString("00.00");
+  //           toolStripStatusLabelExposure.Text = "Exposure: " + ExposureTimeAbs().ToString("00.00");
 
             if (this.States == SAVE)
             {
@@ -930,6 +945,7 @@ namespace MT3
 
         /// <summary>
         /// FIFO pushルーチン
+        /// imgdata.img　は　すでにセット済み
         /// </summary>
         private void imgdata_push_FIFO()
         {

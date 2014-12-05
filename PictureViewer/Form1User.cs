@@ -85,6 +85,7 @@ namespace MT3
         // 観測開始からのフレーム番号
         int id = 0;
         DateTime LiveStartTime;
+        long timestamp; // [us]
 
         const int MaxFrame = 128;  //512
         //const int WIDTH = 2456; // 2456 max piA2400-12gm
