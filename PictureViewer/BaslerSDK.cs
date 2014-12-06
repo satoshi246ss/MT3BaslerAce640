@@ -74,7 +74,7 @@ namespace MT3
             /* Close the image provider. */
             CloseTheImageProvider();
             /* Since one device is gone, the list needs to be updated. */
-        //    UpdateDeviceList();
+            UpdateDeviceList();
         }
 
         /* Handles the event related to a device being open. */
@@ -250,7 +250,7 @@ namespace MT3
                 /* Ask the device enumerator for a list of devices. */
                 List<DeviceEnumerator.Device> list = DeviceEnumerator.EnumerateDevices();
 
-                ListView.ListViewItemCollection items = null;// deviceListView.Items;
+                ListView.ListViewItemCollection items = deviceListView.Items;
 
                 /* Add each new device to the list. */
                 foreach (DeviceEnumerator.Device device in list)
@@ -283,7 +283,7 @@ namespace MT3
                         item.Tag = device;
 
                         /* Attach the device data. */
-                    //    deviceListView.Items.Add(item);
+                        deviceListView.Items.Add(item);
                     }
                 }
 
@@ -304,7 +304,7 @@ namespace MT3
                     /* If the device has not been found by enumeration then remove from the list view. */
                     if (!exists)
                     {
-                    //    deviceListView.Items.Remove(item);
+                        deviceListView.Items.Remove(item);
                     }
                 }
             }
@@ -330,11 +330,50 @@ namespace MT3
             CloseTheImageProvider();
         }
 
+        /* Handles the selection of cameras from the list box. The currently open device is closed and the first 
+         selected device is opened. */
+        private void deviceListView_SelectedIndexChanged(object sender, EventArgs ev)
+        {
+            /* Close the currently open image provider. */
+            /* Stops the grabbing of images. */
+            Stop();
+            /* Close the image provider. */
+            CloseTheImageProvider();
+
+            /* Open the selected image provider. */
+            if (deviceListView.SelectedItems.Count > 0)
+            {
+                /* Get the first selected item. */
+                ListViewItem item = deviceListView.SelectedItems[0];
+                /* Get the attached device data. */
+                DeviceEnumerator.Device device = item.Tag as DeviceEnumerator.Device;
+                try
+                {
+                    /* Open the image provider using the index from the device data. */
+                    m_imageProvider.Open(device.Index);
+                }
+                catch (Exception e)
+                {
+                    ShowException(e, m_imageProvider.GetLastErrorMessage());
+                }
+            }
+        }
+
+        /* If the F5 key has been pressed update the list of devices. */
+        private void deviceListView_KeyDown(object sender, KeyEventArgs ev)
+        {
+            if (ev.KeyCode == Keys.F5)
+            {
+                ev.Handled = true;
+                /* Update the list of available devices in the upper left area. */
+                UpdateDeviceList();
+            }
+        }
 
         /* Timer callback used for periodically checking whether displayed devices are still attached to the PC. */
         private void updateDeviceListTimer_Tick(object sender, EventArgs e)
         {
-        //    UpdateDeviceList();
+            UpdateDeviceList();
         }
         /// <summary>
         /// フレームレート値読み出し

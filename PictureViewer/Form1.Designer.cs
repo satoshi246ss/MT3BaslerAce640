@@ -45,6 +45,7 @@
             this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_ID = new System.Windows.Forms.Label();
             this.label_X2Y2 = new System.Windows.Forms.Label();
+            this.deviceListView = new System.Windows.Forms.ListView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -59,12 +60,12 @@
             this.toolStripStatusLabelID = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelPixelClock = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelExposure = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelGain = new System.Windows.Forms.ToolStripStatusLabel();
             this.timerMTmonSend = new System.Windows.Forms.Timer(this.components);
             this.timer1min = new System.Windows.Forms.Timer(this.components);
             this.timerWaitShutdown = new System.Windows.Forms.Timer(this.components);
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripStatusLabelGain = new System.Windows.Forms.ToolStripStatusLabel();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -119,6 +120,7 @@
             this.flowLayoutPanel1.Controls.Add(this.label_frame_rate);
             this.flowLayoutPanel1.Controls.Add(this.label_ID);
             this.flowLayoutPanel1.Controls.Add(this.label_X2Y2);
+            this.flowLayoutPanel1.Controls.Add(this.deviceListView);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 487);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -264,6 +266,16 @@
             this.label_X2Y2.TabIndex = 13;
             this.label_X2Y2.Text = "(X2,Y2)";
             // 
+            // deviceListView
+            // 
+            this.deviceListView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.deviceListView.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.deviceListView.Location = new System.Drawing.Point(289, 32);
+            this.deviceListView.Name = "deviceListView";
+            this.deviceListView.Size = new System.Drawing.Size(121, 16);
+            this.deviceListView.TabIndex = 12;
+            this.deviceListView.UseCompatibleStateImageBehavior = false;
+            // 
             // textBox1
             // 
             tableLayoutPanel1.SetColumnSpan(this.textBox1, 2);
@@ -356,12 +368,6 @@
             this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(28, 17);
             this.toolStripStatusLabelExposure.Text = "Exp";
             // 
-            // toolStripStatusLabelGain
-            // 
-            this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
-            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(33, 17);
-            this.toolStripStatusLabelGain.Text = "Gain";
-            // 
             // timerMTmonSend
             // 
             this.timerMTmonSend.Enabled = true;
@@ -389,6 +395,12 @@
             this.updateDeviceListTimer.Enabled = true;
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
+            // 
+            // toolStripStatusLabelGain
+            // 
+            this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(33, 17);
+            this.toolStripStatusLabelGain.Text = "Gain";
             // 
             // Form1
             // 
@@ -453,6 +465,7 @@
         private System.Windows.Forms.Timer timerSave;
         private System.Windows.Forms.Timer updateDeviceListTimer;
         private System.Windows.Forms.Label label_X2Y2;
+        private System.Windows.Forms.ListView deviceListView;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGain;
     }
 }
