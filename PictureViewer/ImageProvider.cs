@@ -107,7 +107,9 @@ namespace PylonC.NETSupportLibrary
         public void Open(uint index)
         {
             /* Get a handle for the device and proceed. */
-            Open(Pylon.CreateDeviceByIndex(index));
+            //Open(Pylon.CreateDeviceByIndex(index));
+            PYLON_DEVICE_HANDLE m_hDevice2 = Pylon.CreateDeviceByIndex(index);
+            Open(m_hDevice2);
         }
 
         /* Close the device */

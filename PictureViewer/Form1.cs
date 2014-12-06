@@ -75,7 +75,7 @@ namespace MT3
                 */
 
                 /* Update the list of available devices in the upper left area. */
-                UpdateDeviceList();
+            //    UpdateDeviceList();
             }
 
             Pid_Data_Send_Init();
@@ -185,8 +185,15 @@ namespace MT3
                         {
                             ImgSaveFlag = TRUE;
                             this.States = SAVE;
-                            kalman_init();
-                            pos_mes.init();
+                            try
+                            {
+                                kalman_init();
+                                pos_mes.init();
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Error 1");
+                            }
                         }
                     }
                     else if (kmd3.cmd == 90) //mmPidTest:90
@@ -594,11 +601,6 @@ namespace MT3
             {
                 if (cam.Acquisition.Stop() == uEye.Defines.Status.SUCCESS)
                 {
-                    // BackgroundWorkerを停止.
-                    if (worker.IsBusy)
-                    {
-                        //this.worker.CancelAsync();
-                    }
                 }
             }
             //ImaginSouse
@@ -606,18 +608,19 @@ namespace MT3
             {
                 //icImagingControl1.LiveStop();
             }
+            //analog
+            if (cam_maker == Camera_Maker.analog)
+            {
+                // BackgroundWorkerを停止.
+                if (worker.IsBusy)
+                {
+                    this.worker.CancelAsync();
+                }
+            }
         }
 
         private void ObsStart_Click(object sender, EventArgs e)
         {
-            LiveStartTime = DateTime.Now;
-            this.States = RUN;
-            timerDisplay.Enabled = true;
-            this.ObsStart.Enabled = false;
-            this.ObsStart.BackColor = Color.Red;
-            this.ObsEndButton.Enabled = true;
-            this.ObsEndButton.BackColor = Color.FromKnownColor(KnownColor.Control);
-
             //AVT
             if (cam_maker == Camera_Maker.AVT)
             {
@@ -637,23 +640,26 @@ namespace MT3
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
                     MessageBox.Show("Start Live Video failed");
-                }
-                else
-                {
-                    LiveStartTime = DateTime.Now;
-                    this.ObsStart.BackColor = Color.Red;
-                    this.States = RUN;
-                    this.ObsEndButton.Enabled = true;
-                    timerDisplay.Enabled = true;
-                    // BackgroundWorkerを開始
-                    if (!worker.IsBusy)
-                    {
-                        //this.worker.RunWorkerAsync();
-                        this.ObsStart.BackColor = Color.Red;
-                        this.States = RUN;
-                    }
+                    return;
                 }
             }
+            //analog
+            if (cam_maker == Camera_Maker.analog)
+            {
+                // BackgroundWorkerを開始
+                if (!worker.IsBusy)
+                {
+                    this.worker.RunWorkerAsync();
+                }
+            }
+
+            LiveStartTime = DateTime.Now;
+            this.States = RUN;
+            timerDisplay.Enabled = true;
+            this.ObsStart.Enabled = false;
+            this.ObsStart.BackColor = Color.Red;
+            this.ObsEndButton.Enabled = true;
+            this.ObsEndButton.BackColor = Color.FromKnownColor(KnownColor.Control);
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
@@ -899,8 +905,8 @@ namespace MT3
              frame_underrun = StatFrameUnderrun();// AVT
              frame_total = StatFrameDelivered() ;
             */
-            frame_total = m_imageProvider.Get_Statistic_Total_Buffer_Count();
-            frame_error = Get_Statistic_Total_Buffer_Count();
+        //    frame_total = m_imageProvider.Get_Statistic_Total_Buffer_Count();
+        //    frame_error = Get_Statistic_Total_Buffer_Count();
            // toolStripStatusLabelFailed.Text = "Failed U:" + StatFrameUnderrun().ToString("0000") + " S:" + StatFrameShoved().ToString("0000") + " D:" + StatFrameDropped().ToString("0000");
 
             double err_rate = 100.0 * (frame_total / (double)id);
@@ -1133,5 +1139,6 @@ namespace MT3
             Mode = LOST;
             ButtonSaveEnd_Click(sender, e);
         }
+
     }
 }
