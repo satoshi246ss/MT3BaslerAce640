@@ -60,12 +60,12 @@
             this.toolStripStatusLabelID = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelPixelClock = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelExposure = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelGain = new System.Windows.Forms.ToolStripStatusLabel();
             this.timerMTmonSend = new System.Windows.Forms.Timer(this.components);
             this.timer1min = new System.Windows.Forms.Timer(this.components);
             this.timerWaitShutdown = new System.Windows.Forms.Timer(this.components);
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripStatusLabelGain = new System.Windows.Forms.ToolStripStatusLabel();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -368,6 +368,12 @@
             this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(28, 17);
             this.toolStripStatusLabelExposure.Text = "Exp";
             // 
+            // toolStripStatusLabelGain
+            // 
+            this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(33, 17);
+            this.toolStripStatusLabelGain.Text = "Gain";
+            // 
             // timerMTmonSend
             // 
             this.timerMTmonSend.Enabled = true;
@@ -395,12 +401,6 @@
             this.updateDeviceListTimer.Enabled = true;
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
-            // 
-            // toolStripStatusLabelGain
-            // 
-            this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
-            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(33, 17);
-            this.toolStripStatusLabelGain.Text = "Gain";
             // 
             // Form1
             // 
