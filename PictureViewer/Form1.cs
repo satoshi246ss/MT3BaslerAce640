@@ -736,18 +736,6 @@ namespace MT3
                 if (this.States == RUN && checkBoxObsAuto.Checked)
                 {
                     ObsEndButton_Click(sender, e);
-
-                    // BackgroundWorkerを停止.
-                    if (worker.IsBusy)
-                    {
-                        this.worker.CancelAsync();
-                    }
-
-                    // IDS
-                    if (cam_maker == Camera_Maker.IDS)
-                    {
-                        cam.Exit();
-                    }
                     timerWaitShutdown.Start();
                 }
             }
@@ -815,7 +803,7 @@ namespace MT3
         /// <param name="capacity">画像表示用タイマールーチン</param>
         private void timerDisplay_Tick(object sender, EventArgs e)
         {
-      //      if (this.States == STOP || cam == null) return;
+            if (this.States == STOP) return;
 
             //OpenCV　表示ルーチン
             if (imgdata.img != null)
