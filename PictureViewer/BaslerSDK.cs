@@ -138,6 +138,7 @@ namespace MT3
                  /* Check if the image has been removed in the meantime. */
                 if (image != null)
                 {
+                    try { 
                     /* Display image */
                     //Pylon.ImageWindowDisplayImage<Byte>(0, image.Buffer, grabResult);
 
@@ -152,8 +153,15 @@ namespace MT3
                     m_imageProvider.ReleaseImage();
                     /* The buffer can be used for the next image grabs. */
 
-                    detect();
-                    imgdata_push_FIFO();
+                    
+                    
+                        detect();
+                        imgdata_push_FIFO();
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        MessageBox.Show("KeyNotFoundException:2");
+                    }
                 }                 
             }
             catch (Exception e)
@@ -172,12 +180,18 @@ namespace MT3
                 BeginInvoke(new ImageProvider.GrabbingStoppedEventHandler(OnGrabbingStoppedEventCallback));
                 return;
             }
+            try
+            {
+                /* Enable device list update again */
+                updateDeviceListTimer.Start();
 
-            /* Enable device list update again */
-            updateDeviceListTimer.Start();
-
-            /* The image provider stopped grabbing. Enable the grab buttons. Disable the stop button. */
-            EnableButtons(m_imageProvider.IsOpen, false);
+                /* The image provider stopped grabbing. Enable the grab buttons. Disable the stop button. */
+                EnableButtons(m_imageProvider.IsOpen, false);
+            }
+            catch (KeyNotFoundException)
+            {
+                MessageBox.Show("KeyNotFoundException:3");
+            }
         }
 
         /* Helps to set the states of all buttons. */
