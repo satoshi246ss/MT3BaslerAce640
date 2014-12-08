@@ -49,7 +49,6 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.timerSaveTimeOver = new System.Windows.Forms.Timer(this.components);
             this.timerSaveMainTime = new System.Windows.Forms.Timer(this.components);
             this.timerDisplay = new System.Windows.Forms.Timer(this.components);
@@ -438,7 +437,6 @@
         private System.Windows.Forms.Button ButtonSaveEnd;
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button ObsStart;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button buttonSave;
