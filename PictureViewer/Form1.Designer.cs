@@ -48,6 +48,8 @@
             this.deviceListView = new System.Windows.Forms.ListView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.timerSaveTimeOver = new System.Windows.Forms.Timer(this.components);
             this.timerSaveMainTime = new System.Windows.Forms.Timer(this.components);
             this.timerDisplay = new System.Windows.Forms.Timer(this.components);
@@ -293,6 +295,13 @@
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|BMP Files (*.bmp)|*.bmp|All file" +
+    "s (*.*)|*.* ";
+            this.openFileDialog1.Title = "Select a picture file ";
+            // 
             // timerSaveTimeOver
             // 
             this.timerSaveTimeOver.Interval = 45000;
@@ -428,6 +437,8 @@
         private System.Windows.Forms.Button ObsEndButton;
         private System.Windows.Forms.Button ButtonSaveEnd;
         private System.Windows.Forms.Button CloseButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button ObsStart;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button buttonSave;
