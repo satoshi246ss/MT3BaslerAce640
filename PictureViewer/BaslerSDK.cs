@@ -152,15 +152,27 @@ namespace MT3
                     /* The processing of the image is done. Release the image buffer. */
                     m_imageProvider.ReleaseImage();
                     /* The buffer can be used for the next image grabs. */
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        MessageBox.Show("KeyNotFoundException:20");
+                    }
 
-                    
-                    
+                    try
+                    {
                         detect();
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        MessageBox.Show("KeyNotFoundException:21");
+                    }
+
+                    try{
                         imgdata_push_FIFO();
                     }
                     catch (KeyNotFoundException)
                     {
-                        MessageBox.Show("KeyNotFoundException:2");
+                        MessageBox.Show("KeyNotFoundException:22");
                     }
                 }                 
             }

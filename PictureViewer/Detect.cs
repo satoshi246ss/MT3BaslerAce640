@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Windows.Forms;
 using OpenCvSharp;
 using OpenCvSharp.Blob;
 
@@ -18,9 +19,23 @@ namespace MT3
             ++id;
 
             #region 位置検出2  //Blob
-            Cv.Threshold(imgdata.img, img2, threshold_blob, 255, ThresholdType.Binary); //2ms
-            blobs.Label(img2); //1.4ms
-            maxBlob = blobs.LargestBlob();
+            try
+            {
+                Cv.Threshold(imgdata.img, img2, threshold_blob, 255, ThresholdType.Binary); //2ms
+                blobs.Label(img2); //1.4ms
+            }
+            catch (KeyNotFoundException)
+            {
+                MessageBox.Show("KeyNotFoundException:211");
+            }
+            try
+            {
+                maxBlob = blobs.LargestBlob();
+            }
+            catch (KeyNotFoundException)
+            {
+                MessageBox.Show("KeyNotFoundException:212");
+            }
             if (blobs.Count > 0)
             {
                 int min_area = Math.Max(2, (int)(threshold_min_area * maxBlob.Area));
@@ -85,12 +100,6 @@ namespace MT3
             }
              #endregion
 
-            // 保存用データをキューへ
-            if (ImgSaveFlag == TRUE)
-            {
-                //imgdata_push_FIFO();
-            }
-
             elapsed2 = sw.ElapsedTicks; sw.Stop(); sw.Reset();
             // 処理速度
             double sf = (double)Stopwatch.Frequency / 1000; //msec
@@ -98,13 +107,6 @@ namespace MT3
             lap1 = (1 - alpha) * lap1 + alpha * elapsed1 / sf;
             lap2 = (1 - alpha) * lap2 + alpha * elapsed2 / sf;
             fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2}", id, lap0, lap1, lap2);
-
-            //catch (Exception ex)
-            //{
-            //匿名デリゲートで表示する
-            //  this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
-            //  System.Diagnostics.Trace.WriteLine(ex.Message);
-            //}
 
             // ワイドダイナミックレンジ用設定 Exp 100-1-100-1-
             if (checkBox_WideDR.Checked)
