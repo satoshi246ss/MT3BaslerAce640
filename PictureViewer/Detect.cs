@@ -36,11 +36,18 @@ namespace MT3
             {
                 MessageBox.Show("KeyNotFoundException:212");
             }
+
+            try{
             if (blobs.Count > 0)
             {
                 int min_area = Math.Max(2, (int)(threshold_min_area * maxBlob.Area));
                 blobs.FilterByArea(min_area, int.MaxValue); //0.001ms   面積がmin_area未満のblobを削除
                 max_label = pos_mes.mesure(blobs);
+            }
+            }
+            catch (KeyNotFoundException)
+            {
+                MessageBox.Show("KeyNotFoundException:213");
             }
 
             if (max_label > 0)
@@ -64,7 +71,15 @@ namespace MT3
                     Cv.SetIdentity(kalman.ErrorCovPost, Cv.RealScalar(errcov));
                 }
                 // 修正フェーズ(kalman)
-                correction = Cv.KalmanCorrect(kalman, measurement);
+                try
+                {
+                    correction = Cv.KalmanCorrect(kalman, measurement);
+                }
+                catch (KeyNotFoundException)
+                {
+                    MessageBox.Show("KeyNotFoundException:214");
+                }
+
                 // 予測フェーズ(kalman)
                 prediction = Cv.KalmanPredict(kalman);
                 kgx = prediction.DataArraySingle[0] + xoa;
@@ -80,17 +95,24 @@ namespace MT3
                     //w2.WriteLine("{0:D3} {1:F2} {2:F2} {3:F2} {4:F2} {5} {6} {7}", i, max_centroid.X, max_centroid.Y, prediction.DataArraySingle[0] + xc, prediction.DataArraySingle[1] + yc, vm, dx, dy);
                 }
                 // 目標位置からの誤差(pix)からターゲットの位置を計算
-                dx = sgx; dy = sgy;
-                udpkv.cxcy2azalt(-dx, -dy, udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, fl, ccdpx, ccdpx, ref az, ref alt);
-                udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, fl, ccdpx, ccdpx, ref az1, ref alt1);
-                vaz = udpkv.vaz2_kv + (az1 - az) / dt;
-                valt = udpkv.valt2_kv + (alt1 - alt) / dt;
+                try
+                {
+                    dx = sgx; dy = sgy;
+                    udpkv.cxcy2azalt(-dx, -dy, udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, fl, ccdpx, ccdpx, ref az, ref alt);
+                    udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, fl, ccdpx, ccdpx, ref az1, ref alt1);
+                    vaz = udpkv.vaz2_kv + (az1 - az) / dt;
+                    valt = udpkv.valt2_kv + (alt1 - alt) / dt;
 
-                //daz = az - udpkv.az2_c; dalt = alt - udpkv.alt2_c;             //位置誤差
-                //dvaz = (daz - daz1) / dt; dvalt = (dalt - dalt1) / dt;        //速度誤差
-                //diff_vaz = (az - az_pre1) / dt; diff_valt = (alt - alt_pre1) / dt; //速度差
+                    //daz = az - udpkv.az2_c; dalt = alt - udpkv.alt2_c;             //位置誤差
+                    //dvaz = (daz - daz1) / dt; dvalt = (dalt - dalt1) / dt;        //速度誤差
+                    //diff_vaz = (az - az_pre1) / dt; diff_valt = (alt - alt_pre1) / dt; //速度差
 
-                az0 = az; alt0 = alt;
+                    az0 = az; alt0 = alt;
+                }
+                catch (KeyNotFoundException)
+                {
+                    MessageBox.Show("KeyNotFoundException:215");
+                }
             }
             else
             {
