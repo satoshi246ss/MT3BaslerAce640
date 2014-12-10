@@ -37,27 +37,51 @@ namespace MT3
                 MessageBox.Show("KeyNotFoundException:212");
             }
 
-            try{
-            if (blobs.Count > 0)
+            try
             {
-                int min_area = Math.Max(2, (int)(threshold_min_area * maxBlob.Area));
-                blobs.FilterByArea(min_area, int.MaxValue); //0.001ms   面積がmin_area未満のblobを削除
-                max_label = pos_mes.mesure(blobs);
-            }
+                if (blobs.Count > 0)
+                {
+                    int min_area = Math.Max(2, (int)(threshold_min_area * maxBlob.Area));
+                    blobs.FilterByArea(min_area, int.MaxValue); //0.001ms   面積がmin_area未満のblobを削除
+                }
+                max_label = 0;
+                if (blobs.Count > 0)
+                {
+                    max_label = pos_mes.mesure(blobs);
+                } 
             }
             catch (KeyNotFoundException)
             {
                 MessageBox.Show("KeyNotFoundException:213");
             }
 
-            if (max_label > 0)
+            if (max_label > 0 && blobs.ContainsKey(max_label))
             {
-                maxBlob = blobs[max_label];
-                max_centroid = maxBlob.Centroid;
-                gx = max_centroid.X;
-                gy = max_centroid.Y;
-                max_val = maxBlob.Area;
-                blob_rect = maxBlob.Rect;
+                try
+                {
+                    maxBlob = blobs[max_label];
+                }
+                catch (KeyNotFoundException)
+                {
+                    MessageBox.Show("KeyNotFoundException:2171");
+                }
+                try{
+                    max_centroid = maxBlob.Centroid;
+                }
+                catch (KeyNotFoundException)
+                {
+                    MessageBox.Show("KeyNotFoundException:2172");
+                }
+                try{
+                    gx = max_centroid.X;
+                    gy = max_centroid.Y;
+                    max_val = maxBlob.Area;
+                    blob_rect = maxBlob.Rect;
+                }
+                catch (KeyNotFoundException)
+                {
+                    MessageBox.Show("KeyNotFoundException:2173");
+                }
 
                 // 観測値(kalman)
                 measurement.Set2D(0, 0, (float)(gx - xoa));
@@ -77,15 +101,23 @@ namespace MT3
                 }
                 catch (KeyNotFoundException)
                 {
-                    MessageBox.Show("KeyNotFoundException:214");
+                    MessageBox.Show("KeyNotFoundException:216");
                 }
 
                 // 予測フェーズ(kalman)
-                prediction = Cv.KalmanPredict(kalman);
-                kgx = prediction.DataArraySingle[0] + xoa;
-                kgy = prediction.DataArraySingle[1] + yoa;
-                kvx = prediction.DataArraySingle[2];
-                kvy = prediction.DataArraySingle[3];
+                try
+                {
+                    prediction = Cv.KalmanPredict(kalman);
+                    kgx = prediction.DataArraySingle[0] + xoa;
+                    kgy = prediction.DataArraySingle[1] + yoa;
+                    kvx = prediction.DataArraySingle[2];
+                    kvy = prediction.DataArraySingle[3];
+                }
+                catch (KeyNotFoundException)
+                {
+                    MessageBox.Show("KeyNotFoundException:215");
+                }
+
                 // カルマン　or　観測重心　の選択
                 if ((Math.Abs(kgx - gx) + Math.Abs(kgy - gy) < 15))  // 
                 {
@@ -111,7 +143,7 @@ namespace MT3
                 }
                 catch (KeyNotFoundException)
                 {
-                    MessageBox.Show("KeyNotFoundException:215");
+                    MessageBox.Show("KeyNotFoundException:218");
                 }
             }
             else
