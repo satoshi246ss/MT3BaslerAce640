@@ -112,7 +112,7 @@ namespace MT3
         Int32 set_pixelclock = 30;  // [MHz]
 
         double set_framerate = 120; // [fps]
-        double set_exposure  = 8;   // [ms]            F1.8:F4  exp same  gain 1024: 100  約４０倍
+        double set_exposure  = 3;   // [ms]            F1.8:F4  exp 8ms:3ms  gain 1024: 100  約106倍
         double set_exposure1 = 0.2; // [ms]
         Int32 set_gain = 100;       // [100-1023]
 

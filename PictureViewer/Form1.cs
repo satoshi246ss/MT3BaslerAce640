@@ -249,24 +249,17 @@ namespace MT3
         //メインスレッドでの処理
         private void worker_udp_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            try
+            // 画面表示
+            if ((id % 1) == 0)
             {
-                // 画面表示
-                if ((id % 1) == 0)
-                {
-                    //MOTOR_DATA_KV_SP kmd3 = (MOTOR_DATA_KV_SP)e.UserState;
-                    //string s = string.Format("worker_udp_ProgressChanged:[{0} {1} az:{2} alt:{3}]\n", kmd3.cmd, kmd3.t, kmd3.az, kmd3.alt);
-                    //  richTextBox1.AppendText(s);
-                    udpkv.kd = (KV_DATA)e.UserState;
-                    udpkv.cal_mt3();
+                //MOTOR_DATA_KV_SP kmd3 = (MOTOR_DATA_KV_SP)e.UserState;
+                //string s = string.Format("worker_udp_ProgressChanged:[{0} {1} az:{2} alt:{3}]\n", kmd3.cmd, kmd3.t, kmd3.az, kmd3.alt);
+                //  richTextBox1.AppendText(s);
+                udpkv.kd = (KV_DATA)e.UserState;
+                udpkv.cal_mt3();
 
-                    string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
-                    label_X2Y2.Text = s;
-                }
-            }
-            catch (KeyNotFoundException)
-            {
-                MessageBox.Show("KeyNotFoundException:1");
+                string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
+                label_X2Y2.Text = s;
             }
         }
 
