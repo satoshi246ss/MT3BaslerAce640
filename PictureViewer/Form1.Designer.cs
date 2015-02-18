@@ -38,7 +38,7 @@
             this.ObsEndButton = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.ButtonSaveEnd = new System.Windows.Forms.Button();
-            this.buttonMakeDark = new System.Windows.Forms.Button();
+            this.buttonMakeSettings = new System.Windows.Forms.Button();
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
             this.checkBoxGainBoost = new System.Windows.Forms.CheckBox();
@@ -111,7 +111,7 @@
             this.flowLayoutPanel1.Controls.Add(this.ObsEndButton);
             this.flowLayoutPanel1.Controls.Add(this.buttonSave);
             this.flowLayoutPanel1.Controls.Add(this.ButtonSaveEnd);
-            this.flowLayoutPanel1.Controls.Add(this.buttonMakeDark);
+            this.flowLayoutPanel1.Controls.Add(this.buttonMakeSettings);
             this.flowLayoutPanel1.Controls.Add(this.checkBox_WideDR);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxObsAuto);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxGainBoost);
@@ -190,15 +190,15 @@
             this.ButtonSaveEnd.UseVisualStyleBackColor = true;
             this.ButtonSaveEnd.Click += new System.EventHandler(this.ButtonSaveEnd_Click);
             // 
-            // buttonMakeDark
+            // buttonMakeSettings
             // 
-            this.buttonMakeDark.Location = new System.Drawing.Point(457, 3);
-            this.buttonMakeDark.Name = "buttonMakeDark";
-            this.buttonMakeDark.Size = new System.Drawing.Size(70, 23);
-            this.buttonMakeDark.TabIndex = 6;
-            this.buttonMakeDark.Text = "MakeDark";
-            this.buttonMakeDark.UseVisualStyleBackColor = true;
-            this.buttonMakeDark.Click += new System.EventHandler(this.buttonMakeDark_Click);
+            this.buttonMakeSettings.Location = new System.Drawing.Point(457, 3);
+            this.buttonMakeSettings.Name = "buttonMakeSettings";
+            this.buttonMakeSettings.Size = new System.Drawing.Size(70, 23);
+            this.buttonMakeSettings.TabIndex = 6;
+            this.buttonMakeSettings.Text = "MakeSet";
+            this.buttonMakeSettings.UseVisualStyleBackColor = true;
+            this.buttonMakeSettings.Click += new System.EventHandler(this.buttonMakeDark_Click);
             // 
             // checkBox_WideDR
             // 
@@ -433,7 +433,7 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Timer timerSaveTimeOver;
         private System.Windows.Forms.Timer timerSaveMainTime;
-        private System.Windows.Forms.Button buttonMakeDark;
+        private System.Windows.Forms.Button buttonMakeSettings;
         private System.Windows.Forms.Timer timerDisplay;
         private System.Windows.Forms.Timer timerObsOnOff;
         private System.Windows.Forms.CheckBox checkBoxObsAuto;

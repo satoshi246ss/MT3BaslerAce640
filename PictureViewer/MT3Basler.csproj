@@ -135,6 +135,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ringbuf.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SliderUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

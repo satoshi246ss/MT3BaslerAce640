@@ -137,7 +137,10 @@ namespace MT3
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             //UDP停止
-            worker_udp.CancelAsync();
+            if (worker_udp.IsBusy)
+            {
+                worker_udp.CancelAsync();
+            }
             // IDS
             if (cam_maker == Camera_Maker.IDS)
             {
@@ -744,24 +747,27 @@ namespace MT3
             timerSaveMainTime.Stop();
         }
 
+        // settingsの作成
         private void buttonMakeDark_Click(object sender, EventArgs e)
         {
-            Double dFramerate=0;
-            // IDS
-            if (cam_maker == Camera_Maker.IDS)
-            {
-                cam.Timing.Framerate.GetCurrentFps(out dFramerate);
-            }
-            toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("00.00");
-            //            label_frame_rate.Text = String.Format("FrDrop:{0} / {1}", icImagingControl1.DeviceCountOfFramesDropped, icImagingControl1.DeviceCountOfFramesNotDropped);
-            Pid_Data_Send();
+            //保存する設定を作成する
+            Settings sett = new Settings();
+            // Cam ID 21
+            sett.Width  = 640;
+            sett.Height = 480;
 
-            if (checkBox_WideDR.Checked)
-            {
-                // checkBox1.Checked = false;
-                //DarkMode = TRUE;
-                // timerDisplay.Enabled = true;
-            }
+            SettingsfileName = "settings21.config";//@"C:\test\settings.config";
+
+            //＜XMLファイルに書き込む＞
+            //XmlSerializerオブジェクトを作成
+            //書き込むオブジェクトの型を指定する
+            System.Xml.Serialization.XmlSerializer serializer1 = new System.Xml.Serialization.XmlSerializer(typeof(Settings));
+            //ファイルを開く（UTF-8 BOM無し）
+            System.IO.StreamWriter sw = new System.IO.StreamWriter( SettingsfileName, false, new System.Text.UTF8Encoding(false));
+            //シリアル化し、XMLファイルに保存する
+            serializer1.Serialize(sw, sett);
+            //閉じる
+            sw.Close();
         }
 
         private void timerMakeDark_Tick(object sender, EventArgs e)

@@ -70,6 +70,10 @@ namespace MT3
         #region グローバル変数
         //コマンドライン引数
         string[] cmds;
+        Settings appSettings = new Settings();
+        //設定保存先のファイル名
+        string SettingsfileName = "settings.config";//@"C:\test\settings.config";
+
         // メイン装置光軸座標
         int xoa;  //320
         int yoa;  //240
