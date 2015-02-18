@@ -68,6 +68,8 @@ namespace MT3
         #endregion
 
         #region グローバル変数
+        //コマンドライン引数
+        string[] cmds;
         // メイン装置光軸座標
         int xoa;  //320
         int yoa;  //240

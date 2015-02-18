@@ -367,7 +367,6 @@
             // 
             // timerMTmonSend
             // 
-            this.timerMTmonSend.Enabled = true;
             this.timerMTmonSend.Interval = 2000;
             this.timerMTmonSend.Tick += new System.EventHandler(this.timerMTmonSend_Tick);
             // 

@@ -27,12 +27,24 @@ namespace MT3
             InitializeComponent();
             timeBeginPeriod(time_period);
 
-            worker = new BackgroundWorker();
-            worker.WorkerReportsProgress = true;
-            worker.WorkerSupportsCancellation = true;
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            //コマンドライン引数を配列で取得する
+            cmds = System.Environment.GetCommandLineArgs();
+            //コマンドライン引数をcheck
+            if (cmds.Length != 3)
+            {
+                //アプリケーションを終了する
+                Application.Exit();
+            }
+            if (cmds[1].StartsWith("/vi"))  // analog camera VideoInputを使用
+            {
+                cam_maker = Camera_Maker.analog;
+               // cam_color = Camera_Color.mono;
+            }
+            if (cmds[1].StartsWith("/b")) // Basler
+            {
+                cam_maker = Camera_Maker.Basler;
+                // cam_color = Camera_Color.mono;
+            }
 
             worker_udp = new BackgroundWorker();
             worker_udp.WorkerReportsProgress = true;
@@ -42,6 +54,17 @@ namespace MT3
 
             xoa = xoa_mes;
             yoa = yoa_mes;
+
+            // VideoInput
+            if (cam_maker == Camera_Maker.analog)
+            {
+                worker = new BackgroundWorker();
+                worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+                worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            }
 
             // IDS
             if (cam_maker == Camera_Maker.IDS)
@@ -105,6 +128,8 @@ namespace MT3
         {
             checkBoxObsAuto_CheckedChanged(sender, e);
             diskspace = cDrive.TotalFreeSpace;
+            timerMTmonSend.Start();
+
             // IDS open
             //ShowButton.PerformClick();
         }
@@ -684,7 +709,11 @@ namespace MT3
                 ImgSaveFlag = TRUE;
                 this.States = SAVE;
                 this.timerSave.Enabled = true;
-               // fifo.Saveflag_true_Last(5);  // 1fr=0.2s  -> 5fr=1s 
+                // 過去データ保存
+                if (cam_maker == Camera_Maker.analog)
+                {
+                    fifo.Saveflag_true_Last(30);  // 1fr=0.2s  -> 5fr=1s 
+                }
             }
         }
 
