@@ -753,21 +753,11 @@ namespace MT3
             //保存する設定を作成する
             Settings sett = new Settings();
             // Cam ID 21
+            sett.ID = 21;
             sett.Width  = 640;
             sett.Height = 480;
+            SettingsSave(sett);
 
-            SettingsfileName = "settings21.config";//@"C:\test\settings.config";
-
-            //＜XMLファイルに書き込む＞
-            //XmlSerializerオブジェクトを作成
-            //書き込むオブジェクトの型を指定する
-            System.Xml.Serialization.XmlSerializer serializer1 = new System.Xml.Serialization.XmlSerializer(typeof(Settings));
-            //ファイルを開く（UTF-8 BOM無し）
-            System.IO.StreamWriter sw = new System.IO.StreamWriter( SettingsfileName, false, new System.Text.UTF8Encoding(false));
-            //シリアル化し、XMLファイルに保存する
-            serializer1.Serialize(sw, sett);
-            //閉じる
-            sw.Close();
         }
 
         private void timerMakeDark_Tick(object sender, EventArgs e)

@@ -180,6 +180,41 @@ namespace MT3
 
         #endregion
 
+        public void SettingsSave(Settings sett)
+        {
+            string fileName = string.Format("settings{00}.config", sett.ID);  //@"C:\test\settings.config";
+
+            //＜XMLファイルに書き込む＞
+            //XmlSerializerオブジェクトを作成
+            //書き込むオブジェクトの型を指定する
+            System.Xml.Serialization.XmlSerializer serializer1 = new System.Xml.Serialization.XmlSerializer(typeof(Settings));
+            //ファイルを開く（UTF-8 BOM無し）
+            System.IO.StreamWriter sw = new System.IO.StreamWriter(fileName, false, new System.Text.UTF8Encoding(false));
+            //シリアル化し、XMLファイルに保存する
+            serializer1.Serialize(sw, sett);
+            //閉じる
+            sw.Close();
+        }
+        public Settings SettingsLoad(int ID)
+        {
+            //loadする設定を作成する
+            Settings appSettings = new Settings();
+            string fileName = string.Format("settings{00}.config", ID);  //@"C:\test\settings.config";
+
+            //＜XMLファイルから読み込む＞
+            //XmlSerializerオブジェクトの作成
+            System.Xml.Serialization.XmlSerializer serializer2 = new System.Xml.Serialization.XmlSerializer(typeof(Settings));
+            //ファイルを開く
+            System.IO.StreamReader sr = new System.IO.StreamReader(
+                fileName, new System.Text.UTF8Encoding(false));
+            //XMLファイルから読み込み、逆シリアル化する
+            appSettings =
+                (Settings)serializer2.Deserialize(sr);
+            //閉じる
+            sr.Close();
+            return appSettings;
+        }
+
         # region AVT
         //AVT
         //GE680CCamera cam = new GE680CCamera(1);
