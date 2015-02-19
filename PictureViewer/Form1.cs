@@ -375,7 +375,7 @@ namespace MT3
                 int height = vi.GetHeight(DeviceID);
 
                 using (IplImage img = new IplImage(width, height, BitDepth.U8, 3))
-                using (IplImage img_dark8 = Cv.LoadImage(@"C:\piccolo\MT3V_dark.bmp", LoadMode.GrayScale))
+                //using (IplImage img_dark8 = Cv.LoadImage(@"C:\piccolo\MT3V_dark.bmp", LoadMode.GrayScale))
                 //using (IplImage img_dark = new IplImage(width, height, BitDepth.U8, 3))
                 using (IplImage img_mono = new IplImage(width, height, BitDepth.U8, 1))
                 using (IplImage img2 = new IplImage(width, height, BitDepth.U8, 1))
@@ -750,14 +750,8 @@ namespace MT3
         // settingsの作成
         private void buttonMakeDark_Click(object sender, EventArgs e)
         {
-            //保存する設定を作成する
-            Settings sett = new Settings();
-            // Cam ID 21
-            sett.ID = 21;
-            sett.Width  = 640;
-            sett.Height = 480;
-            SettingsSave(sett);
-
+            SettingsMake();
+            appSettings = SettingsLoad(21);
         }
 
         private void timerMakeDark_Tick(object sender, EventArgs e)

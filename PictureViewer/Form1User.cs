@@ -214,7 +214,48 @@ namespace MT3
             sr.Close();
             return appSettings;
         }
+        public void SettingsMake()
+        {
+            //保存する設定を作成する
+            Settings sett = new Settings();
+            // Cam ID 21
+            sett.Text = "Watec WAT-902";
+            sett.ID = 21;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 3;       //カメラタイプ毎のID
+            sett.CameraColor = 0;    // 0:mono  1:color
+            sett.Width = 640;
+            sett.Height = 480;
+            SettingsSave(sett);
 
+            sett.Text = "IDS UI-2410SE-M";
+            sett.ID = 4;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 2;       //カメラタイプ毎のID
+            sett.CameraColor = 0;    // 0:mono  1:color
+            sett.Width  = 640;
+            sett.Height = 480;
+            sett.Fl = 12.5;      //[mm]
+            sett.Ccdpx = 0.0074; //[mm]
+            sett.Ccdpy = 0.0074; //[mm]
+            sett.Framerate = 75.0; //[fps]
+            sett.FifoMaxFrame = 64;
+            sett.Exposure = 13; //[ms]
+            sett.Gain = 100;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410;
+            sett.UdpPortSend    = 24429;
+ /*
+            sett.IP_KV1000SpCam2 = "192.168.1.204";
+            sett.UdpPortKV1000SpCam2 = 24410;
+            sett.IP_KV1000 = "192.168.1.10";
+            sett.UdpPortKV1000 = 8503;
+            sett.IP_MtMon = "192.168.1.211";
+            sett.UdpPortMtMon = 24415;
+            */
+            SettingsSave(sett);
+        }
         # region AVT
         //AVT
         //GE680CCamera cam = new GE680CCamera(1);

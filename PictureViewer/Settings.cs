@@ -21,6 +21,13 @@ namespace MT3
             set { _id = value; }
         }
 
+        private string _camera_type;
+        public string CameraType
+        {
+            get { return _camera_type; }
+            set { _camera_type = value; }
+        }
+
         private int _camera_id;
         public int CameraID
         {
@@ -141,12 +148,41 @@ namespace MT3
             set { _udp_port_kv1000spcam2 = value; }
         }
 
+        private string _ip_kv1000;
+        public string IP_KV1000
+        {
+            get { return _ip_kv1000; }
+            set { _ip_kv1000 = value; }
+        }
+
+        private int _udp_port_kv1000;
+        public int UdpPortKV1000
+        {
+            get { return _udp_port_kv1000; }
+            set { _udp_port_kv1000 = value; }
+        }
+
+        private string _ip_mtmon;
+        public string IP_MtMon
+        {
+            get { return _ip_mtmon; }
+            set { _ip_mtmon = value; }
+        }
+
+        private int _udp_port_mtmon;
+        public int UdpPortMtMon
+        {
+            get { return _udp_port_mtmon; }
+            set { _udp_port_mtmon = value; }
+        }
+
         public Settings()
         {
             _text   = "IDS UI-2410SE-M";
-            _id     = 4;
-            _camera_id = 2;
-            _camera_color = 0; // 0:mono  1:color
+            _id     = 4;          //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            _camera_type = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
+            _camera_id = 2;       //カメラタイプ毎のID
+            _camera_color = 0;    // 0:mono  1:color
             _width  = 640;
             _height = 480;
             _fl = 12.5;      //[mm]
@@ -160,8 +196,12 @@ namespace MT3
             _threshold_min_area = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             _udp_port_recieve = 24410;
             _udp_port_send = 24429;
-            _ip_kv1000spcam2="192.168.1.204"
+            _ip_kv1000spcam2 = "192.168.1.204";
             _udp_port_kv1000spcam2 = 24410;
+            _ip_kv1000 = "192.168.1.10";
+            _udp_port_kv1000 = 8503;
+            _ip_mtmon = "192.168.1.211";
+            _udp_port_mtmon = 24415;
 
         }
 
