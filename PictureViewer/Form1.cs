@@ -35,16 +35,32 @@ namespace MT3
                 //アプリケーションを終了する
                 Application.Exit();
             }
-            if (cmds[1].StartsWith("/vi"))  // analog camera VideoInputを使用
+            if (cmds[1].StartsWith("/vi") || cmds[1].StartsWith("/an"))  // analog camera VideoInputを使用
             {
                 cam_maker = Camera_Maker.analog;
                // cam_color = Camera_Color.mono;
             }
-            if (cmds[1].StartsWith("/b")) // Basler
+            if (cmds[1].StartsWith("/ba") || cmds[1].StartsWith("/Ba")) // Basler
             {
                 cam_maker = Camera_Maker.Basler;
                 // cam_color = Camera_Color.mono;
             }
+            if (cmds[1].StartsWith("/AV") || cmds[1].StartsWith("/av")) // AVT
+            {
+                cam_maker = Camera_Maker.AVT;
+                // cam_color = Camera_Color.mono;
+            }
+            if (cmds[1].StartsWith("/ID") || cmds[1].StartsWith("/id")) // IDS
+            {
+                cam_maker = Camera_Maker.IDS;
+                // cam_color = Camera_Color.mono;
+            }
+            if (cmds[1].StartsWith("/IS") || cmds[1].StartsWith("/Im")) // Imaging Souce
+            {
+                cam_maker = Camera_Maker.ImagingSouce;
+                // cam_color = Camera_Color.mono;
+            }
+
 
             worker_udp = new BackgroundWorker();
             worker_udp.WorkerReportsProgress = true;
