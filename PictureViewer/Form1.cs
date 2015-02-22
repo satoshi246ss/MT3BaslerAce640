@@ -404,7 +404,7 @@ namespace MT3
                             //str = String.Format("ID:{0}", id);
                             //img.PutText(str, new CvPoint(10, 450), font, new CvColor(0, 255, 100));
                             Cv.CvtColor(img, img_mono, ColorConversion.BgrToGray);
-                            Cv.Sub(img_mono, img_dark8, imgdata.img); // dark減算
+                            Cv.Copy(img_mono, imgdata.img); // Copy 将来的にはdark減算
                             imgdata.id = ++id;
                             imgdata.t = dn;
                             imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換

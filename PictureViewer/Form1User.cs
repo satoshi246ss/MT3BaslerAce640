@@ -246,7 +246,27 @@ namespace MT3
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;
             sett.UdpPortSend    = 24429;
- /*
+
+            // MT2 Echelle
+            sett.Text = "AVT GE-2040";
+            sett.ID = 11;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.CameraType = "AVT"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 2;       //カメラタイプ毎のID
+            sett.CameraColor = 0;    // 0:mono  1:color
+            sett.Width  = 2048;
+            sett.Height = 2048;
+            sett.Fl = 50;      //[mm]
+            sett.Ccdpx = 0.0074; //[mm]
+            sett.Ccdpy = 0.0074; //[mm]
+            sett.Framerate = 15.0; //[fps]
+            sett.FifoMaxFrame = 32;
+            sett.Exposure = 66; //[ms]
+            sett.Gain = 30; // 0-30  要検討
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410;
+            sett.UdpPortSend = 24429;
+            /*
             sett.IP_KV1000SpCam2 = "192.168.1.204";
             sett.UdpPortKV1000SpCam2 = 24410;
             sett.IP_KV1000 = "192.168.1.10";
