@@ -176,6 +176,22 @@ namespace MT3
             set { _udp_port_mtmon = value; }
         }
 
+        //ringbuf
+        // file ID
+        private int _no_cap_dev;
+        public int NoCapDev
+        {
+            get { return _no_cap_dev; }
+            set { _no_cap_dev = value; }
+        }
+        // Save dir
+        private string _save_dir;
+        public string SaveDir
+        {
+            get { return _save_dir; }
+            set { _save_dir = value; }
+        }
+
         public Settings()
         {
             _text   = "IDS UI-2410SE-M";
@@ -202,6 +218,8 @@ namespace MT3
             _udp_port_kv1000 = 8503;
             _ip_mtmon = "192.168.1.211";
             _udp_port_mtmon = 24415;
+            _no_cap_dev = _id;
+            _save_dir = @"C:\Users\Public\img_data\";
 
         }
 

@@ -82,9 +82,38 @@ namespace MT3
         int mask;
 
         CvVideoWriter vw;
-        int width, height;
-        int NoCapDev = 9;  // file ID
-        string savedir;
+        //int width, height;
+        private int _width;
+        public int Width
+        {
+            get { return _width; }
+            set { _width = value; }
+        }
+
+        private int _height;
+        public int Height
+        {
+            get { return _height; }
+            set { _height = value; }
+        }
+        
+        // file ID
+        private int _no_cap_dev;
+        public int NoCapDev
+        {
+            get { return _no_cap_dev; }
+            set { _no_cap_dev = value; }
+        }
+
+        // Save dir
+        private string _save_dir;
+        public string SaveDir
+        {
+            get { return _save_dir; }
+            set { _save_dir = value; }
+        }
+
+
         IplImage imgR;
         //IplImage imgBGR = new IplImage(640, 480, BitDepth.U8, 3);
         //IplImage imgR = new IplImage(640, 480, BitDepth.U8, 1);
@@ -103,6 +132,11 @@ namespace MT3
         /// <param name="capacity">初期載大容量</param>
         public CircularBuffer(int capacity, int width, int height)
         {
+            _no_cap_dev = 9;
+            _save_dir = @"C:\Users\Public\img_data\";
+            _width = width;
+            _height = height;
+
             capacity = Pow2((uint)capacity);
             this.data = new ImageData[capacity];
             this.img = new IplImage[capacity];
@@ -110,9 +144,6 @@ namespace MT3
                 this.img[i] = new IplImage(width, height, BitDepth.U8, 1); //1
             this.top = this.bottom = 0;
             this.mask = capacity - 1;
-            this.width = width;
-            this.height = height;
-            this.savedir = @"C:\Users\Public\img_data\";
             this.imgR = new IplImage(width, height, BitDepth.U8, 1);
         }
 
@@ -216,7 +247,7 @@ namespace MT3
             }
             IplImage[] img = new IplImage[this.data.Length * 2];
             for (i = 0; i < this.data.Length * 2; i++)
-                this.img[i] = new IplImage(width, height, BitDepth.U8, 1);
+                this.img[i] = new IplImage(Width, Height, BitDepth.U8, 1);
             i = 0;
             foreach (IplImage elem in this)
             {
@@ -331,7 +362,7 @@ namespace MT3
             // 初期化チェック
             if (this.data[this.bottom].ImgSaveFlag == false && this.data[(this.bottom - 1) & this.mask].ImgSaveFlag == true)
             {
-                string fn = savedir + this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd") + @"\";
+                string fn = SaveDir + this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd") + @"\";
                 // フォルダ (ディレクトリ) が存在しているかどうか確認する
                 if (!System.IO.Directory.Exists(fn))
                 {
@@ -403,7 +434,7 @@ namespace MT3
         {
             int codec = Cv.FOURCC('D', 'I', 'B', ' ');  // 0; //非圧縮avi
             //this.vw = new CvVideoWriter(fn, codec, 29.97, new CvSize(this.width, this.height), true); //color
-            this.vw = new CvVideoWriter(fn, codec, 29.97, new CvSize(this.width, this.height), false); //mono
+            this.vw = new CvVideoWriter(fn, codec, 29.97, new CvSize(Width, Height), false); //mono
             this.writer = new StreamWriter(@"Test.txt", true, System.Text.Encoding.GetEncoding("shift_jis"));
         }
 

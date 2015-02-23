@@ -93,11 +93,11 @@ namespace MT3
         DateTime LiveStartTime;
         long timestamp; // [us]
 
-        const int MaxFrame = 128;  //512
+        const int MaxFrame = 32;  //512
         //const int WIDTH = 2456; // 2456 max piA2400-12gm
         //const int HEIGHT = 2058; // 2058 max
-        const int WIDTH  = 640; // 2456 max piA2400-12gm
-        const int HEIGHT = 480; // 2058 max
+        const int WIDTH  = 2048; // 2456 max piA2400-12gm
+        const int HEIGHT = 2048; // 2058 max
 
         ImageData imgdata = new ImageData(WIDTH, HEIGHT);
         CircularBuffer fifo = new CircularBuffer(MaxFrame, WIDTH, HEIGHT);
@@ -214,6 +214,10 @@ namespace MT3
             sr.Close();
             return appSettings;
         }
+        public void SettingsRingBuf()
+        {
+
+        }
         public void SettingsMake()
         {
             //保存する設定を作成する
@@ -246,6 +250,7 @@ namespace MT3
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;
             sett.UdpPortSend    = 24429;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
 
             // MT2 Echelle
             sett.Text = "AVT GE-2040";
@@ -266,6 +271,8 @@ namespace MT3
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;
             sett.UdpPortSend = 24429;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
+
             /*
             sett.IP_KV1000SpCam2 = "192.168.1.204";
             sett.UdpPortKV1000SpCam2 = 24410;
@@ -287,7 +294,7 @@ namespace MT3
         long payloadSize;
         AVT.VmbAPINET.Frame[] frameArray = new AVT.VmbAPINET.Frame[3];
 
-        String avtcam_ip = "192.168.1.150";
+        String avtcam_ip = "192.168.1.151";
 
         static void CopyMemory(IntPtr dst, IntPtr src, int size)
         {
@@ -470,7 +477,7 @@ namespace MT3
         }
         public double ExposureTimeAbs()
         {
-            feature = features[" ExposureTimeAbs"];
+            feature = features["ExposureTimeAbs"];
             return feature.FloatValue;
         }
         //DESCRIPTION:
@@ -510,7 +517,7 @@ namespace MT3
         }
         public long GainRaw()
         {
-            feature = features[" GainRaw"];
+            feature = features["GainRaw"];
             return feature.IntValue;
         }
  
