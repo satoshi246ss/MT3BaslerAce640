@@ -57,11 +57,11 @@ namespace MT3
             set { _height = value; }
         }
 
-        private double _fl;
-        public double Fl
+        private double _focal_length;
+        public double FocalLength
         {
-            get { return _fl; }
-            set { _fl = value; }
+            get { return _focal_length; }
+            set { _focal_length = value; }
         }
 
         private double _ccdpx;
@@ -201,7 +201,7 @@ namespace MT3
             _camera_color = 0;    // 0:mono  1:color
             _width  = 640;
             _height = 480;
-            _fl = 12.5;      //[mm]
+            _focal_length = 12.5;      //[mm]
             _ccdpx = 0.0074; //[mm]
             _ccdpy = 0.0074; //[mm]
             _framerate = 75.0; //[fps]

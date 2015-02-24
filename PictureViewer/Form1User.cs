@@ -63,7 +63,6 @@ namespace MT3
         double yoa_test_start = 70;
         double xoa_test_step = 1;
         double yoa_test_step = 1;
-        //int roa_mes = 10;
 
         #endregion
 
@@ -80,10 +79,10 @@ namespace MT3
         int roa = 10;
         double xoad, yoad;
 
-        const  double fl = 12.5, ccdpx = 0.0074, ccdpy = 0.0074;
-        public double dx, dy, theta_c = 0, dt = 1.0 / 12.0;
+        public double theta_c = 0 ;
+        public double dx, dy ;
         public double az0, alt0, vaz0, valt0; // 流星位置、速度（前フレームの値）
-        public double az, alt, vaz, valt; // 流星位置、速度
+        public double az,  alt,  vaz,  valt; // 流星位置、速度
         public double az1, alt1, vaz1, valt1; // 流星位置、速度（次フレームの値）
         public double daz, dalt, dvaz, dvalt; // 流星位置差、速度差（前フレームからの）
         position_mesure pos_mes = new position_mesure();
@@ -99,12 +98,11 @@ namespace MT3
         const int WIDTH  = 2048; // 2456 max piA2400-12gm
         const int HEIGHT = 2048; // 2058 max
 
-        ImageData imgdata = new ImageData(WIDTH, HEIGHT);
-        CircularBuffer fifo = new CircularBuffer(MaxFrame, WIDTH, HEIGHT);
+        //ImageData imgdata = new ImageData(WIDTH, HEIGHT);
+        ImageData imgdata = new ImageData(640,480);
+        CircularBuffer fifo = new CircularBuffer();
 
         private ImageProvider m_imageProvider = new ImageProvider(); /* Create one image provider. */
-        //private Bitmap m_bitmap = null; /* The bitmap is used for displaying the image. */
-
 
         //TIS.Imaging.ImageBuffer CurrentBuffer = null;
 
@@ -180,6 +178,8 @@ namespace MT3
 
         #endregion
 
+        # region Settings
+
         public void SettingsSave(Settings sett)
         {
             string fileName = string.Format("settings{00}.config", sett.ID);  //@"C:\test\settings.config";
@@ -239,7 +239,7 @@ namespace MT3
             sett.CameraColor = 0;    // 0:mono  1:color
             sett.Width  = 640;
             sett.Height = 480;
-            sett.Fl = 12.5;      //[mm]
+            sett.FocalLength = 12.5;      //[mm]
             sett.Ccdpx = 0.0074; //[mm]
             sett.Ccdpy = 0.0074; //[mm]
             sett.Framerate = 75.0; //[fps]
@@ -251,6 +251,7 @@ namespace MT3
             sett.UdpPortRecieve = 24410;
             sett.UdpPortSend    = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
+            SettingsSave(sett);
 
             // MT2 Echelle
             sett.Text = "AVT GE-2040";
@@ -260,7 +261,7 @@ namespace MT3
             sett.CameraColor = 0;    // 0:mono  1:color
             sett.Width  = 2048;
             sett.Height = 2048;
-            sett.Fl = 50;      //[mm]
+            sett.FocalLength = 50;      //[mm]
             sett.Ccdpx = 0.0074; //[mm]
             sett.Ccdpy = 0.0074; //[mm]
             sett.Framerate = 15.0; //[fps]
@@ -283,6 +284,8 @@ namespace MT3
             */
             SettingsSave(sett);
         }
+        #endregion
+
         # region AVT
         //AVT
         //GE680CCamera cam = new GE680CCamera(1);

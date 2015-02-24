@@ -54,18 +54,38 @@ namespace MT3
         public Udp_kv udpkv1;
 
         // デフォルトコンストラクタ
-        public ImageData(Int32 w, Int32 h)
+/*        public ImageData()
         {
             id = 0;
             detect_mode = 0;
             t = DateTime.Now;
-            img = new IplImage(w, h, BitDepth.U8, 1);
+            img = null;// new IplImage(w, h, BitDepth.U8, 1);
             ImgSaveFlag = false;
             gx = gy = vmax = 0.0;
             kgx = kgy = kvx = kvy = 0.0;
             az = alt = vaz = valt = 0.0;
             blobs = new CvBlobs();
             udpkv1 = new Udp_kv();
+        }
+ */
+        // デフォルトコンストラクタ
+        public ImageData(Int32 w, Int32 h)
+        {
+            id = 0;
+            detect_mode = 0;
+            t = DateTime.Now;
+            img = null;
+            //img = new IplImage(w, h, BitDepth.U8, 1);
+            ImgSaveFlag = false;
+            gx = gy = vmax = 0.0;
+            kgx = kgy = kvx = kvy = 0.0;
+            az = alt = vaz = valt = 0.0;
+            blobs = new CvBlobs();
+            udpkv1 = new Udp_kv();
+        }
+        public void init(Int32 w, Int32 h)
+        {
+            img = new IplImage(w, h, BitDepth.U8, 1);
         }
     }
     /// <summary>
@@ -82,7 +102,6 @@ namespace MT3
         int mask;
 
         CvVideoWriter vw;
-        //int width, height;
         private int _width;
         public int Width
         {
@@ -124,12 +143,13 @@ namespace MT3
         #endregion
         #region 初期化
 
-        public CircularBuffer() : this(256, 640, 480) { }
+        //public CircularBuffer() : this(256, 640, 480) { }
+        public CircularBuffer() { }
 
         /// <summary>
         /// 初期最大容量を指定して初期化。
         /// </summary>
-        /// <param name="capacity">初期載大容量</param>
+        /// <param name="capacity">初期最大容量</param>
         public CircularBuffer(int capacity, int width, int height)
         {
             _no_cap_dev = 9;
@@ -146,6 +166,29 @@ namespace MT3
             this.mask = capacity - 1;
             this.imgR = new IplImage(width, height, BitDepth.U8, 1);
         }
+
+        /// <summary>
+        /// 初期最大容量を指定して初期化。
+        /// </summary>
+        /// <param name="capacity">初期最大容量</param>
+        public void init(int capacity, int width, int height, int no_cap_dev, string save_dir)
+        {
+            _no_cap_dev = no_cap_dev;
+            _save_dir   = save_dir;
+            _width      = width;
+            _height     = height;
+            SaveDir = save_dir;
+
+            capacity = Pow2((uint)capacity);
+            this.data = new ImageData[capacity];
+            this.img = new IplImage[capacity];
+            for (int i = 0; i < capacity; i++)
+                this.img[i] = new IplImage(width, height, BitDepth.U8, 1); //1
+            this.top = this.bottom = 0;
+            this.mask = capacity - 1;
+            this.imgR = new IplImage(width, height, BitDepth.U8, 1);
+        }
+
 
         static int Pow2(uint n)
         {

@@ -130,10 +130,10 @@ namespace MT3
                 try
                 {
                     dx = sgx; dy = sgy;
-                    udpkv.cxcy2azalt(-dx, -dy, udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, fl, ccdpx, ccdpx, ref az, ref alt);
-                    udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, fl, ccdpx, ccdpx, ref az1, ref alt1);
-                    vaz = udpkv.vaz2_kv + (az1 - az) / dt;
-                    valt = udpkv.valt2_kv + (alt1 - alt) / dt;
+                    udpkv.cxcy2azalt(-dx        , -dy        , udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az , ref alt );
+                    udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                    vaz  = udpkv.vaz2_kv  + (az1  - az)  * appSettings.Framerate;
+                    valt = udpkv.valt2_kv + (alt1 - alt) * appSettings.Framerate;
 
                     //daz = az - udpkv.az2_c; dalt = alt - udpkv.alt2_c;             //位置誤差
                     //dvaz = (daz - daz1) / dt; dvalt = (dalt - dalt1) / dt;        //速度誤差

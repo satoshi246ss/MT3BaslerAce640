@@ -61,7 +61,13 @@ namespace MT3
                 // cam_color = Camera_Color.mono;
             }
 
+            // setting load
+            appSettings = SettingsLoad(int.Parse(cmds[2]));
 
+            imgdata.init(appSettings.Width, appSettings.Height);
+            // FIFO init
+            fifo.init(appSettings.FifoMaxFrame, appSettings.Width, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir);
+            
             worker_udp = new BackgroundWorker();
             worker_udp.WorkerReportsProgress = true;
             worker_udp.WorkerSupportsCancellation = true;
