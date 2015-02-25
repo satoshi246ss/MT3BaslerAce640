@@ -356,14 +356,14 @@
             // toolStripStatusLabelExposure
             // 
             this.toolStripStatusLabelExposure.Name = "toolStripStatusLabelExposure";
-            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(28, 17);
-            this.toolStripStatusLabelExposure.Text = "Exp";
+            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(129, 17);
+            this.toolStripStatusLabelExposure.Text = "Exposure: xx.xx[ms]";
             // 
             // toolStripStatusLabelGain
             // 
             this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
-            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(33, 17);
-            this.toolStripStatusLabelGain.Text = "Gain";
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(52, 17);
+            this.toolStripStatusLabelGain.Text = "Gain:xx";
             // 
             // timerMTmonSend
             // 

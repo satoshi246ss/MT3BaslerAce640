@@ -106,6 +106,13 @@ namespace MT3
             set { _fifo_max_frame = value; }
         }
 
+        private bool _use_detect;
+        public bool UseDetect
+        {
+            get { return _use_detect; }
+            set { _use_detect = value; }
+        }
+        
         private int _threshold_blob;
         public int ThresholdBlob
         {
@@ -208,6 +215,7 @@ namespace MT3
             _fifo_max_frame = 64;
             _exposure = 13; //[ms]
             _gain = 100;
+            _use_detect = true;
             _threshold_blob = 128;     // 検出閾値（０－２５５）
             _threshold_min_area = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             _udp_port_recieve = 24410;
@@ -220,7 +228,6 @@ namespace MT3
             _udp_port_mtmon = 24415;
             _no_cap_dev = _id;
             _save_dir = @"C:\Users\Public\img_data\";
-
         }
 
      }

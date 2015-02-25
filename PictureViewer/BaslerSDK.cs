@@ -16,7 +16,7 @@ namespace MT3
         {
             //Basler
             m_imageProvider.Open(index);
-            m_imageProvider.Setup(WIDTH, HEIGHT);
+            m_imageProvider.Setup(appSettings.Width, appSettings.Height);
             m_imageProvider.SetupExposureTimeAbs(set_exposure * 1000.0); // [usec]
             m_imageProvider.SetupGain(set_gain); // 100-1023
             m_imageProvider.SetupFrameRate(set_framerate);

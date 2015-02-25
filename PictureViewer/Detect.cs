@@ -18,10 +18,12 @@ namespace MT3
         {
             ++id;
 
+            if (!appSettings.UseDetect) return;
+
             #region 位置検出2  //Blob
             try
             {
-                Cv.Threshold(imgdata.img, img2, threshold_blob, 255, ThresholdType.Binary); //2ms
+                Cv.Threshold(imgdata.img, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
                 blobs.Label(img2); //1.4ms
             }
             catch (KeyNotFoundException)
@@ -41,7 +43,7 @@ namespace MT3
             {
                 if (blobs.Count > 0)
                 {
-                    int min_area = Math.Max(2, (int)(threshold_min_area * maxBlob.Area));
+                    int min_area = Math.Max(2, (int)(appSettings.ThresholdMinArea * maxBlob.Area));
                     blobs.FilterByArea(min_area, int.MaxValue); //0.001ms   面積がmin_area未満のblobを削除
                 }
                 max_label = 0;

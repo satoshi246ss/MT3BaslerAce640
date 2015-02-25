@@ -64,6 +64,7 @@ namespace MT3
             // setting load
             appSettings = SettingsLoad(int.Parse(cmds[2]));
 
+            IplImageInit();
             imgdata.init(appSettings.Width, appSettings.Height);
             // FIFO init
             fifo.init(appSettings.FifoMaxFrame, appSettings.Width, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir);
@@ -430,7 +431,7 @@ namespace MT3
                             imgdata.id = ++id;
                             imgdata.t = dn;
                             imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
-                            if (fifo.Count == MaxFrame - 1) fifo.EraseLast();
+                            if (fifo.Count == appSettings.FifoMaxFrame - 1) fifo.EraseLast();
                             fifo.InsertFirst(imgdata);
                             // 位置検出
                             Cv.Smooth(imgdata.img, img2, SmoothType.Gaussian, size, 0, sigma, 0);
@@ -862,6 +863,7 @@ namespace MT3
         private void timerDisplay_Tick(object sender, EventArgs e)
         {
             if (this.States == STOP) return;
+            //if (img_dmk3 == null) return;
 
             //OpenCV　表示ルーチン
             if (imgdata.img != null)
@@ -910,8 +912,6 @@ namespace MT3
             label_ID.Text = max_label.ToString("0");
 
             // Status表示
-
-
             double dFramerate = 0; // Frame rate[fr/s]
             double dExpo = 0; // Exposure[us]
             long igain = 0; //Gain
@@ -936,7 +936,7 @@ namespace MT3
             }
             toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
             label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
-            toolStripStatusLabelExposure.Text = "Exposure: " + dExpo.ToString("00.00")+"[ms]";
+            toolStripStatusLabelExposure.Text = "Exposure: " + (dExpo/1000.0).ToString("00.00")+"[ms]";
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
 
             // Error rate
@@ -1025,7 +1025,7 @@ namespace MT3
             imgdata.alt = alt;
             imgdata.vaz = vaz;
             imgdata.valt = valt;
-            if (fifo.Count == MaxFrame - 1) fifo.EraseLast();
+            if (fifo.Count == appSettings.FifoMaxFrame - 1) fifo.EraseLast();
             fifo.InsertFirst(imgdata);
             /*}
             catch (Exception ex)

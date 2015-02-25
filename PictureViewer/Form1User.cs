@@ -92,14 +92,7 @@ namespace MT3
         DateTime LiveStartTime;
         long timestamp; // [us]
 
-        const int MaxFrame = 32;  //512
-        //const int WIDTH = 2456; // 2456 max piA2400-12gm
-        //const int HEIGHT = 2058; // 2058 max
-        const int WIDTH  = 2048; // 2456 max piA2400-12gm
-        const int HEIGHT = 2048; // 2058 max
-
-        //ImageData imgdata = new ImageData(WIDTH, HEIGHT);
-        ImageData imgdata = new ImageData(640,480);
+        ImageData imgdata = new ImageData(640,480); //struck 初期化ダミー
         CircularBuffer fifo = new CircularBuffer();
 
         private ImageProvider m_imageProvider = new ImageProvider(); /* Create one image provider. */
@@ -120,19 +113,11 @@ namespace MT3
         double set_exposure1 = 0.2; // [ms]
         Int32 set_gain = 100;       // [100-1023]
 
-        IplImage img_dmk3 = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 3);
-        IplImage img_dmk = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 1);
-        // IplImage img_dark8 = Cv.LoadImage(@"C:\Users\Public\piccolo\dark00.bmp", LoadMode.GrayScale);
-        IplImage img2 = new IplImage(WIDTH, HEIGHT, BitDepth.U8, 1);
-        IplImage imgLabel = new IplImage(WIDTH, HEIGHT, CvBlobLib.DepthLabel, 1);
+        IplImage img_dmk3, img_dmk, img2, imgLabel;
         CvBlobs blobs = new CvBlobs();
         CvFont font = new CvFont(FontFace.HersheyComplex, 0.50, 0.50);
 
-        //CvWindow window1 = new CvWindow("DMK2", WindowMode.AutoSize);
-        //int id_fr = 0;
         double gx, gy, max_val, kgx, kgy, kvx, kvy, sgx, sgy;
-        int threshold_blob = 128; // 検出閾値（０－２５５）
-        double threshold_min_area = 0.25; // 最小エリア閾値（最大値ｘ0.25)
         CvPoint2D64f max_centroid;
         int max_label;
         CvBlob maxBlob;
@@ -178,6 +163,15 @@ namespace MT3
 
         #endregion
 
+        public void IplImageInit()
+        {
+            img_dmk3 = new IplImage(appSettings.Width, appSettings.Height, BitDepth.U8, 3);
+            img_dmk = new IplImage(appSettings.Width, appSettings.Height, BitDepth.U8, 1);
+            // IplImage img_dark8 = Cv.LoadImage(@"C:\Users\Public\piccolo\dark00.bmp", LoadMode.GrayScale);
+            img2 = new IplImage(appSettings.Width, appSettings.Height, BitDepth.U8, 1);
+            imgLabel = new IplImage(appSettings.Width, appSettings.Height, CvBlobLib.DepthLabel, 1);
+        }
+
         # region Settings
 
         public void SettingsSave(Settings sett)
@@ -200,6 +194,12 @@ namespace MT3
             //loadする設定を作成する
             Settings appSettings = new Settings();
             string fileName = string.Format("settings{00}.config", ID);  //@"C:\test\settings.config";
+
+            // ファイルが存在しているかどうか確認する
+            if (!System.IO.File.Exists(fileName))
+            {
+                SettingsMake();
+            }
 
             //＜XMLファイルから読み込む＞
             //XmlSerializerオブジェクトの作成
@@ -230,6 +230,9 @@ namespace MT3
             sett.CameraColor = 0;    // 0:mono  1:color
             sett.Width = 640;
             sett.Height = 480;
+            sett.UseDetect = true;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             SettingsSave(sett);
 
             sett.Text = "IDS UI-2410SE-M";
@@ -246,6 +249,7 @@ namespace MT3
             sett.FifoMaxFrame = 64;
             sett.Exposure = 13; //[ms]
             sett.Gain = 100;
+            sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;
@@ -268,11 +272,13 @@ namespace MT3
             sett.FifoMaxFrame = 32;
             sett.Exposure = 66; //[ms]
             sett.Gain = 30; // 0-30  要検討
+            sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;
             sett.UdpPortSend = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
+            SettingsSave(sett);
 
             /*
             sett.IP_KV1000SpCam2 = "192.168.1.204";
@@ -282,7 +288,8 @@ namespace MT3
             sett.IP_MtMon = "192.168.1.211";
             sett.UdpPortMtMon = 24415;
             */
-            SettingsSave(sett);
+            //const int WIDTH = 2456; // 2456 max piA2400-12gm
+            //const int HEIGHT = 2058; // 2058 max
         }
         #endregion
 
@@ -426,8 +433,7 @@ namespace MT3
             }
             elapsed21 = sw2.ElapsedTicks; // 0.1ms
             
-            //detect();
-            id++;
+            detect();            
             imgdata_push_FIFO();
             elapsed22 = sw2.ElapsedTicks; // 0.1ms
             // 処理速度
@@ -462,7 +468,7 @@ namespace MT3
             imgdata.alt = alt;
             imgdata.vaz = vaz;
             imgdata.valt = valt;
-            if (fifo.Count == MaxFrame - 1) fifo.EraseLast();
+            if (fifo.Count == appSettings.FifoMaxFrame - 1) fifo.EraseLast();
             fifo.InsertFirst(imgdata, buf);
             /*}
             catch (Exception ex)

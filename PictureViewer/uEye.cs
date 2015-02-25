@@ -182,7 +182,7 @@ namespace MT3
 
                     // 位置検出
                     Cv.Smooth(img_dmk, img2, SmoothType.Gaussian, size, 0, sigma, 0);
-                    CvRect rect = new CvRect(1, 1, WIDTH - 2, HEIGHT - 2);
+                    CvRect rect = new CvRect(1, 1, appSettings.Width - 2, appSettings.Height - 2);
                     Cv.SetImageROI(img2, rect);
                     Cv.MinMaxLoc(img2, out  min_val, out  max_val, out  min_loc, out  max_loc, null);
                     Cv.ResetImageROI(img2);
@@ -192,8 +192,8 @@ namespace MT3
                     double m00, m10, m01;
                     if (max_loc.X - size2x < 0) size2x = max_loc.X;
                     if (max_loc.Y - size2y < 0) size2y = max_loc.Y;
-                    if (max_loc.X + size2x >= WIDTH) size2x = WIDTH - max_loc.X - 1;
-                    if (max_loc.Y + size2y >= HEIGHT) size2y = HEIGHT - max_loc.Y - 1;
+                    if (max_loc.X + size2x >= appSettings.Width ) size2x = appSettings.Width  - max_loc.X - 1;
+                    if (max_loc.Y + size2y >= appSettings.Height) size2y = appSettings.Height - max_loc.Y - 1;
                     rect = new CvRect(max_loc.X - size2x, max_loc.Y - size2y, size, size);
                     CvMoments moments;
                     Cv.SetImageROI(img2, rect);

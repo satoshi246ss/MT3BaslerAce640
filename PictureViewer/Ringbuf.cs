@@ -54,7 +54,7 @@ namespace MT3
         public Udp_kv udpkv1;
 
         // デフォルトコンストラクタ
-/*        public ImageData()
+ /*       public ImageData()
         {
             id = 0;
             detect_mode = 0;
@@ -67,7 +67,7 @@ namespace MT3
             blobs = new CvBlobs();
             udpkv1 = new Udp_kv();
         }
- */
+        */
         // デフォルトコンストラクタ
         public ImageData(Int32 w, Int32 h)
         {
@@ -161,7 +161,10 @@ namespace MT3
             this.data = new ImageData[capacity];
             this.img = new IplImage[capacity];
             for (int i = 0; i < capacity; i++)
-                this.img[i] = new IplImage(width, height, BitDepth.U8, 1); //1
+            {
+                //this.data[i] = new ImageData(width,height) ;
+                this.img[i]  = new IplImage(width, height, BitDepth.U8, 1);
+            }
             this.top = this.bottom = 0;
             this.mask = capacity - 1;
             this.imgR = new IplImage(width, height, BitDepth.U8, 1);
