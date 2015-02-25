@@ -935,9 +935,10 @@ namespace MT3
                 igain = GainRaw();
             }
             toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
-            label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
             toolStripStatusLabelExposure.Text = "Exposure: " + (dExpo/1000.0).ToString("00.00")+"[ms]";
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
+
+            label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
 
             // Error rate
             long frame_total=0, frame_error=0, frame_underrun = 0 ;
@@ -945,20 +946,20 @@ namespace MT3
             /*            uEye.Types.CaptureStatus captureStatus;
                         cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
                         frame_total= captureStatus.Total();
-  
+  */
              frame_underrun = StatFrameUnderrun();// AVT
              frame_total = StatFrameDelivered() ;
-            */
+            
     //        frame_total = m_imageProvider.Get_Statistic_Total_Buffer_Count();
     //        frame_error = Get_Statistic_Total_Buffer_Count();
-           // toolStripStatusLabelFailed.Text = "Failed U:" + StatFrameUnderrun().ToString("0000") + " S:" + StatFrameShoved().ToString("0000") + " D:" + StatFrameDropped().ToString("0000");
+             toolStripStatusLabelFailed.Text = "Failed U:" + StatFrameUnderrun().ToString("0000") + " S:" + StatFrameShoved().ToString("0000") + " D:" + StatFrameDropped().ToString("0000") ;
 
-    //        double err_rate = 100.0 * (frame_total / (double)id);
-    //        toolStripStatusLabelID.Text = "Frames: " + frame_total + " " + frame_error + " " + err_rate.ToString("00.00");
+            double err_rate = 100.0 * (frame_total / (double)id);
+            toolStripStatusLabelID.Text = "Frames: " + frame_total + " " + frame_error + " " + err_rate.ToString("00.00");
 
             //Int32 s32Value;
             //statusRet = cam.Timing.PixelClock.Get(out s32Value);
-            toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed21-elapsed20)/(double)(Stopwatch.Frequency) +" "+ 10000*(elapsed22-elapsed21)/(double)(Stopwatch.Frequency);
+ //           toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed21-elapsed20)/(double)(Stopwatch.Frequency) +" "+ 10000*(elapsed22-elapsed21)/(double)(Stopwatch.Frequency);
  //           toolStripStatusLabelPixelClock.Text = "Gain: " + GainRaw().ToString("00");
 
             //Double dValue;

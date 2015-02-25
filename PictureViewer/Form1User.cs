@@ -237,6 +237,7 @@ namespace MT3
 
             sett.Text = "IDS UI-2410SE-M";
             sett.ID = 4;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 4;
             sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 2;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
@@ -260,6 +261,7 @@ namespace MT3
             // MT2 Echelle
             sett.Text = "AVT GE-2040";
             sett.ID = 11;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 11;
             sett.CameraType = "AVT"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 2;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
@@ -272,7 +274,7 @@ namespace MT3
             sett.FifoMaxFrame = 32;
             sett.Exposure = 66; //[ms]
             sett.Gain = 30; // 0-30  要検討
-            sett.UseDetect = true;
+            sett.UseDetect = false;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;

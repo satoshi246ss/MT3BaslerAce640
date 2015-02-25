@@ -350,8 +350,8 @@
             // toolStripStatusLabelPixelClock
             // 
             this.toolStripStatusLabelPixelClock.Name = "toolStripStatusLabelPixelClock";
-            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(133, 17);
-            this.toolStripStatusLabelPixelClock.Text = "toolStripStatusLabel3";
+            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(22, 17);
+            this.toolStripStatusLabelPixelClock.Text = "PC";
             // 
             // toolStripStatusLabelExposure
             // 
