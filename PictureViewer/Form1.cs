@@ -96,9 +96,16 @@ namespace MT3
                 cam = new uEye.Camera();
             }
 
+             //AVT
+            if (cam_maker == Camera_Maker.AVT)
+            {
+                appTitle = "MT3AVT " + appSettings.ID.ToString();
+            }
+            
             //Basler
             if (cam_maker == Camera_Maker.Basler)
             {
+                appTitle = "MT3Basler " + appSettings.ID.ToString();
                 Text = "MT3BaslerAce";
                 /* Register for the events of the image provider needed for proper operation. */
                 m_imageProvider.GrabErrorEvent += new ImageProvider.GrabErrorEventHandler(OnGrabErrorEventCallback);
@@ -130,6 +137,8 @@ namespace MT3
         private void Form1_Load(object sender, EventArgs e)
         {
             this.worker_udp.RunWorkerAsync();
+
+            this.Text = appTitle;
 
             // 有効な画像取り込みデバイスが選択されているかをチェック。
             /*  if (!icImagingControl1.DeviceValid)

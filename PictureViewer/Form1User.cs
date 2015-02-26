@@ -72,6 +72,7 @@ namespace MT3
         Settings appSettings = new Settings();
         //設定保存先のファイル名
         string SettingsfileName = "settings.config";//@"C:\test\settings.config";
+        string appTitle = "MT3";
 
         // メイン装置光軸座標
         int xoa;  //320
@@ -373,6 +374,10 @@ namespace MT3
             feature.EnumValue = "UserSet1";
             feature = features["UserSetLoad"];
             feature.RunCommand();
+
+            //露出設定
+            feature = features["ExposureTimeAbs"];
+            feature.FloatValue = 50000 ;//us
 
             //撮像開始
             feature = features["AcquisitionMode"];
