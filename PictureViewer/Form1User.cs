@@ -368,10 +368,15 @@ namespace MT3
             {
                 camera.QueueFrame(frameArray[index]);
             }
+            // パラメータロード
+            feature = features["UserSetSelector"];
+            feature.EnumValue = "UserSet1";
+            feature = features["UserSetLoad"];
+            feature.RunCommand();
 
+            //撮像開始
             feature = features["AcquisitionMode"];
             feature.EnumValue = "Continuous";
-
             feature = features["AcquisitionStart"];
             feature.RunCommand();
 
@@ -481,6 +486,22 @@ namespace MT3
             }*/
         }
 
+        public UserSetSelectorEnum UserSetSelector
+        {
+            get { return (UserSetSelectorEnum)UserSetSelectorFeature.EnumIntValue; }
+            set { UserSetSelectorFeature.EnumIntValue = (int)value; }
+        }
+        public AVT.VmbAPINET.Feature UserSetSelectorFeature
+        {
+            get
+            {
+                if (m_UserSetSelectorFeature == null)
+                    m_UserSetSelectorFeature = camera.Features["UserSetSelector"];
+                return m_UserSetSelectorFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_UserSetSelectorFeature = null;
+
         public double StatFrameRate()
         {
             feature = features["StatFrameRate"];
@@ -549,5 +570,173 @@ namespace MT3
         private AVT.VmbAPINET.Feature m_AcquisitionFrameCountFeature = null;
 
         #endregion
+
+
+
+        #region Public methods.
+
+        #region Category /AcquisitionControl
+
+        public void AcquisitionAbort()
+        {
+            AcquisitionAbortFeature.RunCommand();
+        }
+        public AVT.VmbAPINET.Feature AcquisitionAbortFeature
+        {
+            get
+            {
+                if (m_AcquisitionAbortFeature == null)
+                    m_AcquisitionAbortFeature = camera.Features["AcquisitionAbort"];
+                return m_AcquisitionAbortFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_AcquisitionAbortFeature = null;
+
+        public void AcquisitionStart()
+        {
+            AcquisitionStartFeature.RunCommand();
+        }
+        public AVT.VmbAPINET.Feature AcquisitionStartFeature
+        {
+            get
+            {
+                if (m_AcquisitionStartFeature == null)
+                    m_AcquisitionStartFeature = camera.Features["AcquisitionStart"];
+                return m_AcquisitionStartFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_AcquisitionStartFeature = null;
+
+        public void AcquisitionStop()
+        {
+            AcquisitionStopFeature.RunCommand();
+        }
+        public AVT.VmbAPINET.Feature AcquisitionStopFeature
+        {
+            get
+            {
+                if (m_AcquisitionStopFeature == null)
+                    m_AcquisitionStopFeature = camera.Features["AcquisitionStop"];
+                return m_AcquisitionStopFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_AcquisitionStopFeature = null;
+
+        public void TriggerSoftware()
+        {
+            TriggerSoftwareFeature.RunCommand();
+        }
+        public AVT.VmbAPINET.Feature TriggerSoftwareFeature
+        {
+            get
+            {
+                if (m_TriggerSoftwareFeature == null)
+                    m_TriggerSoftwareFeature = camera.Features["TriggerSoftware"];
+                return m_TriggerSoftwareFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_TriggerSoftwareFeature = null;
+
+        #endregion
+
+        #region Category /SavedUserSets
+
+        public void UserSetLoad()
+        {
+            UserSetLoadFeature.RunCommand();
+        }
+        public AVT.VmbAPINET.Feature UserSetLoadFeature
+        {
+            get
+            {
+                if (m_UserSetLoadFeature == null)
+                    m_UserSetLoadFeature = camera.Features["UserSetLoad"];
+                return m_UserSetLoadFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_UserSetLoadFeature = null;
+
+        public void UserSetSave()
+        {
+            UserSetSaveFeature.RunCommand();
+        }
+        public AVT.VmbAPINET.Feature UserSetSaveFeature
+        {
+            get
+            {
+                if (m_UserSetSaveFeature == null)
+                    m_UserSetSaveFeature = camera.Features["UserSetSave"];
+                return m_UserSetSaveFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_UserSetSaveFeature = null;
+
+        #endregion
+
+        #region Category /Stream/Settings
+
+        public void GVSPAdjustPacketSize()
+        {
+            GVSPAdjustPacketSizeFeature.RunCommand();
+        }
+        public AVT.VmbAPINET.Feature GVSPAdjustPacketSizeFeature
+        {
+            get
+            {
+                if (m_GVSPAdjustPacketSizeFeature == null)
+                    m_GVSPAdjustPacketSizeFeature = camera.Features["GVSPAdjustPacketSize"];
+                return m_GVSPAdjustPacketSizeFeature;
+            }
+        }
+        private AVT.VmbAPINET.Feature m_GVSPAdjustPacketSizeFeature = null;
+
+        #endregion
+
+        #endregion
+
+        #region Enum declarations.
+
+        public enum AcquisitionModeEnum
+        {
+            Continuous = 1,
+            SingleFrame = 2,
+            MultiFrame = 3,
+            Recorder = 4
+        }
+
+        public enum PixelFormatEnum
+        {
+            Mono8 = 17301505,
+            BayerGR8 = 17301512,
+            BayerRG8 = 17301513,
+            BayerBG8 = 17301515,
+            Mono10 = 17825795,
+            Mono12 = 17825797,
+            BayerBG10 = 17825807,
+            BayerGR12 = 17825808,
+            BayerRG12 = 17825809,
+            YUV411Packed = 34340894,
+            YUV422Packed = 34603039,
+            RGB8Packed = 35127316,
+            BGR8Packed = 35127317,
+            YUV444Packed = 35127328,
+            RGBA8Packed = 35651606,
+            BGRA8Packed = 35651607,
+            RGB10Packed = 36700184,
+            RGB12Packed = 36700186
+        }
+
+        public enum UserSetSelectorEnum
+        {
+            Default = 0,
+            UserSet1 = 1,
+            UserSet2 = 2,
+            UserSet3 = 3,
+            UserSet4 = 4,
+            UserSet5 = 5
+        }
+
+        #endregion
+
     }  
 }
