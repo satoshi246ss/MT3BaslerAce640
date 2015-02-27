@@ -35,13 +35,20 @@ namespace MT3
             set { _camera_id = value; }
         }
 
-        private int _camera_color;
-        public int CameraColor
+        private Camera_Color _camera_color;
+        public Camera_Color CameraColor
         {
             get { return _camera_color; }
             set { _camera_color = value; }
         }
-       
+
+        private Camera_Interface _camera_interface;
+        public Camera_Interface CameraInterface
+        {
+            get { return _camera_interface; }
+            set { _camera_interface = value; }
+        }
+      
         //CCD
         private int _width;
         public int Width
@@ -127,6 +134,13 @@ namespace MT3
             set { _threshold_min_area = value; }
         }
 
+        private string _ip_gige_camera;
+        public string IP_GIGE_Camera
+        {
+            get { return _ip_gige_camera; }
+            set { _ip_gige_camera = value; }
+        }
+
         private int _udp_port_recieve;
         public int UdpPortRecieve
         {
@@ -205,7 +219,9 @@ namespace MT3
             _id     = 4;          //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
             _camera_type = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
             _camera_id = 2;       //カメラタイプ毎のID
-            _camera_color = 0;    // 0:mono  1:color
+            _camera_color = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            _camera_interface = Camera_Interface.USB2 ;
+            _ip_gige_camera = "192.168.1.150"; //GIGE Camera only.
             _width  = 640;
             _height = 480;
             _focal_length = 12.5;      //[mm]

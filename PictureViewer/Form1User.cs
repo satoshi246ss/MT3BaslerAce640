@@ -14,19 +14,34 @@ using PylonC.NETSupportLibrary;
 
 namespace MT3
 {
+    #region 定数
+    public enum Camera_Maker
+    {
+        analog,
+        ImagingSouce,
+        IDS,
+        AVT,
+        Basler
+    }
+    public enum Camera_Color
+    {
+        mono,
+        color,
+        mono12packed
+    }
+    public enum Camera_Interface
+    {
+        USB2,
+        USB3,
+        GIGE,
+        IEEE1394,
+        NTSC
+    }
+    #endregion
+
     public partial class Form1 : Form
     {
         #region 定数
-        enum Camera_Maker
-        {
-            analog,
-            ImagingSouce,
-            IDS,
-            AVT,
-            Basler
-        }
-        enum Camera_Color
-        {mono,color}
         
         Camera_Maker cam_maker = Camera_Maker.Basler ;
         Camera_Color cam_color = Camera_Color.mono;
@@ -166,11 +181,22 @@ namespace MT3
 
         public void IplImageInit()
         {
-            img_dmk3 = new IplImage(appSettings.Width, appSettings.Height, BitDepth.U8, 3);
-            img_dmk = new IplImage(appSettings.Width, appSettings.Height, BitDepth.U8, 1);
+            int wi = appSettings.Width;
+            if (appSettings.CameraColor == Camera_Color.mono12packed)
+            {
+                wi = appSettings.Width + (appSettings.Width / 2 ); 
+            }
+                
+            img_dmk3 = new IplImage(wi, appSettings.Height, BitDepth.U8, 3);
+            img_dmk  = new IplImage(wi, appSettings.Height, BitDepth.U8, 1);
             // IplImage img_dark8 = Cv.LoadImage(@"C:\Users\Public\piccolo\dark00.bmp", LoadMode.GrayScale);
-            img2 = new IplImage(appSettings.Width, appSettings.Height, BitDepth.U8, 1);
-            imgLabel = new IplImage(appSettings.Width, appSettings.Height, CvBlobLib.DepthLabel, 1);
+            img2     = new IplImage(wi, appSettings.Height, BitDepth.U8, 1);
+            imgLabel = new IplImage(wi, appSettings.Height, CvBlobLib.DepthLabel, 1);
+
+            imgdata.init(wi, appSettings.Height);
+            // FIFO init
+            fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir);
+
         }
 
         # region Settings
@@ -265,7 +291,9 @@ namespace MT3
             sett.NoCapDev = 11;
             sett.CameraType = "AVT"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 2;       //カメラタイプ毎のID
-            sett.CameraColor = 0;    // 0:mono  1:color
+            sett.CameraColor = Camera_Color.mono12packed;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.GIGE;
+            sett.IP_GIGE_Camera  = "192.168.1.152"; //GIGE Camera only.
             sett.Width  = 2048;
             sett.Height = 2048;
             sett.FocalLength = 50;      //[mm]
@@ -307,8 +335,6 @@ namespace MT3
         long payloadSize;
         AVT.VmbAPINET.Frame[] frameArray = new AVT.VmbAPINET.Frame[3];
 
-        String avtcam_ip = "192.168.1.151";
-
         static void CopyMemory(IntPtr dst, IntPtr src, int size)
         {
             byte[] temp = new byte[size];
@@ -333,7 +359,7 @@ namespace MT3
             //foreach( AVT.VmbAPINET.Camera camera in cameras){
             try
             {
-                camera = sys.OpenCameraByID(avtcam_ip, AVT.VmbAPINET.VmbAccessModeType.VmbAccessModeFull);
+                camera = sys.OpenCameraByID(appSettings.IP_GIGE_Camera, AVT.VmbAPINET.VmbAccessModeType.VmbAccessModeFull);
                 str = "/// Camera opened\n";
             }
             catch (AVT.VmbAPINET.VimbaException ve)
@@ -377,7 +403,10 @@ namespace MT3
 
             //露出設定
             feature = features["ExposureTimeAbs"];
-            feature.FloatValue = 50000 ;//us
+            feature.FloatValue = 1000*appSettings.Exposure;// 50000;//us
+            //Gain設定
+            feature = features["GainRaw"];
+            feature.IntValue = (int)appSettings.Gain; // range:0-30
 
             //撮像開始
             feature = features["AcquisitionMode"];

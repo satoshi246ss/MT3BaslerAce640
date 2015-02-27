@@ -65,9 +65,6 @@ namespace MT3
             appSettings = SettingsLoad(int.Parse(cmds[2]));
 
             IplImageInit();
-            imgdata.init(appSettings.Width, appSettings.Height);
-            // FIFO init
-            fifo.init(appSettings.FifoMaxFrame, appSettings.Width, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir);
             
             worker_udp = new BackgroundWorker();
             worker_udp.WorkerReportsProgress = true;
@@ -138,6 +135,7 @@ namespace MT3
         {
             this.worker_udp.RunWorkerAsync();
 
+            appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString();
             this.Text = appTitle;
 
             // 有効な画像取り込みデバイスが選択されているかをチェック。
