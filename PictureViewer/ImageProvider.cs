@@ -1096,6 +1096,7 @@ namespace PylonC.NETSupportLibrary
                 bool isAvailable;    /* Is the feature available? */
                 long val = 0;        /* Properties of the feature. */
 
+             //   featureName = "StatisticTotalBufferCount";
                 featureName = "Statistic_Total_Buffer_Count";
           /*      NODE_HANDLE hNode = GetNodeFromDevice(featureName);
                 bool bval = GenApi.NodeIsReadable(hNode);

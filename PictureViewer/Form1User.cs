@@ -285,6 +285,32 @@ namespace MT3
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
+            // MT2 Basler Guide
+            sett.Text = "Basler acA640-120gm";
+            sett.ID = 10;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev   = 10;
+            sett.CameraType = "Basler"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID   = 2;          //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.GIGE;
+            sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            sett.Width  = 659;
+            sett.Height = 494;
+            sett.FocalLength = 50;      //[mm]
+            sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
+            sett.Ccdpy = 0.0056; //[mm]
+            sett.Framerate = 120.0; //[fps]
+            sett.FifoMaxFrame = 32;
+            sett.Exposure = 8.3; //[ms]
+            sett.Gain = 300; // 100-1023  要検討
+            sett.UseDetect = true;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410;
+            sett.UdpPortSend = 24429;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
+            SettingsSave(sett);
+
             // MT2 Echelle
             sett.Text = "AVT GE-2040";
             sett.ID = 11;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々

@@ -17,11 +17,9 @@ namespace MT3
             //Basler
             m_imageProvider.Open(index);
             m_imageProvider.Setup(appSettings.Width, appSettings.Height);
-            m_imageProvider.SetupExposureTimeAbs(set_exposure * 1000.0); // [usec]
-            m_imageProvider.SetupGain(set_gain); // 100-1023
-            m_imageProvider.SetupFrameRate(set_framerate);
-
-            //double exp = 8000;
+            m_imageProvider.SetupExposureTimeAbs(appSettings.Exposure * 1000.0); // [usec]
+            m_imageProvider.SetupGain((long)appSettings.Gain); // 100-1023
+            m_imageProvider.SetupFrameRate(appSettings.Framerate);
         }
         /* Handles the click on the single frame button. */
         public void BaslerEnd()
@@ -458,7 +456,7 @@ namespace MT3
             }
         }
         /// <summary>
-        /// Expo値読み出し(ms) ( 1 = 0.1ms )
+        /// Expo値読み出し[us]
         /// </summary>
         public double GetExposureTime()
         {
@@ -495,7 +493,7 @@ namespace MT3
                     /* Query the value range and the current value. */
                     val = GenApi.FloatGetValue(hNode);
 
-                    return val*0.001; // [ms]
+                    return val; // [us]
                 }
                 return 0;
             }
