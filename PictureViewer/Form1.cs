@@ -919,6 +919,7 @@ namespace MT3
             label_ID.Text = max_label.ToString("0");
 
             // Status表示
+            //long frame_timestamp=0;
             double dFramerate = 0; // Frame rate[fr/s]
             double dExpo = 0; // Exposure[us]
             long igain = 0; //Gain
@@ -926,7 +927,7 @@ namespace MT3
             long frame_total = 0, frame_error = 0;
             long frame_underrun = 0, frame_shoved = 0, frame_dropped=0;
             double err_rate = 0;
-
+            
             // IDS
             if (cam_maker == Camera_Maker.IDS)
             {
@@ -940,15 +941,17 @@ namespace MT3
                 //statusRet = cam.Timing.PixelClock.Get(out s32Value);
                 //           toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed21-elapsed20)/(double)(Stopwatch.Frequency) +" "+ 10000*(elapsed22-elapsed21)/(double)(Stopwatch.Frequency);
 
-            }
+            }            
             if (cam_maker == Camera_Maker.Basler)
             {
                 dFramerate = m_imageProvider.GetFrameRate(); // Basler
                 dExpo = GetExposureTime();
                 igain = GetGain();
-                //igain = m_imageProvider.GetTimestamp();
-                        frame_total = m_imageProvider.Get_Statistic_Total_Buffer_Count();
-                //        frame_error = Get_Statistic_Total_Buffer_Count();
+                timestamp = m_imageProvider.GetTimestamp();
+                frame_total = m_imageProvider.Get_Statistic_Total_Buffer_Count();
+                frame_underrun = m_imageProvider.Get_Statistic_feature("Statistic_Buffer_Underrun_Count");
+                frame_error = frame_underrun + m_imageProvider.Get_Statistic_feature("Statistic_Failed_Buffer_Count");
+                //frame_dropped = m_imageProvider.Get_Statistic_feature("Statistic_Total_Packet_Count");
             }
             if (cam_maker == Camera_Maker.AVT)
             {
@@ -965,7 +968,7 @@ namespace MT3
             toolStripStatusLabelExposure.Text = "Exposure: " + (dExpo/1000.0).ToString("00.00")+"[ms]";
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
             toolStripStatusLabelFailed.Text = "Failed U:" + frame_underrun.ToString("0000") + " S:" + frame_shoved.ToString("0000") + " D:" + frame_dropped.ToString("0000");
-
+            
             label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
 
             //double err_rate = 100.0 * (frame_total / (double)id);
@@ -973,7 +976,7 @@ namespace MT3
             {
                 err_rate = 100.0 * (frame_error / (double)frame_total);
             }
-            toolStripStatusLabelID.Text = "Frames: " + frame_total + " " + frame_error + " " + err_rate.ToString("00.00");
+            toolStripStatusLabelID.Text = "Frames: " + frame_total.ToString("0000") + " " + frame_error.ToString("0000") + " " + err_rate.ToString("00.00");// +"TS:" + timestamp;
  
             if (this.States == SAVE)
             {

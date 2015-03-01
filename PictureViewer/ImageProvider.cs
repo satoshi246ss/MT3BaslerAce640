@@ -1096,15 +1096,61 @@ namespace PylonC.NETSupportLibrary
                 bool isAvailable;    /* Is the feature available? */
                 long val = 0;        /* Properties of the feature. */
 
-             //   featureName = "StatisticTotalBufferCount";
                 featureName = "Statistic_Total_Buffer_Count";
-          /*      NODE_HANDLE hNode = GetNodeFromDevice(featureName);
+
+                NODEMAP_HANDLE hMapNode = Pylon.StreamGrabberGetNodeMap(m_hGrabber);
+                NODE_HANDLE hNode = GenApi.NodeMapGetNode(hMapNode, featureName);
+                bool bval = GenApi.NodeIsReadable(hNode);
+                if (bval)
+                {
+                    val = GenApi.IntegerGetValue(hNode);     // Get the current value. 
+                } 
+            
+                isAvailable = Pylon.DeviceFeatureIsAvailable(m_hDevice, featureName);
+                if (isAvailable)
+                {
+                    //min = Pylon.DeviceGetFloatFeatureMin(m_hDevice, featureName);  /* Get the minimum value. */
+                    //max = Pylon.DeviceGetFloatFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
+                    val = Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
+                }
+                return val;
+            }
+            catch
+            {
+                UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
+        /// Statistic_Failed_Buffer_Count ì«Ç›èoÇµ
+        /// Failed Buffer Count
+        /// Counts the number of buffers with at least one failed packet (status != success).
+        /// </summary>
+        public long Get_Statistic_feature(string statistic_feature)
+        {
+            try
+            {
+                string featureName;  /* Name of the feature used in this sample: AOI Width. */
+                bool isAvailable;    /* Is the feature available? */
+                long val = 0;        /* Properties of the feature. */
+
+                featureName = statistic_feature;// "Statistic_Total_Buffer_Count";
+
+                NODEMAP_HANDLE hMapNode = Pylon.StreamGrabberGetNodeMap(m_hGrabber);
+                NODE_HANDLE hNode = GenApi.NodeMapGetNode(hMapNode, featureName);
                 bool bval = GenApi.NodeIsReadable(hNode);
                 if (bval)
                 {
                     val = GenApi.IntegerGetValue(hNode);     // Get the current value. 
                 }
-           */
 
                 isAvailable = Pylon.DeviceFeatureIsAvailable(m_hDevice, featureName);
                 if (isAvailable)

@@ -86,7 +86,7 @@ namespace MT3
         string[] cmds;
         Settings appSettings = new Settings();
         //設定保存先のファイル名
-        string SettingsfileName = "settings.config";//@"C:\test\settings.config";
+        string SettingsfileName ;//= "settings.config"; //@"C:\test\settings.config";
         string appTitle = "MT3";
 
         // メイン装置光軸座標
@@ -284,7 +284,7 @@ namespace MT3
             sett.UdpPortSend    = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
-
+            
             // MT2 Basler Guide
             sett.Text = "Basler acA640-120gm";
             sett.ID = 10;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
