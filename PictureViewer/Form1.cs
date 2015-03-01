@@ -604,12 +604,14 @@ namespace MT3
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
-            //OpenIDScamera();
+            OpenIDScamera();
             //AVT
+            /*
             if (cam_maker == Camera_Maker.AVT)
             {
                 avt_cam_start();
             }
+            */
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -709,6 +711,7 @@ namespace MT3
             //IDS
             if (cam_maker == Camera_Maker.IDS)
             {
+                OpenIDScamera();
                 statusRet = cam.Acquisition.Capture();
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {

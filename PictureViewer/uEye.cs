@@ -41,7 +41,7 @@ namespace MT3
             statusRet = uEye.Defines.Status.NO_SUCCESS;
             foreach (uEye.Types.CameraInformation info in cameraList)
             {
-                if (info.CameraID == cameraID)
+                if (info.CameraID == appSettings.CameraID)
                 {
                     statusRet = uEye.Defines.Status.SUCCESS;
                 }
@@ -59,7 +59,7 @@ namespace MT3
             // Open Camera
             if (statusRet == uEye.Defines.Status.SUCCESS)
             {
-                statusRet = cam.Init(cameraID);
+                statusRet = cam.Init(appSettings.CameraID);
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
                     //MessageBox.Show("IDS Camera initializing failed");

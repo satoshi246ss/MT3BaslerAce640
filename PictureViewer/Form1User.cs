@@ -121,7 +121,7 @@ namespace MT3
         uEye.Defines.Status statusRet = 0;
         uEye.Types.ImageInfo imageInfo;
         Int32 s32MemID;
-        int cameraID = 2;  // 1:UI5240   2:UI2410
+        int cameraID = 2;  // 1:UI5240   2:UI2410  5:UI1540LE
         Int32 set_pixelclock = 30;  // [MHz]
 
         double set_framerate = 120; // [fps]
@@ -328,6 +328,32 @@ namespace MT3
             sett.Framerate = 15.0; //[fps]
             sett.FifoMaxFrame = 32;
             sett.Exposure = 66; //[ms]
+            sett.Gain = 30; // 0-30  要検討
+            sett.UseDetect = false;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410;
+            sett.UdpPortSend = 24429;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
+            SettingsSave(sett);
+
+            // IDS
+            sett.Text = "IDS UI-1540";
+            sett.ID = 14;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 14;
+            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 5;       //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.USB2;
+            sett.IP_GIGE_Camera = "192.168.1.xxx"; //GIGE Camera only.
+            sett.Width  = 1280;
+            sett.Height = 1024;
+            sett.FocalLength = 50;      //[mm]
+            sett.Ccdpx = 0.0074; //[mm]
+            sett.Ccdpy = 0.0074; //[mm]
+            sett.Framerate = 25.0; //[fps]
+            sett.FifoMaxFrame = 32;
+            sett.Exposure = 33; //[ms]
             sett.Gain = 30; // 0-30  要検討
             sett.UseDetect = false;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
