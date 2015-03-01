@@ -935,10 +935,15 @@ namespace MT3
             if (cam_maker == Camera_Maker.IDS)
             {
                 cam.Timing.Framerate.GetCurrentFps(out dFramerate); //IDS
-                statusRet = cam.Timing.Exposure.Get(out dExpo);
+                statusRet = cam.Timing.Exposure.Get(out dExpo);//[ms]
+                dExpo *= 1000; // [us]
+                int ig;
+                cam.Gain.Hardware.Scaled.GetMaster(out ig);
+                igain = ig;
                 uEye.Types.CaptureStatus captureStatus;
                 cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
-               // frame_total = captureStatus.Total();
+                frame_error = (long)captureStatus.Total;
+                frame_total = (long)(imageInfo.FrameNumber - ueye_frame_number) ;
 
                 //Int32 s32Value;
                 //statusRet = cam.Timing.PixelClock.Get(out s32Value);

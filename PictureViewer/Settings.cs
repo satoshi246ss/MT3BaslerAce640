@@ -85,6 +85,13 @@ namespace MT3
             set { _ccdpy = value; }
         }
 
+        private int _pixel_clock;
+        public int PixelClock
+        {
+            get { return _pixel_clock; }
+            set { _pixel_clock = value; }
+        }
+
         private double _framerate;
         public double Framerate
         {
@@ -227,6 +234,7 @@ namespace MT3
             _focal_length = 12.5;      //[mm]
             _ccdpx = 0.0074; //[mm]
             _ccdpy = 0.0074; //[mm]
+            _pixel_clock = 43;//[MHz] int
             _framerate = 75.0; //[fps]
             _fifo_max_frame = 64;
             _exposure = 13; //[ms]

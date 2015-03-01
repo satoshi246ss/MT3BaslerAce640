@@ -120,15 +120,13 @@ namespace MT3
         uEye.Camera cam;
         uEye.Defines.Status statusRet = 0;
         uEye.Types.ImageInfo imageInfo;
+        ulong ueye_frame_number = 0;
         Int32 s32MemID;
         int cameraID = 2;  // 1:UI5240   2:UI2410  5:UI1540LE
-        Int32 set_pixelclock = 30;  // [MHz]
 
-        double set_framerate = 120; // [fps]
         double set_exposure  = 3;   // [ms]            F1.8:F4  exp 8ms:3ms  gain 1024: 100  約106倍
         double set_exposure1 = 0.2; // [ms]
-        Int32 set_gain = 100;       // [100-1023]
-
+ 
         IplImage img_dmk3, img_dmk, img2, imgLabel;
         CvBlobs blobs = new CvBlobs();
         CvFont font = new CvFont(FontFace.HersheyComplex, 0.50, 0.50);
@@ -351,6 +349,7 @@ namespace MT3
             sett.FocalLength = 50;      //[mm]
             sett.Ccdpx = 0.0074; //[mm]
             sett.Ccdpy = 0.0074; //[mm]
+            sett.PixelClock = 43; //[MHz] 5-43MHz  UI-1540
             sett.Framerate = 25.0; //[fps]
             sett.FifoMaxFrame = 32;
             sett.Exposure = 33; //[ms]

@@ -83,25 +83,25 @@ namespace MT3
                 cam.EventFrame += onFrameEvent;
 
                 // Set PC,Fr,Exp
-                statusRet = cam.Timing.PixelClock.Set(set_pixelclock);
+                statusRet = cam.Timing.PixelClock.Set(appSettings.PixelClock);
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
                     MessageBox.Show("IDS Camera Set PixelClock failed");
                 }
 
-                statusRet = cam.Timing.Exposure.Set(set_exposure);
+                statusRet = cam.Timing.Exposure.Set(appSettings.Exposure);
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
                     MessageBox.Show("IDS Camera Set Exposure failed");
                 }
 
-                statusRet = cam.Timing.Framerate.Set(set_framerate);
+                statusRet = cam.Timing.Framerate.Set(appSettings.Framerate);
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
                     MessageBox.Show("IDS Camera Set FrameRate failed");
                 }
 
-                cam.Gain.Hardware.Scaled.SetMaster(set_gain);
+                cam.Gain.Hardware.Scaled.SetMaster((int)appSettings.Gain);
             }
         }
         // IDS event追加
@@ -127,11 +127,11 @@ namespace MT3
 
             //画像データをバッファにコピー
             cam.Memory.Lock(s32MemID);
-            uEye.Types.ImageInfo imageInfo;
             cam.Information.GetImageInfo(s32MemID, out imageInfo);
             cam.Memory.ToIntPtr(s32MemID, out ptr);
             CopyMemory( img_dmk.ImageDataOrigin, ptr,img_dmk.ImageSize);
             Cv.Copy(img_dmk, imgdata.img);
+            if (ueye_frame_number == 0) ueye_frame_number = imageInfo.FrameNumber; //frame number初期値
             elapsed0 = sw.ElapsedTicks; // 0.1ms
 
             //3  Cv.Copy(img_dmk3, imgdata.img);
@@ -157,7 +157,6 @@ namespace MT3
             {
                 System.IntPtr ptr;
                 cam.Memory.Lock(s32MemID);
-                uEye.Types.ImageInfo imageInfo;
                 cam.Information.GetImageInfo(s32MemID, out imageInfo);
                 cam.Memory.ToIntPtr(s32MemID, out ptr);
                 CopyMemory(img_dmk3.ImageDataOrigin, ptr, img_dmk3.ImageSize);
