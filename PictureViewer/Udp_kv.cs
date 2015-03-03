@@ -60,6 +60,45 @@ namespace MT3
         public int mt3state_night_pre = 0;//     = (G_kv_status  & (1<<14)); //夜間フラグ
         public int mt3state_center_pre = 0;// (data_request & (1 << 2)); //センタリング中フラグ
 
+        public int kalman_init_flag = 0;  // 1:Form1のカルマンフィルタをリセット
+
+        /// <summary>
+        // 速度データをmmdeg整数化（KV-1000に送信用）
+        // 戻り：0.001deg/sec単位の整数
+        /// </summary>
+        public int round_d2i(double x)
+        {
+            if (x > 0.0)
+            {
+                return (int)(x * 1000 + 0.5);
+            }
+            else
+            {
+                return (-1 * (int)(-x * 1000 + 0.5));
+            }
+        }
+
+        /// <summary>
+        // 速度データをmmdeg整数化（KV-1000に送信用）後、ushort変換
+        // 戻り：0.001deg/sec単位の整数
+        /// </summary>
+        public ushort PIDPV_makedata(double daz0)
+        {
+            double daz = daz0;
+            // 条件チェック
+            const double vmax = 32.765;
+            if (daz < -vmax) daz = -vmax;
+            if (daz > vmax) daz = vmax;
+
+            int upos = round_d2i(daz);
+
+            ushort p4b;
+            // p4a = (unsigned short)(upos>>16) ;
+            p4b = (ushort)(0xffff & upos);
+
+            return p4b;
+        }
+
         /// <summary>
         /// udp dataを取り込む。
         /// </summary>
@@ -71,6 +110,19 @@ namespace MT3
             GCHandle gch = GCHandle.Alloc(bytes, GCHandleType.Pinned);
             kd = (KV_DATA)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(KV_DATA));
             gch.Free();
+        }
+        /// <summary>
+        /// KV1000用byte列に変換　エンディアンも違う
+        /// </summary>
+        public byte[] ToBytes(KV_PID_DATA obj)
+        {
+            int size = Marshal.SizeOf(typeof(KV_PID_DATA));
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(obj, ptr, false);
+            byte[] bytes = new byte[size];
+            Marshal.Copy(ptr, bytes, 0, size);
+            Marshal.FreeHGlobal(ptr);
+            return bytes;
         }
         /// <summary>
         /// KV1000用 エンディアン変換
@@ -156,29 +208,29 @@ namespace MT3
             // Normal
             if (x2pos >= 0 && x2pos < 360000)
             {
-                if (y2pos >= 0 && y2pos <= 180000)
+                if (mt3mode == mmWest)
                 {
-                    mt3mode = mmWest; //0
-                    az2_c = (90000 + x2pos) / 1000.0;
+                    //mt3mode = mmWest; //0
+                    az2_c = (-90000 + x2pos) / 1000.0;
                     alt2_c = (-90000 + y2pos) / 1000.0;
                 }
+                else if (mt3mode == mmEast)
+                {
+                    //mt3mode = mmEast; //1
+                    az2_c = (90000 + x2pos) / 1000.0;
+                    alt2_c = (270000 - y2pos) / 1000.0;
+                }
                 else
-                    if (y2pos >= 180000 && y2pos < 360000)
-                    {
-                        mt3mode = mmEast; //1
-                        az2_c = (270000 + x2pos) / 1000.0;
-                        alt2_c = (270000 - y2pos) / 1000.0;
-                    }
-                    else
-                    {
-                        mt3mode = altErr; // Alt out of range
-                    }
+                {
+                    mt3mode = altErr; // mt3mode out of range
+                }
             }
             else
             {
                 mt3mode = azErr; // Az out of range
             }
             if (az2_c > 360) az2_c -= 360;
+            else if (az2_c < 0) az2_c += 360;
         }
 
         public object Clone()
@@ -280,7 +332,7 @@ namespace MT3
         //   CCD座標(cx,cy):CCD中心からの誤差座標[pix]    Std. Cam が基準(cx = x-xc, cy = y-yc)
         //   中心位置(az_c,alt_c)と視野回転(theta_c)
         //   fl:焦点距離[mm],　ccdpx,ccdpy:ピクセル間隔[mm]
-
+      
         public void cxcy2azalt(double cx, double cy,
                double az_c, double alt_c, int mode, double theta_c,
                double fl, double ccdpx, double ccdpy,
@@ -292,17 +344,17 @@ namespace MT3
             //ターゲットの方向余弦
             if (mode == mmEast)
             {
-                cxmm = -cx * ccdpx; // -(+x)
-                cymm = -cy * ccdpy; // -(-y)
+                cxmm = -cx * ccdpx; // +ccd -az
+                cymm = +cy * ccdpy; // +ccd +alt
             }
             else
             { //mmWest
-                cxmm = cx * ccdpx; // (+x)
-                cymm = cy * ccdpy; // (-y)
+                cxmm = +cx * ccdpx; // +ccd +az
+                cymm = -cy * ccdpy; // +ccd -alt
             }
             CvMat v1 = new CvMat(3, 1, MatrixType.F64C1);
             v1.Set2D(0, 0, fl);
-            v1.Set2D(1, 0, cxmm);
+            v1.Set2D(1, 0,-cxmm);
             v1.Set2D(2, 0, cymm);
             v1.Normalize(v1);// 方向余弦化
 
@@ -338,6 +390,16 @@ namespace MT3
             az = Math.Atan2(-v2.Get2D(1, 0), v2.Get2D(0, 0)) / rad;
             if (az < 0) az += 360;
             alt = Math.Asin(v2.Get2D(2, 0)) / rad;
+
+        //    //Az_Cとの距離が近い値を採用
+        //    double az2 = az - 360;
+        //    double az3 = az + 360;
+        //    double dis1 = Math.Abs(az - az_c);
+        //    double dis2 = Math.Abs(az2 - az_c);
+        //    double dis3 = Math.Abs(az3 - az_c);
+        //    if (dis1 > dis2) az = az2;
+        //    if (dis1 > dis3) az = az3;
         }
+
     }
 }

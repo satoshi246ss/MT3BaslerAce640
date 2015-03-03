@@ -245,7 +245,7 @@ namespace MT3
             _udp_port_recieve = 24410;
             _udp_port_send = 24429;
             _ip_kv1000spcam2 = "192.168.1.204";
-            _udp_port_kv1000spcam2 = 24410;
+            _udp_port_kv1000spcam2 = 24426;
             _ip_kv1000 = "192.168.1.10";
             _udp_port_kv1000 = 8503;
             _ip_mtmon = "192.168.1.211";

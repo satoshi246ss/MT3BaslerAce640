@@ -197,8 +197,7 @@ namespace MT3
             BackgroundWorker bw = (BackgroundWorker)sender;
 
             //バインドするローカルポート番号
-            int localPort = mmFsiUdpPortSpCam;// 24410 broadcast
-            //int localPort = mmFsiUdpPortMT3Basler; // broadcast mmFsiUdpPortMT3Basler;
+            int localPort = appSettings.UdpPortRecieve;// mmFsiUdpPortSpCam;// 24410 broadcast
             System.Net.Sockets.UdpClient udpc = null; ;
             try
             {
@@ -218,7 +217,6 @@ namespace MT3
             int size = Marshal.SizeOf(kmd3);
             KV_DATA kd = new KV_DATA();
             int sizekd = Marshal.SizeOf(kd);
-
 
             //データを受信する
             System.Net.IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, localPort);
@@ -361,7 +359,7 @@ namespace MT3
 
         #endregion
 
-        #region キャプチャー
+        #region アナログキャプチャー
         // 別スレッド処理（キャプチャー）
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -370,28 +368,12 @@ namespace MT3
             string str;
             id = 0;
 
-            //PID送信用UDP
-            //バインドするローカルポート番号
-            FSI_PID_DATA pid_data = new FSI_PID_DATA();
-            int localPort = 24406;
-            System.Net.Sockets.UdpClient udpc2 = null; ;
-            try
-            {
-                udpc2 = new System.Net.Sockets.UdpClient(localPort);
-
-            }
-            catch (Exception ex)
-            {
-                //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
-            }
-
             //videoInputオブジェクト
-            const int DeviceID = 0;// 0;      // 3 (pro), 4(piccolo)  7(DMK)
-            const int CaptureFps = 30;  // 30
+            int DeviceID   = appSettings.CameraID; // 基本は、0　 // 3 (pro), 4(piccolo)  7(DMK)
+            int CaptureFps = (int)appSettings.Framerate;  // 30
             int interval = (int)(1000 / CaptureFps / 10);
-            const int CaptureWidth = 640;
-            const int CaptureHeight = 480;
+            //const int CaptureWidth = 640;
+            //const int CaptureHeight = 480;
             // 画像保存枚数
             int mmFsiPostRec = 60;
             int save_counter = mmFsiPostRec;
@@ -399,28 +381,15 @@ namespace MT3
             using (VideoInput vi = new VideoInput())
             {
                 vi.SetIdealFramerate(DeviceID, CaptureFps);
-                vi.SetupDevice(DeviceID, CaptureWidth, CaptureHeight);
+                vi.SetupDevice(DeviceID, appSettings.Width, appSettings.Height);
 
                 int width = vi.GetWidth(DeviceID);
                 int height = vi.GetHeight(DeviceID);
 
                 using (IplImage img = new IplImage(width, height, BitDepth.U8, 3))
-                //using (IplImage img_dark8 = Cv.LoadImage(@"C:\piccolo\MT3V_dark.bmp", LoadMode.GrayScale))
-                //using (IplImage img_dark = new IplImage(width, height, BitDepth.U8, 3))
-                using (IplImage img_mono = new IplImage(width, height, BitDepth.U8, 1))
-                using (IplImage img2 = new IplImage(width, height, BitDepth.U8, 1))
-                //                    using (Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb))
-                using (CvFont font = new CvFont(FontFace.HersheyComplex, 0.5, 0.5))
-                using (CvWindow window0 = new CvWindow("FIFO0", WindowMode.AutoSize))
+                //using (IplImage img_mono = new IplImage(width, height, BitDepth.U8, 1))
+                //using (IplImage img2 = new IplImage(width, height, BitDepth.U8, 1))
                 {
-                    this.Size = new Size(width + 12, height + 148);
-                    double min_val, max_val;
-                    CvPoint min_loc, max_loc;
-                    int size = 15;
-                    int size2x = size / 2;
-                    int size2y = size / 2;
-                    //int num = 0;
-                    double sigma = 3;
                     long elapsed0 = 0, elapsed1 = 0;
                     double framerate0 = 0, framerate1 = 0;
                     double alfa_fr = 0.999;
@@ -431,65 +400,7 @@ namespace MT3
                         {
                             DateTime dn = DateTime.Now; //取得時刻
                             vi.GetPixels(DeviceID, img.ImageData, false, true);
-                            //str = String.Format("ID:{0}", id);
-                            //img.PutText(str, new CvPoint(10, 450), font, new CvColor(0, 255, 100));
-                            Cv.CvtColor(img, img_mono, ColorConversion.BgrToGray);
-                            Cv.Copy(img_mono, imgdata.img); // Copy 将来的にはdark減算
-                            imgdata.id = ++id;
-                            imgdata.t = dn;
-                            imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
-                            if (fifo.Count == appSettings.FifoMaxFrame - 1) fifo.EraseLast();
-                            fifo.InsertFirst(imgdata);
-                            // 位置検出
-                            Cv.Smooth(imgdata.img, img2, SmoothType.Gaussian, size, 0, sigma, 0);
-                            CvRect rect = new CvRect(1, 1, width - 2, height - 2);
-                            Cv.SetImageROI(img2, rect);
-                            Cv.MinMaxLoc(img2, out  min_val, out  max_val, out  min_loc, out  max_loc, null);
-                            Cv.ResetImageROI(img2);
-                            max_loc.X += 1; // 基準点が(1,1)のため＋１
-                            max_loc.Y += 1;
-                            window0.ShowImage(img2);
-
-                            double m00, m10, m01, gx, gy;
-                            size2x = size2y = size / 2;
-                            if (max_loc.X - size2x < 0) size2x = max_loc.X;
-                            if (max_loc.Y - size2y < 0) size2y = max_loc.Y;
-                            if (max_loc.X + size2x >= width) size2x = width - max_loc.X - 1;
-                            if (max_loc.Y + size2y >= height) size2y = height - max_loc.Y - 1;
-                            rect = new CvRect(max_loc.X - size2x, max_loc.Y - size2y, size2x, size2y);
-                            CvMoments moments;
-                            Cv.SetImageROI(img2, rect);
-                            Cv.Moments(img2, out moments, false);
-                            Cv.ResetImageROI(img2);
-                            m00 = Cv.GetSpatialMoment(moments, 0, 0);
-                            m10 = Cv.GetSpatialMoment(moments, 1, 0);
-                            m01 = Cv.GetSpatialMoment(moments, 0, 1);
-                            gx = max_loc.X - size2x + m10 / m00;
-                            gy = max_loc.Y - size2y + m01 / m00;
-
-                            // 画面表示
-                            str = String.Format("ID:{0:D2} ", id) + dn.ToString("yyyyMMdd_HHmmss_fff") + String.Format(" ({0,000:F2},{1,000:F2}) ({2,000:0},{3,000:0})({4,0:F1})", gx, gy, max_loc.X, max_loc.Y, max_val);
-                            if (imgdata.ImgSaveFlag) str += " True";
-                            img.PutText(str, new CvPoint(10, 20), font, new CvColor(0, 255, 100));
-                            img.Circle(max_loc, 10, new CvColor(255, 255, 100));
                             bw.ReportProgress(0, img);
-
-                            // PID data send for UDP
-                            if (ImgSaveFlag == TRUE)
-                            {
-                                //データを送信するリモートホストとポート番号
-                                string remoteHost = mmFsiSC440;
-                                int remotePort = mmFsiUdpPortSpCam;
-                                //送信するデータを読み込む
-                                ++(pid_data.id);
-                                pid_data.swid = 24402;          // 仮　mmFsiUdpPortFSI2
-                                pid_data.t = TDateTimeDouble(DateTime.Now);
-                                pid_data.dx = (float)(gx - xoa);
-                                pid_data.dy = (float)(gy - yoa);
-                                byte[] sendBytes = ToBytes(pid_data);
-                                //リモートホストを指定してデータを送信する
-                                udpc2.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
-                            }
 
                             // 処理速度
                             elapsed0 = sw.ElapsedTicks - elapsed1; // 1frameのticks
@@ -500,9 +411,6 @@ namespace MT3
                             str = String.Format("fr time = {0}({1}){2:F1}", sw.Elapsed, id, framerate0); //," ", sw.ElapsedMilliseconds);
                             //匿名デリゲートで現在の時間をラベルに表示する
                             this.Invoke(new dlgSetString(ShowText), new object[] { textBox1, str });
-                            //img.ToBitmap(bitmap);
-                            //pictureBox1.Refresh();
-
                         }
                         Application.DoEvents();
                         Thread.Sleep(interval);
@@ -511,7 +419,6 @@ namespace MT3
                     this.Invoke(new dlgSetColor(SetColor), new object[] { ObsStart, this.States });
                     this.Invoke(new dlgSetColor(SetColor), new object[] { ObsEndButton, this.States });
                     vi.StopDevice(DeviceID);
-                    udpc2.Close();
                 }
             }
         }
@@ -564,19 +471,20 @@ namespace MT3
             }
         }
 
+        // アナログ画像保存
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            // 画面表示
-            if ((id % 1) == 0)
-            {
-                IplImage image = (IplImage)e.UserState;
+            IplImage image = (IplImage)e.UserState;
+            Cv.Split(image, imgdata.img,null,null,null);
 
-                Cv.Circle(image, new CvPoint((int)xoa, (int)yoa), roa, new CvColor(0, 255, 0));
-                Cv.Line(image, new CvPoint((int)xoa + roa, (int)yoa + roa), new CvPoint((int)xoa - roa, (int)yoa - roa), new CvColor(0, 255, 0));
-                Cv.Line(image, new CvPoint((int)xoa - roa, (int)yoa + roa), new CvPoint((int)xoa + roa, (int)yoa - roa), new CvColor(0, 255, 0));
+            detect();
+            imgdata_push_FIFO();
 
-                pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
-            }
+            //Cv.Circle(image, new CvPoint((int)xoa, (int)yoa), roa, new CvColor(0, 255, 0));
+            //Cv.Line(image, new CvPoint((int)xoa + roa, (int)yoa + roa), new CvPoint((int)xoa - roa, (int)yoa - roa), new CvColor(0, 255, 0));
+            //Cv.Line(image, new CvPoint((int)xoa - roa, (int)yoa + roa), new CvPoint((int)xoa + roa, (int)yoa - roa), new CvColor(0, 255, 0));
+
+            //pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -784,7 +692,7 @@ namespace MT3
         private void buttonMakeDark_Click(object sender, EventArgs e)
         {
             SettingsMake();
-            appSettings = SettingsLoad(21);
+            //appSettings = SettingsLoad(21);
         }
 
         private void timerMakeDark_Tick(object sender, EventArgs e)
@@ -1058,69 +966,7 @@ namespace MT3
             }*/
         }
 
-        /// <summary>
-        /// PID data送信ルーチン
-        /// </summary>
-        private void Pid_Data_Send_Init()
-        {
-            //PID送信用UDP
-            //バインドするローカルポート番号
-            //FSI_PID_DATA pid_data = new FSI_PID_DATA();
-            int localPort = mmFsiUdpPortMT3BaslerS;
-            //System.Net.Sockets.UdpClient udpc3 = null ;
-            try
-            {
-                udpc3 = new System.Net.Sockets.UdpClient(localPort);
-            }
-            catch (Exception ex)
-            {
-                //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
-            }
-        }
-        // PID data送信ルーチン
-        private void Pid_Data_Send()
-        {
-            // PID data send for UDP
-            //データを送信するリモートホストとポート番号
-            string remoteHost = mmFsiSC440;
-            int remotePort = mmFsiUdpPortSpCam; // KV1000SpCam
-            //送信するデータを読み込む
-            ++(pid_data.id);
-            //pid_data.swid = (ushort)mmFsiUdpPortMT3IDS2s;// 24417;  //mmFsiUdpPortMT3WideS
-            pid_data.swid = (ushort)id;// mmFsiUdpPortMT3IDS2s;// 24417;  //mmFsiUdpPortMT3WideS
-            pid_data.t = TDateTimeDouble(imageInfo.TimestampSystem);  //LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime));//(DateTime.Now);
-            if (Mode == PID_TEST)
-            {
-                xoad = xoa_test_start + xoa_test_step * (pid_data.id - test_start_id);
-                yoad = yoa_test_start + yoa_test_step * (pid_data.id - test_start_id);
-            }
-            else
-            {
-                xoad = xoa_mes;
-                yoad = yoa_mes;
-            }
-            pid_data.dx = (float)(gx - xoad);
-            pid_data.dy = (float)(gy - yoad);
-            pid_data.vmax = (ushort)(max_val);
-            pid_data.az = (float)(az);
-            pid_data.alt = (float)(alt);
-            pid_data.vaz = (float)(vaz);
-            pid_data.valt = (float)(valt);
 
-            byte[] sendBytes = ToBytes(pid_data);
-
-            try
-            {
-                //リモートホストを指定してデータを送信する
-                udpc3.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
-            }
-            catch (Exception ex)
-            {
-                //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
-            }
-        }
         /// <summary>
         /// HDDの空き領域を求めます
         /// </summary>

@@ -14,7 +14,7 @@ using PylonC.NETSupportLibrary;
 
 namespace MT3
 {
-    #region 定数
+    #region 定義
     public enum Camera_Maker
     {
         analog,
@@ -122,7 +122,6 @@ namespace MT3
         uEye.Types.ImageInfo imageInfo;
         ulong ueye_frame_number = 0;
         Int32 s32MemID;
-        int cameraID = 2;  // 1:UI5240   2:UI2410  5:UI1540LE
 
         double set_exposure  = 3;   // [ms]            F1.8:F4  exp 8ms:3ms  gain 1024: 100  約106倍
         double set_exposure1 = 0.2; // [ms]
@@ -154,11 +153,12 @@ namespace MT3
         Udp_kv udpkv = new Udp_kv();
 
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
+        KV_PID_DATA kv_pid_data = new KV_PID_DATA();
         MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
-        int mmFsiUdpPortMT3Basler = 24428;            // （受信）
-        int mmFsiUdpPortMT3BaslerS = 24429;            // （送信）
+        //int mmFsiUdpPortMT3Basler = 24428;            // （受信）
+        //int mmFsiUdpPortMT3BaslerS = 24429;            // （送信）
         int mmFsiUdpPortMTmonitor = 24415;
-        string mmFsiCore_i5 = "192.168.1.211";
+        string mmFsiCore_i5 = "192.168.1.211"; // for MTmon
         int mmFsiUdpPortSpCam = 24410;   // SpCam（受信）
         string mmFsiSC440 = "192.168.1.206";
         System.Net.Sockets.UdpClient udpc3 = null;
@@ -251,13 +251,20 @@ namespace MT3
             sett.Text = "Watec WAT-902";
             sett.ID = 21;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
             sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 3;       //カメラタイプ毎のID
+            sett.CameraID = 0;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
             sett.Width = 640;
             sett.Height = 480;
+            sett.Ccdpx = 0.010; //[mm]
+            sett.Ccdpy = 0.010; //[mm]
+            sett.Framerate = 30.0; //[fps]
+            sett.FifoMaxFrame = 64;
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410;
+            sett.UdpPortSend = 24429;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
             sett.Text = "IDS UI-2410SE-M";
@@ -405,8 +412,12 @@ namespace MT3
             String str=null;
             //AVT
             sys.Startup();
-            //cameras = sys.Cameras;
-            //if (cameras.Count == 0) return ;
+            cameras = sys.Cameras;
+            if (cameras.Count == 0)
+            {
+                MessageBox.Show("AVT Camera not found!");
+                return;
+            }
             //foreach( AVT.VmbAPINET.Camera camera in cameras){
             try
             {
@@ -533,44 +544,6 @@ namespace MT3
             lap22 = (1 - alpha) * lap22 + alpha * (elapsed22 - elapsed20) / sf;
         }
 
-        /// <summary>
-        /// FIFO pushルーチン
-        /// </summary>
-        private void imgdata_push_FIFO(byte [] buf)
-        {
-            // 文字入れ
-            //String str = String.Format("ID:{0,6:D1} ", imgdata.id) + imgdata.t.ToString("yyyyMMdd_HHmmss_fff") + String.Format(" ({0,6:F1},{1,6:F1})({2,6:F1})", gx, gy, max_val);
-            //img_dmk.PutText(str, new CvPoint(10, 460), font, new CvColor(255, 100, 100));
-
-            //try
-            //{
-            imgdata.id = (int)id;     // (int)imageInfo.FrameNumber;
-            imgdata.t = DateTime.Now; //imageInfo.TimestampSystem;   //  LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime);
-            imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
-            imgdata.gx = gx;
-            imgdata.gy = gy;
-            imgdata.kgx = kgx;
-            imgdata.kgy = kgy;
-            imgdata.kvx = kvx;
-            imgdata.kvy = kvy;
-            imgdata.vmax = max_val;
-            imgdata.blobs = blobs;
-            imgdata.udpkv1 = (Udp_kv)udpkv.Clone();
-            imgdata.az = az;
-            imgdata.alt = alt;
-            imgdata.vaz = vaz;
-            imgdata.valt = valt;
-            if (fifo.Count == appSettings.FifoMaxFrame - 1) fifo.EraseLast();
-            fifo.InsertFirst(imgdata, buf);
-            /*}
-            catch (Exception ex)
-            {
-                //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
-                System.Diagnostics.Trace.WriteLine(ex.Message);
-            }*/
-        }
-
         public UserSetSelectorEnum UserSetSelector
         {
             get { return (UserSetSelectorEnum)UserSetSelectorFeature.EnumIntValue; }
@@ -655,8 +628,6 @@ namespace MT3
         private AVT.VmbAPINET.Feature m_AcquisitionFrameCountFeature = null;
 
         #endregion
-
-
 
         #region Public methods.
 
@@ -823,5 +794,131 @@ namespace MT3
 
         #endregion
 
+        #region common FIFO UDP
+        /// <summary>
+        /// FIFO pushルーチン
+        /// </summary>
+        private void imgdata_push_FIFO(byte[] buf)
+        {
+            // 文字入れ
+            //String str = String.Format("ID:{0,6:D1} ", imgdata.id) + imgdata.t.ToString("yyyyMMdd_HHmmss_fff") + String.Format(" ({0,6:F1},{1,6:F1})({2,6:F1})", gx, gy, max_val);
+            //img_dmk.PutText(str, new CvPoint(10, 460), font, new CvColor(255, 100, 100));
+
+            //try
+            //{
+            imgdata.id = (int)id;     // (int)imageInfo.FrameNumber;
+            imgdata.t = DateTime.Now; //imageInfo.TimestampSystem;   //  LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime);
+            imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
+            imgdata.gx = gx;
+            imgdata.gy = gy;
+            imgdata.kgx = kgx;
+            imgdata.kgy = kgy;
+            imgdata.kvx = kvx;
+            imgdata.kvy = kvy;
+            imgdata.vmax = max_val;
+            imgdata.blobs = blobs;
+            imgdata.udpkv1 = (Udp_kv)udpkv.Clone();
+            imgdata.az = az;
+            imgdata.alt = alt;
+            imgdata.vaz = vaz;
+            imgdata.valt = valt;
+            if (fifo.Count == appSettings.FifoMaxFrame - 1) fifo.EraseLast();
+            fifo.InsertFirst(imgdata, buf);
+            /*}
+            catch (Exception ex)
+            {
+                //匿名デリゲートで表示する
+                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                System.Diagnostics.Trace.WriteLine(ex.Message);
+            }*/
+        }
+
+
+        // PID data送信ルーチン
+        private void Pid_Data_Send_Init()
+        {
+            //PID送信用UDP
+            //バインドするローカルポート番号
+            int localPort = appSettings.UdpPortSend;// 24412;  //mmFsiUdpPortMT3FineS
+            try
+            {
+                udpc3 = new System.Net.Sockets.UdpClient(localPort);
+            }
+            catch (Exception ex)
+            {
+                //匿名デリゲートで表示する
+                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+            }
+        }
+        // PID data送信ルーチン
+        private void Pid_Data_Send()
+        {
+            // PID data send for UDP
+            //データを送信するリモートホストとポート番号
+            string remoteHost = "192.168.1.206";
+            int remotePort = 24410; // KV1000SpCam
+            //送信するデータを読み込む
+            ++(pid_data.id);
+            pid_data.swid = (ushort)appSettings.ID;
+            //pid_data.t = TDateTimeDouble(LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime));//(DateTime.Now);
+            pid_data.t =  TDateTimeDouble(DateTime.Now);
+            pid_data.vmax = (ushort)(max_val);
+            pid_data.dx = (float)(sgx - xoa);
+            pid_data.dy = (float)(sgy - yoa);
+            pid_data.az = (float)(az);
+            pid_data.alt = (float)(alt);
+            pid_data.vaz = (float)(vaz);
+            pid_data.valt = (float)(valt);
+            if (udpkv.mt3state_move == 0 && udpkv.mt3state_center == 0 && udpkv.mt3state_truck != 0) pid_data.kalman_state = 1;
+            else pid_data.kalman_state = 0;
+
+            byte[] sendBytes = ToBytes(pid_data);
+
+            try
+            {
+                //リモートホストを指定してデータを送信する
+                udpc3.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
+            }
+            catch (Exception ex)
+            {
+                //匿名デリゲートで表示する
+                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+            }
+        }
+        /// <summary>
+        /// PID data送信ルーチン(KV1000) DM937
+        /// </summary>
+        private void Pid_Data_Send_KV1000(short id, double daz, double dalt, double vk)
+        {
+            // PID data send for UDP
+            //データを送信するリモートホストとポート番号
+            //string remoteHost = "192.168.1.10";
+            //int remotePort = 8503; //KV1000 UDP   8501(KV1000 cmd); // KV1000SpCam
+            string remoteHost = appSettings.IP_KV1000SpCam2 ;
+            int remotePort = appSettings.UdpPortKV1000SpCam2;// 24426; //KV1000SpCam2 UDP
+
+            //送信するデータを読み込む
+            //string s1 = string.Format("WRS DM11393 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
+            //byte[] sendBytes = Encoding.ASCII.GetBytes(s1);
+            kv_pid_data.fine_time = udpkv.EndianChange((short)udpkv.udp_time_code);
+            kv_pid_data.fine_id = udpkv.EndianChange(id);
+            kv_pid_data.fine_az = udpkv.EndianChange((short)udpkv.PIDPV_makedata(daz));
+            kv_pid_data.fine_alt = udpkv.EndianChange((short)udpkv.PIDPV_makedata(dalt));
+            kv_pid_data.fine_vk = udpkv.EndianChange((short)udpkv.PIDPV_makedata(vk));
+
+            byte[] sendBytes = udpkv.ToBytes(kv_pid_data);
+
+            try
+            {
+                //リモートホストを指定してデータを送信する
+                udpc3.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
+            }
+            catch (Exception ex)
+            {
+                //匿名デリゲートで表示する
+                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+            }
+        }
+        #endregion
     }  
 }
