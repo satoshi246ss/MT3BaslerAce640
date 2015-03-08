@@ -247,26 +247,6 @@ namespace MT3
         {
             //保存する設定を作成する
             Settings sett = new Settings();
-            // Cam ID 21
-            sett.Text = "Watec WAT-902";
-            sett.ID = 21;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 0;       //カメラタイプ毎のID
-            sett.CameraColor = 0;    // 0:mono  1:color
-            sett.Width = 640;
-            sett.Height = 480;
-            sett.Ccdpx = 0.010; //[mm]
-            sett.Ccdpy = 0.010; //[mm]
-            sett.Framerate = 30.0; //[fps]
-            sett.FifoMaxFrame = 64;
-            sett.UseDetect = true;
-            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
-            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410;
-            sett.UdpPortSend = 24429;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
-            SettingsSave(sett);
-
             sett.Text = "IDS UI-2410SE-M";
             sett.ID = 4;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
             sett.NoCapDev = 4;
@@ -309,10 +289,10 @@ namespace MT3
             sett.Exposure = 8.3; //[ms]
             sett.Gain = 300; // 100-1023  要検討
             sett.UseDetect = true;
-            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdBlob = 128;    // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410;
-            sett.UdpPortSend = 24429;
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            sett.UdpPortSend    = 24431;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
@@ -337,8 +317,28 @@ namespace MT3
             sett.UseDetect = false;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410;
-            sett.UdpPortSend = 24429;
+            sett.UdpPortRecieve = 24441; //Broadcast1
+            sett.UdpPortSend    = 24433;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
+            SettingsSave(sett);
+
+            // Wat100N Cam ID 21
+            sett.Text = "Watec WAT-100N";
+            sett.ID = 21;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 0;       //カメラタイプ毎のID
+            sett.CameraColor = 0;    // 0:mono  1:color
+            sett.Width  = 640;
+            sett.Height = 480;
+            sett.Ccdpx = 0.010; //[mm]
+            sett.Ccdpy = 0.010; //[mm]
+            sett.Framerate = 30.0; //[fps]
+            sett.FifoMaxFrame = 64;
+            sett.UseDetect = true;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24442;
+            sett.UdpPortSend = 24451;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
@@ -364,7 +364,7 @@ namespace MT3
             sett.UseDetect = false;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410;
+            sett.UdpPortRecieve = 24410; //Broadcast0
             sett.UdpPortSend = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
@@ -442,6 +442,9 @@ namespace MT3
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
 
             features = camera.Features;
+            feature = features["GVSPAdjustPacketSize"];
+            feature.RunCommand();
+
             feature = features["PayloadSize"];
             payloadSize = feature.IntValue;
 
