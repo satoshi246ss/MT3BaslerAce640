@@ -293,7 +293,7 @@ namespace MT3
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend    = 24431;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
+            sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
 
             // MT2 Echelle
@@ -319,7 +319,7 @@ namespace MT3
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24441; //Broadcast1
             sett.UdpPortSend    = 24433;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
+            sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
 
             // Wat100N Cam ID 21
@@ -337,9 +337,9 @@ namespace MT3
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24442;
+            sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortSend = 24451;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
+            sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
 
             // IDS
