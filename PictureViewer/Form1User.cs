@@ -332,6 +332,10 @@ namespace MT3
             sett.Height = 480;
             sett.Ccdpx = 0.010; //[mm]
             sett.Ccdpy = 0.010; //[mm]
+            sett.Xoa = 435;
+            sett.Yoa = 197;
+            sett.Roa = 192 / 2; // 255x192
+            sett.Theta = 0;
             sett.Framerate = 30.0; //[fps]
             sett.FifoMaxFrame = 64;
             sett.UseDetect = true;

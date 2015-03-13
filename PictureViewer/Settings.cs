@@ -85,6 +85,34 @@ namespace MT3
             set { _ccdpy = value; }
         }
 
+        private double _xoa;
+        public  double Xoa
+        {
+            get { return _xoa; }
+            set { _xoa = value; }
+        }
+
+        private double _yoa;
+        public double Yoa
+        {
+            get { return _yoa; }
+            set { _yoa = value; }
+        }
+
+        private double _roa;
+        public double Roa
+        {
+            get { return _roa; }
+            set { _roa = value; }
+        }
+
+        private double _theta;
+        public double Theta
+        {
+            get { return _theta; }
+            set { _theta = value; }
+        }
+
         private int _pixel_clock;
         public int PixelClock
         {
@@ -234,6 +262,10 @@ namespace MT3
             _focal_length = 12.5;      //[mm]
             _ccdpx = 0.0074; //[mm]
             _ccdpy = 0.0074; //[mm]
+            _xoa = _width / 2;
+            _yoa = _height / 2;
+            _roa = 40;
+            _theta = 0;
             _pixel_clock = 43;//[MHz] int
             _framerate = 75.0; //[fps]
             _fifo_max_frame = 64;

@@ -481,7 +481,9 @@ namespace MT3
             int codec = Cv.FOURCC('D', 'I', 'B', ' ');  // 0; //非圧縮avi
             //this.vw = new CvVideoWriter(fn, codec, 29.97, new CvSize(this.width, this.height), true); //color
             this.vw = new CvVideoWriter(fn, codec, 29.97, new CvSize(Width, Height), false); //mono
-            this.writer = new StreamWriter(@"Test.txt", true, System.Text.Encoding.GetEncoding("shift_jis"));
+            fn += this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".avi";
+            this.writer = new StreamWriter( this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".txt"
+, true, System.Text.Encoding.GetEncoding("shift_jis"));
         }
 
         /// <summary>

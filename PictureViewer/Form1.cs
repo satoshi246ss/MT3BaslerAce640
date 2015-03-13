@@ -794,11 +794,26 @@ namespace MT3
                 {
                     Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.BayerGbToBgr);
                 }
-                Cv.Circle(img_dmk3, new CvPoint((int)xoa, (int)yoa), roa, new CvColor(0, 255, 0));
-                Cv.Line(img_dmk3, new CvPoint(xoa + roa, yoa + roa), new CvPoint(xoa - roa, yoa - roa), new CvColor(0, 255, 0));
-                Cv.Line(img_dmk3, new CvPoint(xoa - roa, yoa + roa), new CvPoint(xoa + roa, yoa - roa), new CvColor(0, 255, 0));
-                Cv.Rectangle(img_dmk3, new CvRect(xoa - 70, yoa - 55, 70 + 70, 55 + 55), new CvColor(0, 255, 80));　// SF
-                Cv.Circle(   img_dmk3, new CvPoint((int)xoa, (int)yoa), 9, new CvColor(0, 200,100)); // 200um Fiber
+                double sinth, costh ;
+                double k1 = 1.2 ;
+                double k2 = 0.3 ;
+                Cv.Circle(img_dmk3, new CvPoint((int)appSettings.Xoa, (int)appSettings.Yoa), (int)appSettings.Roa, new CvColor(0, 255, 0));
+                
+                sinth = Math.Sin( appSettings.Theta * Math.PI / 180.0) ;
+                costh = Math.Cos( appSettings.Theta * Math.PI / 180.0) ;
+                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa + k1 *sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 *costh*appSettings.Roa))
+                                , new CvPoint( (int)(appSettings.Xoa + k2 *sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(0, 255, 0));
+                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa - k1 *sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 *costh*appSettings.Roa))
+                                , new CvPoint( (int)(appSettings.Xoa - k2 *sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 *costh*appSettings.Roa)), new CvColor(0, 255, 0));
+                sinth = Math.Sin( (90.0+appSettings.Theta) * Math.PI / 180.0) ;
+                costh = Math.Cos( (90.0+appSettings.Theta) * Math.PI / 180.0) ;
+                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa + k1 *sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 *costh*appSettings.Roa))
+                                , new CvPoint( (int)(appSettings.Xoa + k2 *sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(0, 255, 0));
+                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa - k1 *sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 *costh*appSettings.Roa))
+                                , new CvPoint( (int)(appSettings.Xoa - k2 *sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 *costh*appSettings.Roa)), new CvColor(0, 255, 0));
+                
+          //      Cv.Rectangle(img_dmk3, new CvRect(xoa - 70, yoa - 55, 70 + 70, 55 + 55), new CvColor(0, 255, 80));　// SF
+          //      Cv.Circle(   img_dmk3, new CvPoint((int)xoa, (int)yoa), 9, new CvColor(0, 200,100)); // 200um Fiber
 
                 String str = String.Format("ID:{4,7:D1} ({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00})", gx, gy, max_val, max_label, id);
                 img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
