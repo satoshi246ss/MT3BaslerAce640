@@ -345,9 +345,18 @@ namespace MT3
             //  richTextBox1.AppendText(s);
             udpkv.kd = (KV_DATA)e.UserState;
             udpkv.cal_mt3();
+            udpkv.cal_mt2();
 
-            //string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
-            string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v);
+            string s = null ;
+            if (appSettings.CamPlatform == Platform.MT2)
+            {
+                //string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
+                s = string.Format("KV:[x1:{0:D6} y1:{1:D6} Az1:{2,6:F1} Alt1:{3,6:F1}]\n", udpkv.xpos, udpkv.ypos, udpkv.az1_c, udpkv.alt1_c);
+            }
+            if (appSettings.CamPlatform == Platform.MT3)
+            {
+                s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c);
+            }
             label_X2Y2.Text = s;
 
         }
@@ -817,16 +826,16 @@ namespace MT3
         /// 回転座標計算ルーチン
         /// </summary>
         /// <param name="capacity">画像表示用回転座標計算ルーチン</param>
-        public CvPoint Rotation(CvPoint xy, CvPoint xcyc, double theta)
+        public CvPoint2D64f Rotation(CvPoint2D64f xy, CvPoint2D64f xcyc, double theta)
         {
             double sinth = Math.Sin(theta * Math.PI / 180.0);
             double costh = Math.Cos(theta * Math.PI / 180.0);
-            CvPoint ans;
-            CvPoint xx = new CvPoint();
+            CvPoint2D64f ans = new CvPoint2D64f();
+            CvPoint2D64f xx  = new CvPoint2D64f();
             xx = xy - xcyc;
-            ans.X = (int)(costh * xx.X + sinth * xx.Y + 0.5);
-            ans.Y = (int)(sinth * xx.X - costh * xx.Y + 0.5);
-            return ans + xcyc;
+            ans.X = costh * xx.X + sinth * xx.Y ;
+            ans.Y = sinth * xx.X - costh * xx.Y ;
+            return (ans + xcyc);
         }
         /// <summary>
         /// 画像表示ルーチン
@@ -853,21 +862,22 @@ namespace MT3
                 double k2 = 0.3 ;
                 double ax = 10.0;
                 double by =  5.0;
-                double theta = udpkv.cal_mt2_theta() + appSettings.Theta;
+                double theta = -udpkv.cal_mt2_theta() - appSettings.Theta;
 
                 Cv.Circle(img_dmk3, new CvPoint((int)appSettings.Xoa, (int)appSettings.Yoa), (int)appSettings.Roa, new CvColor(0, 255, 0));
                 
                 sinth = Math.Sin( theta * Math.PI / 180.0) ;
                 costh = Math.Cos( theta * Math.PI / 180.0) ;
                 Cv.Line(img_dmk3, new CvPoint((int)(appSettings.Xoa - k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 * costh * appSettings.Roa))
-                                , new CvPoint((int)(appSettings.Xoa - k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 * costh * appSettings.Roa)), new CvColor(0, 205, 0));
+                                , new CvPoint((int)(appSettings.Xoa - k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 * costh * appSettings.Roa)), new CvColor(0, 205, 150));
                 Cv.Line(img_dmk3, new CvPoint((int)(appSettings.Xoa + k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 * costh * appSettings.Roa))
                                 , new CvPoint((int)(appSettings.Xoa + k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 * costh * appSettings.Roa)), new CvColor(0, 205, 0));
                 // Arrow
-                Cv.Circle(img_dmk3, Rotation( new CvPoint((int)(appSettings.Xoa - k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 * costh * appSettings.Roa)), new CvPoint((int)appSettings.Xoa, (int)appSettings.Yoa),theta), 5, new CvColor(0, 255, 0));
+                CvPoint2D64f YAxisPoint = Rotation(new CvPoint2D64f(appSettings.Xoa,  appSettings.Yoa - k1 * appSettings.Roa), new CvPoint2D64f(appSettings.Xoa, appSettings.Yoa), theta);
+                Cv.Circle(img_dmk3, YAxisPoint,  5, new CvColor(0, 255, 0));
  
-                sinth = Math.Sin( (90.0+appSettings.Theta) * Math.PI / 180.0) ;
-                costh = Math.Cos( (90.0+appSettings.Theta) * Math.PI / 180.0) ;
+                sinth = Math.Sin( (90.0+theta) * Math.PI / 180.0) ;
+                costh = Math.Cos( (90.0+theta) * Math.PI / 180.0) ;
                 Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa + k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 *costh*appSettings.Roa))
                                 , new CvPoint( (int)(appSettings.Xoa + k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(30, 165, 0));
                 Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa - k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 *costh*appSettings.Roa))
@@ -878,7 +888,7 @@ namespace MT3
 
                 String str = String.Format("ID:{4,7:D1} ({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00})", gx, gy, max_val, max_label, id);
                 img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
-                img_dmk3.Circle(new CvPoint((int)(gx + 0.5), (int)(gy + 0.5)), 15, new CvColor(0, 100, 255));
+                img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), 15, new CvColor(0, 100, 255));
 
                 try
                 {
@@ -1134,8 +1144,7 @@ namespace MT3
         {
             //label_ID.Text = max_label.ToString("0");
             string s = string.Format("(x,y)=({0},{1})", e.X, e.Y);
-            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
-
+            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
         }
     }
 }

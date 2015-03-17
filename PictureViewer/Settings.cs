@@ -48,7 +48,14 @@ namespace MT3
             get { return _camera_interface; }
             set { _camera_interface = value; }
         }
-      
+
+        private Platform _platform;
+        public Platform CamPlatform
+        {
+            get { return _platform; }
+            set { _platform = value; }
+        }
+
         //CCD
         private int _width;
         public int Width
@@ -256,6 +263,7 @@ namespace MT3
             _camera_id = 2;       //カメラタイプ毎のID
             _camera_color = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             _camera_interface = Camera_Interface.USB2 ;
+            _platform = Platform.MT2;
             _ip_gige_camera = "192.168.1.150"; //GIGE Camera only.
             _width  = 640;
             _height = 480;

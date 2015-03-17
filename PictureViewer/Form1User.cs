@@ -37,6 +37,14 @@ namespace MT3
         IEEE1394,
         NTSC
     }
+    public enum Platform
+    {
+        Fish1,
+        Fish2,
+        MT1,
+        MT2,
+        MT3,
+    }
     #endregion
 
     public partial class Form1 : Form

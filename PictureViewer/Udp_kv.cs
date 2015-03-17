@@ -32,7 +32,7 @@ namespace MT3
         const short azErr = -1;
         const short altErr = -2;
         //上の2つ状態を保持します
-        public short mt3mode;
+        public short mt3mode, mt2mode;
 
         public KV_DATA kd = new KV_DATA();
         public Int32 xpos, ypos, x2pos, y2pos;
@@ -40,6 +40,7 @@ namespace MT3
         public Int32 x1v, y1v, x2v, y2v;
         public UInt16 kv_status, data_request;
         public double vaz2_kv, valt2_kv, az2_c, alt2_c;
+        public double vaz1_kv, valt1_kv, az1_c, alt1_c;
         public string binStr_status, binStr_request;
 
         CvKalman kv_kalman = Cv.CreateKalman(4, 2);
@@ -59,6 +60,16 @@ namespace MT3
         public int mt3state_truck_pre = 0;//     = (G_kv_status  & (1<<13)); //追尾中フラグ
         public int mt3state_night_pre = 0;//     = (G_kv_status  & (1<<14)); //夜間フラグ
         public int mt3state_center_pre = 0;// (data_request & (1 << 2)); //センタリング中フラグ
+
+        public int mt2state_move = 0;//     = (G_kv_status  & (1<<12)); //導入中フラグ
+        public int mt2state_truck = 0;//     = (G_kv_status  & (1<<13)); //追尾中フラグ
+        public int mt2state_night = 0;//     = (G_kv_status  & (1<<14)); //夜間フラグ
+        public int mt2state_center = 0;// (data_request & (1 << 2)); //センタリング中フラグ
+
+        public int mt2state_move_pre = 0;//     = (G_kv_status  & (1<<12)); //導入中フラグ
+        public int mt2state_truck_pre = 0;//     = (G_kv_status  & (1<<13)); //追尾中フラグ
+        public int mt2state_night_pre = 0;//     = (G_kv_status  & (1<<14)); //夜間フラグ
+        public int mt2state_center_pre = 0;// (data_request & (1 << 2)); //センタリング中フラグ
 
         public int kalman_init_flag = 0;  // 1:Form1のカルマンフィルタをリセット
 
@@ -160,7 +171,7 @@ namespace MT3
             binStr_status = Convert.ToString(kv_status, 2);
             binStr_request = Convert.ToString(data_request, 2);
             //udp_time_code = EndianChange(kd.UdpTimeCode);
-            Pos2AzAlt2();
+            MT3Pos2AzAlt();
 
             if ((int)(kv_status & (1 << 10)) != 0) vaz2_kv = -x2v / 1000.0;
             else vaz2_kv = +x2v / 1000.0;
@@ -193,6 +204,57 @@ namespace MT3
 
             kalman_update();
         }
+
+        /// <summary>
+        /// MT2 dataの計算
+        /// </summary>
+        /// <remarks>
+        /// KV_DATA -> az,alt etcに変換
+        /// </remarks>
+        public void cal_mt2()
+        {
+            xpos = ((kd.x1 << 8) + kd.x0 ) << 4; // <<16 ->256*256  <<8 ->256
+            ypos = ((kd.y1 << 8) + kd.y0 ) << 4; // <<16 ->256*256  <<8 ->256
+            x1v = ((kd.v11 << 8) + kd.v10) << 6;
+            y1v = ((kd.v13 << 8) + kd.v12) << 6;
+            kv_status = (UInt16)((kd.y3 << 8) + kd.y2);      //KV1000 DM503
+            data_request = (UInt16)((kd.x3 << 8) + kd.x2);   //KV1000 DM499
+            binStr_status = Convert.ToString(kv_status, 2);
+            binStr_request = Convert.ToString(data_request, 2);
+            //udp_time_code = EndianChange(kd.UdpTimeCode);
+            MT2Pos2AzAlt();
+
+            if ((int)(kv_status & (1 << 10)) != 0) vaz1_kv = -x1v / 1000.0;
+            else vaz1_kv = +x1v / 1000.0;
+            if ((int)(kv_status & (1 << 11)) != 0)
+            { //mr107:Y2モータ回転方向
+                if (mt2mode == mmEast) valt1_kv = -y1v / 1000.0;
+                else valt1_kv = y1v / 1000.0;
+            }
+            else
+            {
+                if (mt2mode == mmEast) valt1_kv = y1v / 1000.0;
+                else valt1_kv = -y1v / 1000.0;
+            }
+
+            mt2state_move_pre = mt2state_move;
+            mt2state_truck_pre = mt2state_truck;
+            mt2state_center_pre = mt2state_center;
+            mt2state_night_pre = mt2state_night;
+
+            mt2state_move = (kv_status & (1 << 12)); //導入中フラグ
+            mt2state_truck = (kv_status & (1 << 13)); //追尾中フラグ
+            mt2state_night = (kv_status & (1 << 14)); //夜間フラグ
+            mt2state_center = (data_request & (1 << 2)); //センタリング中フラグ
+
+            // truck開始時
+       ///     if (mt2state_truck_pre == 0 && mt2state_truck != 0) kalman_init();
+
+            // センタリング中 完了時
+       ///     if (mt2state_center_pre != 0 && mt2state_center == 0) kalman_init();
+
+       ///     kalman_update();
+        }
         /// <summary>
         /// MT2 Thetaの計算
         /// </summary>
@@ -201,7 +263,7 @@ namespace MT3
         /// </remarks>
         public double cal_mt2_theta()
         {
-            double theta = -kvaz - kvalt ;
+            double theta = this.az1_c + this.alt1_c ;
             return theta;
         }
 
@@ -214,7 +276,7 @@ namespace MT3
         ///  -1 ;  Az  out of range
         ///  -2 ;  Alt out of range
         /// </remarks>
-        public void Pos2AzAlt2()
+        public void MT3Pos2AzAlt()
         {
             // Normal
             if (x2pos >= 0 && x2pos < 360000)
@@ -242,6 +304,45 @@ namespace MT3
             }
             if (az2_c > 360) az2_c -= 360;
             else if (az2_c < 0) az2_c += 360;
+        }
+
+        /// <summary>
+        /// MT2 Pos => Az,Alt
+        /// </summary>
+        /// <remarks>
+        /// Pos => Az,Alt　変換
+        /// Error code : *mode
+        ///  -1 ;  Az  out of range
+        ///  -2 ;  Alt out of range
+        /// </remarks>
+        public void MT2Pos2AzAlt()
+        {
+            // Normal
+            if (xpos >= 0 && xpos < 360000)
+            {
+                if (mt2mode == mmWest)
+                {
+                    //mt2mode = mmWest; //0
+                    az1_c = (-90000 + xpos) / 1000.0;
+                    alt1_c = (-90000 + ypos) / 1000.0;
+                }
+                else if (mt2mode == mmEast)
+                {
+                    //mt2mode = mmEast; //1
+                    az1_c = (90000 + xpos) / 1000.0;
+                    alt1_c = (270000 - ypos) / 1000.0;
+                }
+                else
+                {
+                    mt2mode = altErr; // mt2mode out of range
+                }
+            }
+            else
+            {
+                mt2mode = azErr; // Az out of range
+            }
+            if (az1_c > 360) az1_c -= 360;
+            else if (az1_c < 0) az1_c += 360;
         }
 
         public object Clone()
