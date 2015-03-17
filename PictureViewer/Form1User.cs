@@ -155,12 +155,10 @@ namespace MT3
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
         KV_PID_DATA kv_pid_data = new KV_PID_DATA();
         MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
-        //int mmFsiUdpPortMT3Basler = 24428;            // （受信）
-        //int mmFsiUdpPortMT3BaslerS = 24429;            // （送信）
-        int mmFsiUdpPortMTmonitor = 24415;
+        int mmUdpPortBroadCast     = 24410;            // （受信）
+        int mmUdpPortBroadCastSent = 24411;            // （送信）
+        int mmFsiUdpPortMTmonitor  = 24415;
         string mmFsiCore_i5 = "192.168.1.211"; // for MTmon
-        int mmFsiUdpPortSpCam = 24410;   // SpCam（受信）
-        string mmFsiSC440 = "192.168.1.206";
         System.Net.Sockets.UdpClient udpc3 = null;
         DriveInfo cDrive = new DriveInfo("C");
         long diskspace;
@@ -291,8 +289,9 @@ namespace MT3
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;    // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410; // Broadcast0
-            sett.UdpPortSend    = 24431;
+            //sett.UdpPortRecieve = 24410; // Broadcast0
+            sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortSend = 24431;
             sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
 
@@ -341,7 +340,8 @@ namespace MT3
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24442; //Broadcast2
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend = 24451;
             sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);

@@ -193,6 +193,17 @@ namespace MT3
 
             kalman_update();
         }
+        /// <summary>
+        /// MT2 Thetaの計算
+        /// </summary>
+        /// <remarks>
+        /// KV_DATA -> az,alt etcに変換
+        /// </remarks>
+        public double cal_mt2_theta()
+        {
+            double theta = -kvaz - kvalt ;
+            return theta;
+        }
 
         /// <summary>
         /// MT3 Pos => Az,Alt

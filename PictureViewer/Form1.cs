@@ -191,7 +191,9 @@ namespace MT3
         }
 
         #region UDP
+        //
         // 別スレッド処理（UDP） //IP 192.168.1.214
+        //
         private void worker_udp_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bw = (BackgroundWorker)sender;
@@ -207,6 +209,22 @@ namespace MT3
             {
                 //匿名デリゲートで表示する
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+            }
+
+            // ベースブロードバンドポートなら転送
+            System.Net.Sockets.UdpClient udpc2 = null; ;
+            if (localPort == mmUdpPortBroadCast)
+            {
+                int localPortSent = mmUdpPortBroadCastSent;
+                try
+                {
+                    udpc2 = new System.Net.Sockets.UdpClient(localPortSent);
+                }
+                catch (Exception ex)
+                {
+                    //匿名デリゲートで表示する
+                    this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                }
             }
 
             //文字コードを指定する
@@ -227,6 +245,22 @@ namespace MT3
                 {
                     kd = ToStruct1(rcvBytes);
                     bw.ReportProgress(0, kd);
+
+                    // ベースブロードバンドポートなら転送
+                    if (localPort == mmUdpPortBroadCast)
+                    {
+                        //データを送信するリモートホストとポート番号
+                        string remoteHost = "localhost";
+                        //string remoteHost = "192.168.1.204";
+                        int remotePort = 24441;  // アプリ1
+                        udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
+
+                        remotePort = 24442;  // アプリ2
+                        udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
+
+                        remotePort = 24443;  // アプリ3
+                        udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
+                    }
                 }
                 else if (rcvBytes.Length == size)
                 {
@@ -313,7 +347,7 @@ namespace MT3
                 //  richTextBox1.AppendText(s);
                 udpkv.kd = (KV_DATA)e.UserState;
                 udpkv.cal_mt3();
-
+                
                 string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
                 label_X2Y2.Text = s;
             }
@@ -797,20 +831,22 @@ namespace MT3
                 double sinth, costh ;
                 double k1 = 1.2 ;
                 double k2 = 0.3 ;
+                double theta = udpkv.cal_mt2_theta() + appSettings.Theta;
+
                 Cv.Circle(img_dmk3, new CvPoint((int)appSettings.Xoa, (int)appSettings.Yoa), (int)appSettings.Roa, new CvColor(0, 255, 0));
                 
-                sinth = Math.Sin( appSettings.Theta * Math.PI / 180.0) ;
-                costh = Math.Cos( appSettings.Theta * Math.PI / 180.0) ;
-                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa + k1 *sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 *costh*appSettings.Roa))
-                                , new CvPoint( (int)(appSettings.Xoa + k2 *sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(0, 255, 0));
-                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa - k1 *sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 *costh*appSettings.Roa))
-                                , new CvPoint( (int)(appSettings.Xoa - k2 *sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 *costh*appSettings.Roa)), new CvColor(0, 255, 0));
+                sinth = Math.Sin( theta * Math.PI / 180.0) ;
+                costh = Math.Cos( theta * Math.PI / 180.0) ;
+                Cv.Line(img_dmk3, new CvPoint((int)(appSettings.Xoa - (k1+0.2) * sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 * costh * appSettings.Roa))
+                                , new CvPoint((int)(appSettings.Xoa - k2       * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 * costh * appSettings.Roa)), new CvColor(0, 205, 0));
+                Cv.Line(img_dmk3, new CvPoint((int)(appSettings.Xoa + k1       * sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 * costh * appSettings.Roa))
+                                , new CvPoint((int)(appSettings.Xoa + k2       * sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 * costh * appSettings.Roa)), new CvColor(0, 205, 0));
                 sinth = Math.Sin( (90.0+appSettings.Theta) * Math.PI / 180.0) ;
                 costh = Math.Cos( (90.0+appSettings.Theta) * Math.PI / 180.0) ;
-                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa + k1 *sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 *costh*appSettings.Roa))
-                                , new CvPoint( (int)(appSettings.Xoa + k2 *sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(0, 255, 0));
-                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa - k1 *sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 *costh*appSettings.Roa))
-                                , new CvPoint( (int)(appSettings.Xoa - k2 *sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 *costh*appSettings.Roa)), new CvColor(0, 255, 0));
+                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa + (k1+0.2) *sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 *costh*appSettings.Roa))
+                                , new CvPoint( (int)(appSettings.Xoa + k2       *sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(30, 165, 0));
+                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa - k1       *sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 *costh*appSettings.Roa))
+                                , new CvPoint( (int)(appSettings.Xoa - k2       *sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 *costh*appSettings.Roa)), new CvColor(30, 165, 0));
                 
           //      Cv.Rectangle(img_dmk3, new CvRect(xoa - 70, yoa - 55, 70 + 70, 55 + 55), new CvColor(0, 255, 80));　// SF
           //      Cv.Circle(   img_dmk3, new CvPoint((int)xoa, (int)yoa), 9, new CvColor(0, 200,100)); // 200um Fiber
