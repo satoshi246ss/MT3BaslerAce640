@@ -88,7 +88,7 @@
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.918927F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 59F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(652, 617);
+            tableLayoutPanel1.Size = new System.Drawing.Size(646, 619);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // pictureBox1
@@ -98,7 +98,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(646, 478);
+            this.pictureBox1.Size = new System.Drawing.Size(640, 480);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -121,9 +121,9 @@
             this.flowLayoutPanel1.Controls.Add(this.label_X2Y2);
             this.flowLayoutPanel1.Controls.Add(this.deviceListView);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 487);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 489);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(646, 47);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(640, 47);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // ShowButton
@@ -279,18 +279,18 @@
             // 
             tableLayoutPanel1.SetColumnSpan(this.textBox1, 2);
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(3, 599);
+            this.textBox1.Location = new System.Drawing.Point(3, 601);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(646, 19);
+            this.textBox1.Size = new System.Drawing.Size(640, 19);
             this.textBox1.TabIndex = 3;
             // 
             // richTextBox1
             // 
             tableLayoutPanel1.SetColumnSpan(this.richTextBox1, 2);
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(3, 540);
+            this.richTextBox1.Location = new System.Drawing.Point(3, 542);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(646, 53);
+            this.richTextBox1.Size = new System.Drawing.Size(640, 53);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
@@ -324,9 +324,9 @@
             this.toolStripStatusLabelPixelClock,
             this.toolStripStatusLabelExposure,
             this.toolStripStatusLabelGain});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 595);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 597);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(652, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(646, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -397,7 +397,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(652, 617);
+            this.ClientSize = new System.Drawing.Size(646, 619);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

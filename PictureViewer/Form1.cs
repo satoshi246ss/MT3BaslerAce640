@@ -869,7 +869,7 @@ namespace MT3
                 sinth = Math.Sin( theta * Math.PI / 180.0) ;
                 costh = Math.Cos( theta * Math.PI / 180.0) ;
                 Cv.Line(img_dmk3, new CvPoint((int)(appSettings.Xoa - k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 * costh * appSettings.Roa))
-                                , new CvPoint((int)(appSettings.Xoa - k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 * costh * appSettings.Roa)), new CvColor(0, 205, 150));
+                                , new CvPoint((int)(appSettings.Xoa - k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 * costh * appSettings.Roa)), new CvColor(0, 205, 0));
                 Cv.Line(img_dmk3, new CvPoint((int)(appSettings.Xoa + k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 * costh * appSettings.Roa))
                                 , new CvPoint((int)(appSettings.Xoa + k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 * costh * appSettings.Roa)), new CvColor(0, 205, 0));
                 // Arrow
@@ -879,9 +879,9 @@ namespace MT3
                 sinth = Math.Sin( (90.0+theta) * Math.PI / 180.0) ;
                 costh = Math.Cos( (90.0+theta) * Math.PI / 180.0) ;
                 Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa + k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 *costh*appSettings.Roa))
-                                , new CvPoint( (int)(appSettings.Xoa + k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(30, 165, 0));
+                                , new CvPoint( (int)(appSettings.Xoa + k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(0, 205, 0));
                 Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa - k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 *costh*appSettings.Roa))
-                                , new CvPoint( (int)(appSettings.Xoa - k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 *costh*appSettings.Roa)), new CvColor(30, 165, 0));
+                                , new CvPoint( (int)(appSettings.Xoa - k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 *costh*appSettings.Roa)), new CvColor(230, 105, 0));
                 
           //      Cv.Rectangle(img_dmk3, new CvRect(xoa - 70, yoa - 55, 70 + 70, 55 + 55), new CvColor(0, 255, 80));　// SF
           //      Cv.Circle(   img_dmk3, new CvPoint((int)xoa, (int)yoa), 9, new CvColor(0, 200,100)); // 200um Fiber
