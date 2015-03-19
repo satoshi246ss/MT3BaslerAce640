@@ -338,9 +338,39 @@ namespace MT3
             sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
 
+            // Wat100N Cam ID 20
+            sett.Text = "Watec WAT-100N";
+            sett.ID = 20;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 20;
+            sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 0;       //カメラタイプ毎のID
+            sett.CameraColor = 0;    // 0:mono  1:color
+            sett.CamPlatform = Platform.MT2;
+            sett.Flipmode = OpenCvSharp.FlipMode.X;
+            sett.Width = 640;
+            sett.Height = 480;
+            sett.FocalLength = 35;      //[mm]
+            sett.Ccdpx = 0.010; //[mm]
+            sett.Ccdpy = 0.010; //[mm]
+            sett.Xoa = 435;
+            sett.Yoa = (480 - 197);// for flip
+            sett.Roa = 91; //直径3deg     192/2;  // 255x192:ace640の縦視野
+            sett.Theta = 180;
+            sett.Framerate = 30.0; //[fps]
+            sett.FifoMaxFrame = 64;
+            sett.UseDetect = true;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            sett.UdpPortSend = 24451;
+            sett.SaveDir = @"D:\img_data\";
+            SettingsSave(sett);
+
             // Wat100N Cam ID 21
             sett.Text = "Watec WAT-100N";
             sett.ID = 21;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 21;
             sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 0;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
@@ -946,6 +976,45 @@ namespace MT3
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
             }
         }
+
+        /// <summary>
+        /// PID data送信ルーチン(KV1000 UDP2)
+        /// </summary>
+        private void Pid_Data_Send_KV1000_SpCam2(short id, double daz, double dalt, double kv)
+        {
+            // PID data send for UDP
+            //データを送信するリモートホストとポート番号
+            string remoteHost = "192.168.1.204";
+            int remotePort = 24426; //KV1000 UDP   8501(KV1000 cmd); // KV1000SpCam2
+
+            if (appSettings.ID == 20)
+            {
+                //送信するデータを読み込む
+                string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
+                kv_pid_data.mt2_wide_time = udpkv.EndianChange((short)udpkv.udp_time_code);
+                kv_pid_data.mt2_wide_id = udpkv.EndianChange(id);
+                kv_pid_data.mt2_wide_az = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
+                kv_pid_data.mt2_wide_alt = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
+                kv_pid_data.mt2_wide_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(kv));
+            }
+            else return;
+ 
+            byte[] sendBytes = udpkv.ToBytes(kv_pid_data);
+
+            try
+            {
+                //リモートホストを指定してデータを送信する
+                udpc3.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
+            }
+            catch (Exception ex)
+            {
+                //匿名デリゲートで表示する
+                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+            }
+
+            //  this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s1 });
+        }
+
         #endregion
     }  
 }

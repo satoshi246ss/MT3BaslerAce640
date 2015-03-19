@@ -179,7 +179,7 @@ namespace MT3
                 sgx = sgy = 0;
                 max_val = 0;
             }
-             #endregion
+            #endregion
 
             elapsed2 = sw.ElapsedTicks; sw.Stop(); sw.Reset();
             // 処理速度

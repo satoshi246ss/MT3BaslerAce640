@@ -478,12 +478,6 @@ namespace MT3
 
             detect();
             imgdata_push_FIFO();
-
-            //Cv.Circle(image, new CvPoint((int)xoa, (int)yoa), roa, new CvColor(0, 255, 0));
-            //Cv.Line(image, new CvPoint((int)xoa + roa, (int)yoa + roa), new CvPoint((int)xoa - roa, (int)yoa - roa), new CvColor(0, 255, 0));
-            //Cv.Line(image, new CvPoint((int)xoa - roa, (int)yoa + roa), new CvPoint((int)xoa + roa, (int)yoa - roa), new CvColor(0, 255, 0));
-
-            //pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
         }
 
         //BCB互換TDatetime値に変換
@@ -565,7 +559,9 @@ namespace MT3
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
-            OpenIDScamera();
+            Pid_Data_Send_KV1000_SpCam2((short)id, daz, dalt, 1);
+ 
+            //OpenIDScamera();
             //AVT
             /*
             if (cam_maker == Camera_Maker.AVT)

@@ -88,12 +88,27 @@ namespace MT3
                 return (-1 * (int)(-x * 1000 + 0.5));
             }
         }
+        /// <summary>
+        // 速度データをmmdeg整数化（KV-1000に送信用）
+        // 戻り：0.001deg/sec単位の整数
+        /// </summary>
+        public short round_d2s(double x)
+        {
+            if (x > 0.0)
+            {
+                return (short)(x * 1000 + 0.5);
+            }
+            else
+            {
+                return (short)(-1 * (short)(-x * 1000 + 0.5));
+            }
+        }
 
         /// <summary>
         // 速度データをmmdeg整数化（KV-1000に送信用）後、ushort変換
         // 戻り：0.001deg/sec単位の整数
         /// </summary>
-        public ushort PIDPV_makedata(double daz0)
+        public short PIDPV_makedata(double daz0)
         {
             double daz = daz0;
             // 条件チェック
@@ -101,13 +116,12 @@ namespace MT3
             if (daz < -vmax) daz = -vmax;
             if (daz > vmax) daz = vmax;
 
-            int upos = round_d2i(daz);
-
-            ushort p4b;
+            //int upos = round_d2i(daz);
+            //ushort p4b;
             // p4a = (unsigned short)(upos>>16) ;
-            p4b = (ushort)(0xffff & upos);
+            //p4b = (ushort)(0xffff & upos);
 
-            return p4b;
+            return round_d2s(daz);
         }
 
         /// <summary>
