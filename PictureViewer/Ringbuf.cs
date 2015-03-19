@@ -436,6 +436,7 @@ namespace MT3
         /// </summary>
         public void Saveflag_true_Last(int n)
         {
+            if (n > bottom) n = bottom;
             for (int i = 0; i < n; ++i)
             {
                 this.data[this.bottom-i].ImgSaveFlag = true;

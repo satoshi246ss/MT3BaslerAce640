@@ -172,9 +172,41 @@ namespace MT3
                         MessageBox.Show("KeyNotFoundException:218b");
                     }
                 }
+                // Data send
+                if (ImgSaveFlag == TRUE)
+                {
+                    // 観測目標移動速作成
+                    double vk;  // [pixel/frame]
+                    if (kalman_id > 3)
+                    {
+                        vk = Math.Sqrt(kvx * kvx + kvy * kvy);
+                    }
+                    else
+                    {
+                        vk = 1000;
+                    }
+                    // 観測データ送信
+                    //Pid_Data_Send(true);
+                    Pid_Data_Send_KV1000_SpCam2((short)(id & 32767), daz, dalt, vk); // 32767->7FFF
+
+                    if (Math.Abs(udpkv.vaz2_kv) > 0.1 || Math.Abs(udpkv.valt2_kv) > 0.1)
+                    {
+                        // 保存時間延長
+                        //timerSavePostTime.Stop();
+                        timerSaveMainTime.Stop();
+                        timerSaveMainTime.Start();
+                    }
+                }
+
             }
             else
             {
+                if (ImgSaveFlag == TRUE)
+                {
+                    // 観測データ送信
+                    //Pid_Data_Send(false);
+                    Pid_Data_Send_KV1000_SpCam2((short)(-(id & 32767)), (az - udpkv.az2_c), (alt - udpkv.alt2_c), -1000);
+                }
                 gx = gy = 0;
                 sgx = sgy = 0;
                 max_val = 0;

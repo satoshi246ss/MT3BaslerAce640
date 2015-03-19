@@ -875,17 +875,11 @@ namespace MT3
                 {
                     Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.BayerGbToBgr);
                 }
-                // 表示画像反転 実装場所　要検討
-                //if (appSettings.Flipmode == OpenCvSharp.FlipMode.X || appSettings.Flipmode == OpenCvSharp.FlipMode.Y)
-                //{
-                //    Cv.Flip(img_dmk3, img_dmk3, appSettings.Flipmode);
-                //}
-                double sinth, costh ;
+
                 double k1 = 1.3333 ; //4deg 
                 double k2 = 0.3333 ; //直径1deg
                 double roa = appSettings.Roa;
-                //double theta = -udpkv.cal_mt2_theta() - appSettings.Theta;
- 
+
                 CvPoint2D64f OCPoint = new CvPoint2D64f(appSettings.Xoa, appSettings.Yoa);
                 Cv.Circle(img_dmk3, OCPoint, (int)appSettings.Roa, new CvColor(0, 255, 0));
 
