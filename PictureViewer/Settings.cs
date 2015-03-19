@@ -56,6 +56,13 @@ namespace MT3
             set { _platform = value; }
         }
 
+        private OpenCvSharp.FlipMode _flip_mode;
+        public  OpenCvSharp.FlipMode Flipmode
+        {
+            get { return _flip_mode; }
+            set { _flip_mode = value; }
+        }
+
         //CCD
         private int _width;
         public int Width
@@ -255,6 +262,7 @@ namespace MT3
             set { _save_dir = value; }
         }
 
+        // Default value
         public Settings()
         {
             _text   = "IDS UI-2410SE-M";
@@ -264,6 +272,7 @@ namespace MT3
             _camera_color = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             _camera_interface = Camera_Interface.USB2 ;
             _platform = Platform.MT2;
+            _flip_mode = OpenCvSharp.FlipMode.XY; // XY:負値　は回転させない。X,Yのみ有効
             _ip_gige_camera = "192.168.1.150"; //GIGE Camera only.
             _width  = 640;
             _height = 480;

@@ -248,12 +248,12 @@ namespace MT3
             mt2state_center = (data_request & (1 << 2)); //センタリング中フラグ
 
             // truck開始時
-       ///     if (mt2state_truck_pre == 0 && mt2state_truck != 0) kalman_init();
+            if (mt2state_truck_pre == 0 && mt2state_truck != 0) kalman_init();
 
             // センタリング中 完了時
-       ///     if (mt2state_center_pre != 0 && mt2state_center == 0) kalman_init();
+            if (mt2state_center_pre != 0 && mt2state_center == 0) kalman_init();
 
-       ///     kalman_update();
+            kalman_update();
         }
         /// <summary>
         /// MT2 Thetaの計算
@@ -261,9 +261,24 @@ namespace MT3
         /// <remarks>
         /// KV_DATA -> az,alt etcに変換
         /// </remarks>
-        public double cal_mt2_theta()
+        public double cal_mt2_theta(OpenCvSharp.FlipMode _flipmode)
         {
-            double theta = this.az1_c + this.alt1_c ;
+            double theta = -( this.az1_c + this.alt1_c ) ;
+            if (_flipmode == OpenCvSharp.FlipMode.XY)
+            {
+                theta = -theta;
+            }
+            return theta;
+        }
+        /// <summary>
+        /// MT3 Thetaの計算
+        /// </summary>
+        /// <remarks>
+        /// KV_DATA -> az,alt etcに変換
+        /// </remarks>
+        public double cal_mt3_theta()
+        {
+            double theta = this.az2_c + this.alt2_c;
             return theta;
         }
 

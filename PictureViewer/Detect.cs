@@ -121,6 +121,7 @@ namespace MT3
                 }
 
                 // カルマン　or　観測重心　の選択
+                sgx = gx; sgy = gy;
                 if ((Math.Abs(kgx - gx) + Math.Abs(kgy - gy) < 15))  // 
                 {
                     sgx = kgx;
@@ -128,24 +129,48 @@ namespace MT3
                     //imgSrc.Circle(new CvPoint((int)(prediction.DataArraySingle[0] + xoa), (int)(prediction.DataArraySingle[1] + yoa)), 30, new CvColor(100, 100, 255));
                     //w2.WriteLine("{0:D3} {1:F2} {2:F2} {3:F2} {4:F2} {5} {6} {7}", i, max_centroid.X, max_centroid.Y, prediction.DataArraySingle[0] + xc, prediction.DataArraySingle[1] + yc, vm, dx, dy);
                 }
+                dx = sgx - appSettings.Xoa;
+                dy = sgy - appSettings.Yoa;
+
                 // 目標位置からの誤差(pix)からターゲットの位置を計算
-                try
+                if (appSettings.CamPlatform == Platform.MT3)
                 {
-                    dx = sgx; dy = sgy;
-                    udpkv.cxcy2azalt(-dx        , -dy        , udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az , ref alt );
-                    udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
-                    vaz  = udpkv.vaz2_kv  + (az1  - az)  * appSettings.Framerate;
-                    valt = udpkv.valt2_kv + (alt1 - alt) * appSettings.Framerate;
+                    try
+                    {
+                        theta_c = -udpkv.cal_mt3_theta() - appSettings.Theta;
+                        udpkv.cxcy2azalt(-dx, -dy, udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                        udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az2_c, udpkv.alt2_c, udpkv.mt3mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                        vaz = udpkv.vaz2_kv + (az1 - az) * appSettings.Framerate;
+                        valt = udpkv.valt2_kv + (alt1 - alt) * appSettings.Framerate;
 
-                    //daz = az - udpkv.az2_c; dalt = alt - udpkv.alt2_c;             //位置誤差
-                    //dvaz = (daz - daz1) / dt; dvalt = (dalt - dalt1) / dt;        //速度誤差
-                    //diff_vaz = (az - az_pre1) / dt; diff_valt = (alt - alt_pre1) / dt; //速度差
+                        daz = az - udpkv.az2_c; dalt = alt - udpkv.alt2_c;             //位置誤差
+                        //dvaz = (daz - daz1) / dt; dvalt = (dalt - dalt1) / dt;        //速度誤差
+                        //diff_vaz = (az - az_pre1) / dt; diff_valt = (alt - alt_pre1) / dt; //速度差
 
-                    az0 = az; alt0 = alt;
+                        az0 = az; alt0 = alt;
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        MessageBox.Show("KeyNotFoundException:218");
+                    }
                 }
-                catch (KeyNotFoundException)
+                else if (appSettings.CamPlatform == Platform.MT2)
                 {
-                    MessageBox.Show("KeyNotFoundException:218");
+                    try
+                    {
+                        theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode) - appSettings.Theta;
+                        udpkv.cxcy2azalt(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                        udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                        vaz = udpkv.vaz1_kv + (az1 - az) * appSettings.Framerate;
+                        valt = udpkv.valt1_kv + (alt1 - alt) * appSettings.Framerate;
+
+                        daz = az - udpkv.az1_c; dalt = alt - udpkv.alt1_c;             //位置誤差
+                        az0 = az; alt0 = alt;
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        MessageBox.Show("KeyNotFoundException:218b");
+                    }
                 }
             }
             else
