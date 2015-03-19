@@ -27,8 +27,8 @@ namespace MT3
     public class Udp_kv : ICloneable
     {
         //状態を表す定数
-        const short mmWest = 0;
-        const short mmEast = 1;
+        public short mmWest = 0;
+        public short mmEast = 1;
         const short azErr = -1;
         const short altErr = -2;
         //上の2つ状態を保持します
@@ -332,6 +332,8 @@ namespace MT3
         /// </remarks>
         public void MT2Pos2AzAlt()
         {
+            if (ypos > 180000) { mt2mode = mmEast; }
+            else if(ypos <=180000){mt2mode=mmWest; }
             // Normal
             if (xpos >= 0 && xpos < 360000)
             {

@@ -838,11 +838,24 @@ namespace MT3
         /// <param name="capacity">画像表示用回転座標計算ルーチン</param>
         public CvPoint2D64f Rotation(CvPoint2D64f xy, double r, double theta)
         {
-            double sinth = Math.Sin(-(theta+90) * Math.PI / 180.0);
-            double costh = Math.Cos(-(theta+90) * Math.PI / 180.0);
+            double sinth=0, costh=r;
             CvPoint2D64f ans = new CvPoint2D64f();
-            ans.Y = -costh * r ;
-            ans.X = +sinth * r ;
+
+            if (appSettings.CamPlatform == Platform.MT2 && udpkv.mt2mode == udpkv.mmWest)
+            {
+                sinth = Math.Sin(-(theta + 90) * Math.PI / 180.0);
+                costh = Math.Cos(-(theta + 90) * Math.PI / 180.0);
+                ans.Y = -costh * r;
+                ans.X = +sinth * r;
+            }
+            if (appSettings.CamPlatform == Platform.MT2 && udpkv.mt2mode == udpkv.mmEast)
+            {
+                sinth = Math.Sin(-(theta - 90) * Math.PI / 180.0);
+                costh = Math.Cos(-(theta - 90) * Math.PI / 180.0);
+                ans.Y = -costh * r;
+                ans.X = +sinth * r;
+            }
+
             return (ans + xy);
         }
         /// <summary>
@@ -874,27 +887,31 @@ namespace MT3
                 double sinth, costh ;
                 double k1 = 1.3333 ; //4deg 
                 double k2 = 0.3333 ; //直径1deg
-                double ax = k1* appSettings.Roa;
+                double roa = appSettings.Roa;
                 //double theta = -udpkv.cal_mt2_theta() - appSettings.Theta;
-
-                Cv.Circle(img_dmk3, new CvPoint((int)appSettings.Xoa, (int)appSettings.Yoa), (int)appSettings.Roa, new CvColor(0, 255, 0));
-                
-                sinth = Math.Sin( theta_c * Math.PI / 180.0) ;
-                costh = Math.Cos( theta_c * Math.PI / 180.0) ;
-                Cv.Line(img_dmk3, new CvPoint((int)(appSettings.Xoa - k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 * costh * appSettings.Roa))
-                                , new CvPoint((int)(appSettings.Xoa - k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 * costh * appSettings.Roa)), new CvColor(230, 105, 0));
-                Cv.Line(img_dmk3, new CvPoint((int)(appSettings.Xoa + k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 * costh * appSettings.Roa))
-                                , new CvPoint((int)(appSettings.Xoa + k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 * costh * appSettings.Roa)), new CvColor(0, 205, 0));
-                // Arrow
-                CvPoint2D64f YAxisPoint = Rotation(new CvPoint2D64f(appSettings.Xoa,  appSettings.Yoa), ax, theta_c);
-                Cv.Circle(img_dmk3, YAxisPoint,  5, new CvColor(0, 255, 0));
  
-                sinth = Math.Sin( (90.0+theta_c) * Math.PI / 180.0) ;
-                costh = Math.Cos( (90.0+theta_c) * Math.PI / 180.0) ;
-                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa + k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k1 *costh*appSettings.Roa))
-                                , new CvPoint( (int)(appSettings.Xoa + k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa + k2 *costh*appSettings.Roa)), new CvColor(0, 205, 0));
-                Cv.Line(img_dmk3, new CvPoint( (int)(appSettings.Xoa - k1 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k1 *costh*appSettings.Roa))
-                                , new CvPoint((int)(appSettings.Xoa - k2 * sinth * appSettings.Roa), (int)(appSettings.Yoa - k2 * costh * appSettings.Roa)), new CvColor(0, 205, 0));
+                CvPoint2D64f OCPoint = new CvPoint2D64f(appSettings.Xoa, appSettings.Yoa);
+                Cv.Circle(img_dmk3, OCPoint, (int)appSettings.Roa, new CvColor(0, 255, 0));
+
+                CvPoint2D64f Point1 ;
+                CvPoint2D64f Point2 ;
+
+                Point1 = Rotation(OCPoint, k1 * roa, theta_c);
+                Point2 = Rotation(OCPoint, k2 * roa, theta_c);
+                Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+
+                Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
+                Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
+                Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+
+                Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
+                Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
+                Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+
+                Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
+                Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
+                Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
 
                 String str = String.Format("ID:{4,7:D1} dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00})", gx, gy, max_val, max_label, id, daz, dalt);
                 img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
@@ -1153,7 +1170,7 @@ namespace MT3
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             //label_ID.Text = max_label.ToString("0");
-            string s = string.Format("(x,y)=({0},{1})", e.X, e.Y);
+            string s = string.Format("(x,y)=({0},{1})\n", e.X, e.Y);
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
         }
     }
