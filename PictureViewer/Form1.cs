@@ -846,8 +846,8 @@ namespace MT3
             }
             if (appSettings.CamPlatform == Platform.MT2 && udpkv.mt2mode == udpkv.mmEast)
             {
-                sinth = Math.Sin(-(theta - 90) * Math.PI / 180.0);
-                costh = Math.Cos(-(theta - 90) * Math.PI / 180.0);
+                sinth = Math.Sin(+(theta + 90) * Math.PI / 180.0);
+                costh = Math.Cos(+(theta + 90) * Math.PI / 180.0);
                 ans.Y = -costh * r;
                 ans.X = +sinth * r;
             }
