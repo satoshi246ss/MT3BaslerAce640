@@ -495,6 +495,8 @@ namespace MT3
         /// </remarks>
         public void VideoWriterFrame()
         {
+            if (vw == null || writer == null) return;
+
             // 画像内にデータ埋め込み
             vd.id = (ushort)this.data[this.bottom].id;
             vd.gx = this.data[this.bottom].gx;
@@ -555,8 +557,14 @@ namespace MT3
         /// </remarks>
         public void VideoWriterRelease()
         {
-            vw.Dispose();
-            writer.Close();
+            if (vw != null)
+            {
+                vw.Dispose();
+            }
+            if (writer != null)
+            {
+                writer.Close();
+            }
         }
 
         /// <summary>

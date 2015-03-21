@@ -449,6 +449,7 @@ namespace MT3
                             elapsed1 = sw.ElapsedTicks;
                             framerate0 = alfa_fr * framerate1 + (1 - alfa_fr) * (Stopwatch.Frequency / (double)elapsed0);
                             framerate1 = framerate0;
+                            dFramerate = framerate0;
 
                             str = String.Format("fr time = {0}({1}){2:F1}", sw.Elapsed, id, framerate0); //," ", sw.ElapsedMilliseconds);
                             //匿名デリゲートで現在の時間をラベルに表示する
@@ -703,9 +704,9 @@ namespace MT3
                 this.States = SAVE;
                 this.timerSave.Enabled = true;
                 // 過去データ保存
-                if (cam_maker == Camera_Maker.analog)
+                if (appSettings.PreSaveNum > 0)
                 {
-                    fifo.Saveflag_true_Last(30);  // 1fr=0.2s  -> 5fr=1s 
+                    fifo.Saveflag_true_Last(appSettings.PreSaveNum);  // 1fr=0.2s  -> 5fr=1s 
                 }
             }
         }
@@ -936,9 +937,9 @@ namespace MT3
             //this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_X2Y2, String.Format("({0},{1}", udpkv.az2_c, udpkv.alt2_c) });
 
             //long frame_timestamp=0;
-            double dFramerate = 0; // Frame rate[fr/s]
-            double dExpo = 0; // Exposure[us]
-            long igain = 0; //Gain
+            //double dFramerate = 0; // Frame rate[fr/s]
+            //double dExpo = 0; // Exposure[us]
+            //long igain = 0; //Gain
             // Error rate
             long frame_total = 0, frame_error = 0;
             long frame_underrun = 0, frame_shoved = 0, frame_dropped=0;
@@ -968,7 +969,7 @@ namespace MT3
                 dFramerate = m_imageProvider.GetFrameRate(); // Basler
                 dExpo = GetExposureTime();
                 igain = GetGain();
-                timestamp = m_imageProvider.GetTimestamp();
+                frame_timestamp = m_imageProvider.GetTimestamp();
                 frame_total = m_imageProvider.Get_Statistic_Total_Buffer_Count();
                 frame_underrun = m_imageProvider.Get_Statistic_feature("Statistic_Buffer_Underrun_Count");
                 frame_error = frame_underrun + m_imageProvider.Get_Statistic_feature("Statistic_Failed_Buffer_Count");

@@ -114,7 +114,11 @@ namespace MT3
         // 観測開始からのフレーム番号
         int id = 0;
         DateTime LiveStartTime;
-        long timestamp; // [us]
+        //long timestamp; // [us]
+        long frame_timestamp; //[us]
+        double dFramerate = 0; // Frame rate[fr/s]
+        double dExpo = 0; // Exposure[us]
+        long igain = 0; //Gain
 
         ImageData imgdata = new ImageData(640,480); //struck 初期化ダミー
         CircularBuffer fifo = new CircularBuffer();
@@ -328,6 +332,7 @@ namespace MT3
             sett.Theta = 0.0;
             sett.Framerate = 15.0; //[fps]
             sett.FifoMaxFrame = 32;
+            sett.PreSaveNum = 0;
             sett.Exposure = 66; //[ms]
             sett.Gain = 30; // 0-30  要検討
             sett.UseDetect = false;
@@ -358,6 +363,7 @@ namespace MT3
             sett.Theta = 180;
             sett.Framerate = 30.0; //[fps]
             sett.FifoMaxFrame = 64;
+            sett.PreSaveNum = 4;
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
@@ -387,6 +393,7 @@ namespace MT3
             sett.Theta = 180;
             sett.Framerate = 30.0; //[fps]
             sett.FifoMaxFrame = 64;
+            sett.PreSaveNum = 30;
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)

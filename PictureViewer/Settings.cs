@@ -261,7 +261,14 @@ namespace MT3
             get { return _save_dir; }
             set { _save_dir = value; }
         }
-
+        // 過去画像保存枚数　０ならなし。
+        private int _pre_save_num;
+        public int PreSaveNum
+        {
+            get { return _pre_save_num; }
+            set { _pre_save_num = value; }
+        }
+ 
         // Default value
         public Settings()
         {
@@ -301,6 +308,7 @@ namespace MT3
             _udp_port_mtmon = 24415;
             _no_cap_dev = _id;
             _save_dir = @"C:\Users\Public\img_data\";
+            _pre_save_num = 0;
         }
 
      }
