@@ -138,7 +138,7 @@ namespace MT3
         double set_exposure  = 3;   // [ms]            F1.8:F4  exp 8ms:3ms  gain 1024: 100  約106倍
         double set_exposure1 = 0.2; // [ms]
  
-        IplImage img_dmk3, img_dmk, img2, imgLabel;
+        IplImage img_dmk3, img_dmk, img2, imgLabel , imgAvg;
         CvBlobs blobs = new CvBlobs();
         CvFont font = new CvFont(FontFace.HersheyComplex, 0.50, 0.50);
 
@@ -200,6 +200,8 @@ namespace MT3
             // IplImage img_dark8 = Cv.LoadImage(@"C:\Users\Public\piccolo\dark00.bmp", LoadMode.GrayScale);
             img2     = new IplImage(wi, appSettings.Height, BitDepth.U8, 1);
             imgLabel = new IplImage(wi, appSettings.Height, CvBlobLib.DepthLabel, 1);
+            
+            imgAvg   = new IplImage(wi, appSettings.Height, BitDepth.F32, 1);
 
             imgdata.init(wi, appSettings.Height);
             // FIFO init

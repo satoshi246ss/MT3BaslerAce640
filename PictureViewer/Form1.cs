@@ -408,29 +408,23 @@ namespace MT3
             BackgroundWorker bw = (BackgroundWorker)sender;
             Stopwatch sw = new Stopwatch();
             string str;
-            id = 0;
+            //id = 0;
 
             //videoInputオブジェクト
             int DeviceID   = appSettings.CameraID; // 基本は、0　 // 3 (pro), 4(piccolo)  7(DMK)
             int CaptureFps = (int)appSettings.Framerate;  // 30
             int interval = (int)(1000 / CaptureFps / 10);
-            //const int CaptureWidth = 640;
-            //const int CaptureHeight = 480;
-            // 画像保存枚数
-            int mmFsiPostRec = 60;
-            int save_counter = mmFsiPostRec;
 
             using (VideoInput vi = new VideoInput())
             {
                 vi.SetIdealFramerate(DeviceID, CaptureFps);
                 vi.SetupDevice(DeviceID, appSettings.Width, appSettings.Height);
 
-                int width = vi.GetWidth(DeviceID);
+                int width  = vi.GetWidth(DeviceID);
                 int height = vi.GetHeight(DeviceID);
 
                 using (IplImage img = new IplImage(width, height, BitDepth.U8, 3))
                 //using (IplImage img_mono = new IplImage(width, height, BitDepth.U8, 1))
-                //using (IplImage img2 = new IplImage(width, height, BitDepth.U8, 1))
                 {
                     long elapsed0 = 0, elapsed1 = 0;
                     double framerate0 = 0, framerate1 = 0;
@@ -451,9 +445,9 @@ namespace MT3
                             framerate1 = framerate0;
                             dFramerate = framerate0;
 
-                            str = String.Format("fr time = {0}({1}){2:F1}", sw.Elapsed, id, framerate0); //," ", sw.ElapsedMilliseconds);
+                            str = String.Format("[{0,0:000}ms]", 1000 * elapsed0/ Stopwatch.Frequency);
                             //匿名デリゲートで現在の時間をラベルに表示する
-                            this.Invoke(new dlgSetString(ShowText), new object[] { textBox1, str });
+                            this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_frame_rate, str });
                         }
                         Application.DoEvents();
                         Thread.Sleep(interval);
@@ -465,7 +459,9 @@ namespace MT3
                 }
             }
         }
+        //
         // アナログ画像保存
+        //
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             IplImage image = (IplImage)e.UserState;
@@ -479,6 +475,9 @@ namespace MT3
 
             detect();
             imgdata_push_FIFO();
+
+            Cv.RunningAvg(imgdata.img, imgAvg, 0.01);
+            //Cv.ShowImage("Video", imgAvg);
         }
 
         //BCB互換TDatetime値に変換
@@ -870,7 +869,17 @@ namespace MT3
                 // カラー判定
                 if (cam_color == Camera_Color.mono)
                 {
-                    Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.GrayToBgr);
+                    if (checkBoxDispAvg.Checked == true)
+                    {
+                        // 移動平均画像の表示
+                        double scale = 4.0;
+                        Cv.ConvertScale(imgAvg, img_dmk, scale);
+                        Cv.CvtColor(img_dmk, img_dmk3, ColorConversion.GrayToBgr);
+                    }
+                    else
+                    {
+                        Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.GrayToBgr);
+                    }
                 }
                 else
                 {
@@ -931,7 +940,7 @@ namespace MT3
                 }
             }
 
-            label_ID.Text = max_label.ToString("0");
+            label_ID.Text = max_label.ToString("00000");
             //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
             // Status表示
             //this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_X2Y2, String.Format("({0},{1}", udpkv.az2_c, udpkv.alt2_c) });
@@ -1147,7 +1156,7 @@ namespace MT3
             // IDS
             if (cam_maker == Camera_Maker.IDS)
             {
-                cam.Gain.Hardware.Boost.SetEnable(checkBoxGainBoost.Checked);
+                cam.Gain.Hardware.Boost.SetEnable(checkBoxDispAvg.Checked);
             }
         }
 
@@ -1160,9 +1169,13 @@ namespace MT3
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            //label_ID.Text = max_label.ToString("0");
             string s = string.Format("(x,y)=({0},{1})\n", e.X, e.Y);
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
+        }
+
+        private void checkBoxDispAvg_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

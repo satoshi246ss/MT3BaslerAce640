@@ -41,7 +41,7 @@
             this.buttonMakeSettings = new System.Windows.Forms.Button();
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
-            this.checkBoxGainBoost = new System.Windows.Forms.CheckBox();
+            this.checkBoxDispAvg = new System.Windows.Forms.CheckBox();
             this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_ID = new System.Windows.Forms.Label();
             this.label_X2Y2 = new System.Windows.Forms.Label();
@@ -115,7 +115,7 @@
             this.flowLayoutPanel1.Controls.Add(this.buttonMakeSettings);
             this.flowLayoutPanel1.Controls.Add(this.checkBox_WideDR);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxObsAuto);
-            this.flowLayoutPanel1.Controls.Add(this.checkBoxGainBoost);
+            this.flowLayoutPanel1.Controls.Add(this.checkBoxDispAvg);
             this.flowLayoutPanel1.Controls.Add(this.label_frame_rate);
             this.flowLayoutPanel1.Controls.Add(this.label_ID);
             this.flowLayoutPanel1.Controls.Add(this.label_X2Y2);
@@ -227,21 +227,21 @@
             this.checkBoxObsAuto.UseVisualStyleBackColor = true;
             this.checkBoxObsAuto.CheckedChanged += new System.EventHandler(this.checkBoxObsAuto_CheckedChanged);
             // 
-            // checkBoxGainBoost
+            // checkBoxDispAvg
             // 
-            this.checkBoxGainBoost.AutoSize = true;
-            this.checkBoxGainBoost.Location = new System.Drawing.Point(77, 32);
-            this.checkBoxGainBoost.Name = "checkBoxGainBoost";
-            this.checkBoxGainBoost.Size = new System.Drawing.Size(77, 16);
-            this.checkBoxGainBoost.TabIndex = 11;
-            this.checkBoxGainBoost.Text = "GainBoost";
-            this.checkBoxGainBoost.UseVisualStyleBackColor = true;
-            this.checkBoxGainBoost.CheckedChanged += new System.EventHandler(this.checkBoxGainBoost_CheckedChanged);
+            this.checkBoxDispAvg.AutoSize = true;
+            this.checkBoxDispAvg.Location = new System.Drawing.Point(77, 32);
+            this.checkBoxDispAvg.Name = "checkBoxDispAvg";
+            this.checkBoxDispAvg.Size = new System.Drawing.Size(67, 16);
+            this.checkBoxDispAvg.TabIndex = 11;
+            this.checkBoxDispAvg.Text = "DispAvg";
+            this.checkBoxDispAvg.UseVisualStyleBackColor = true;
+            this.checkBoxDispAvg.CheckedChanged += new System.EventHandler(this.checkBoxDispAvg_CheckedChanged);
             // 
             // label_frame_rate
             // 
             this.label_frame_rate.AutoSize = true;
-            this.label_frame_rate.Location = new System.Drawing.Point(160, 29);
+            this.label_frame_rate.Location = new System.Drawing.Point(150, 29);
             this.label_frame_rate.Name = "label_frame_rate";
             this.label_frame_rate.Size = new System.Drawing.Size(35, 12);
             this.label_frame_rate.TabIndex = 9;
@@ -250,7 +250,7 @@
             // label_ID
             // 
             this.label_ID.AutoSize = true;
-            this.label_ID.Location = new System.Drawing.Point(201, 29);
+            this.label_ID.Location = new System.Drawing.Point(191, 29);
             this.label_ID.Name = "label_ID";
             this.label_ID.Size = new System.Drawing.Size(35, 12);
             this.label_ID.TabIndex = 10;
@@ -259,7 +259,7 @@
             // label_X2Y2
             // 
             this.label_X2Y2.AutoSize = true;
-            this.label_X2Y2.Location = new System.Drawing.Point(242, 29);
+            this.label_X2Y2.Location = new System.Drawing.Point(232, 29);
             this.label_X2Y2.Name = "label_X2Y2";
             this.label_X2Y2.Size = new System.Drawing.Size(85, 12);
             this.label_X2Y2.TabIndex = 13;
@@ -269,7 +269,7 @@
             // 
             this.deviceListView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.deviceListView.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.deviceListView.Location = new System.Drawing.Point(333, 32);
+            this.deviceListView.Location = new System.Drawing.Point(323, 32);
             this.deviceListView.Name = "deviceListView";
             this.deviceListView.Size = new System.Drawing.Size(121, 16);
             this.deviceListView.TabIndex = 12;
@@ -449,7 +449,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelID;
         private System.Windows.Forms.Timer timerMTmonSend;
         private System.Windows.Forms.Timer timer1min;
-        private System.Windows.Forms.CheckBox checkBoxGainBoost;
+        private System.Windows.Forms.CheckBox checkBoxDispAvg;
         private System.Windows.Forms.Timer timerWaitShutdown;
         private System.Windows.Forms.Timer timerSave;
         private System.Windows.Forms.Timer updateDeviceListTimer;
