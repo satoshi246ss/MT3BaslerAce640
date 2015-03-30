@@ -846,8 +846,8 @@ namespace MT3
             }
             if (appSettings.CamPlatform == Platform.MT2 && udpkv.mt2mode == udpkv.mmEast)
             {
-                sinth = Math.Sin(+(theta + 90) * Math.PI / 180.0);
-                costh = Math.Cos(+(theta + 90) * Math.PI / 180.0);
+                sinth = Math.Sin((theta - 90) * Math.PI / 180.0);
+                costh = Math.Cos((theta - 90) * Math.PI / 180.0);
                 ans.Y = -costh * r;
                 ans.X = +sinth * r;
             }
@@ -940,7 +940,7 @@ namespace MT3
                 }
             }
 
-            label_ID.Text = max_label.ToString("00000");
+     //       label_ID.Text = max_label.ToString("00000");
             //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
             // Status表示
             //this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_X2Y2, String.Format("({0},{1}", udpkv.az2_c, udpkv.alt2_c) });
