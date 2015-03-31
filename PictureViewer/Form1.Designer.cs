@@ -301,7 +301,7 @@
             // 
             // timerSaveMainTime
             // 
-            this.timerSaveMainTime.Interval = 1000;
+            this.timerSaveMainTime.Interval = 3000;
             this.timerSaveMainTime.Tick += new System.EventHandler(this.timerSaveMainTime_Tick);
             // 
             // timerDisplay
