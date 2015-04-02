@@ -77,6 +77,7 @@ namespace MT3
 
         // 時刻基準（BCB互換）
         DateTime TBASE = new DateTime(1899, 12, 30, 0, 0, 0);
+        TimeSpan starttime, endtime;
 
         // メイン装置光軸座標
         int xoa_mes = 640 / 2; //320  2013/11/23 MT3QHYの中心に変更

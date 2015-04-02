@@ -17,6 +17,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.IO;
 using PylonC.NETSupportLibrary;
+using MtLibrary;
 
 namespace MT3
 {
@@ -159,6 +160,12 @@ namespace MT3
             checkBoxObsAuto_CheckedChanged(sender, e);
             diskspace = cDrive.TotalFreeSpace;
             timerMTmonSend.Start();
+
+            starttime = Planet.ObsStartTime(DateTime.Now) -DateTime.Today;
+            endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
+            string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
+            richTextBox1.AppendText(s);
+
 
             // IDS open
             //ShowButton.PerformClick();
@@ -753,8 +760,9 @@ namespace MT3
         private void timerObsOnOff_Tick(object sender, EventArgs e)
         {
             TimeSpan nowtime = DateTime.Now - DateTime.Today;
-            TimeSpan endtime = new TimeSpan(7, 0, 0);
-            TimeSpan starttime = new TimeSpan(16,30, 0);
+            //TimeSpan endtime = new TimeSpan(7, 0, 0);
+            //TimeSpan starttime = new TimeSpan(16,30, 0);
+            
 
             if (nowtime.CompareTo(endtime) >= 0 && nowtime.CompareTo(starttime) <= 0)
             {
