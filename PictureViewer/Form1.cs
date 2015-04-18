@@ -353,19 +353,6 @@ namespace MT3
             udpkv.kd = (KV_DATA)e.UserState;
             udpkv.cal_mt3();
             udpkv.cal_mt2();
-
-            string s = null ;
-            if (appSettings.CamPlatform == Platform.MT2)
-            {
-                //string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
-                s = string.Format("KV:[x1:{0:D6} y1:{1:D6} Az1:{2,6:F1} Alt1:{3,6:F1}]\n", udpkv.xpos, udpkv.ypos, udpkv.az1_c, udpkv.alt1_c);
-            }
-            if (appSettings.CamPlatform == Platform.MT3)
-            {
-                s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c);
-            }
-            label_X2Y2.Text = s;
-
         }
 
         static byte[] ToBytes(MOTOR_DATA_KV_SP obj)
@@ -947,6 +934,17 @@ namespace MT3
                     return;
                 }
             }
+            string s = null;
+            if (appSettings.CamPlatform == Platform.MT2)
+            {
+                //string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
+                s = string.Format("KV:[x1:{0:D6} y1:{1:D6} Az1:{2,6:F1} Alt1:{3,6:F1}]\n", udpkv.xpos, udpkv.ypos, udpkv.az1_c, udpkv.alt1_c);
+            }
+            if (appSettings.CamPlatform == Platform.MT3)
+            {
+                s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c);
+            }
+            label_X2Y2.Text = s;
 
      //       label_ID.Text = max_label.ToString("00000");
             //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
@@ -994,8 +992,15 @@ namespace MT3
             }
             if (cam_maker == Camera_Maker.AVT)
             {
-                dFramerate = StatFrameRate(); //AVT
-                dExpo = ExposureTimeAbs();
+                try
+                {
+                    dFramerate = StatFrameRate(); //AVT
+                    dExpo = ExposureTimeAbs();
+                }
+                catch
+                {
+                    MessageBox.Show("error1");
+                }
                 igain = GainRaw();
                 frame_total    = StatFrameDelivered();
                 frame_underrun = StatFrameUnderrun();// AVT
@@ -1008,7 +1013,7 @@ namespace MT3
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
             toolStripStatusLabelFailed.Text = "Failed U:" + frame_underrun.ToString("0000") + " S:" + frame_shoved.ToString("0000") + " D:" + frame_dropped.ToString("0000");
             
-            label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
+            //label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
 
             //double err_rate = 100.0 * (frame_total / (double)id);
             if (frame_total > 0)

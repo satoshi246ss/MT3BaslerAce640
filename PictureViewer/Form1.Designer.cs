@@ -252,14 +252,14 @@
             this.label_ID.AutoSize = true;
             this.label_ID.Location = new System.Drawing.Point(191, 29);
             this.label_ID.Name = "label_ID";
-            this.label_ID.Size = new System.Drawing.Size(35, 12);
+            this.label_ID.Size = new System.Drawing.Size(44, 12);
             this.label_ID.TabIndex = 10;
-            this.label_ID.Text = "label1";
+            this.label_ID.Text = "label_ID";
             // 
             // label_X2Y2
             // 
             this.label_X2Y2.AutoSize = true;
-            this.label_X2Y2.Location = new System.Drawing.Point(232, 29);
+            this.label_X2Y2.Location = new System.Drawing.Point(241, 29);
             this.label_X2Y2.Name = "label_X2Y2";
             this.label_X2Y2.Size = new System.Drawing.Size(85, 12);
             this.label_X2Y2.TabIndex = 13;
@@ -269,7 +269,7 @@
             // 
             this.deviceListView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.deviceListView.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.deviceListView.Location = new System.Drawing.Point(323, 32);
+            this.deviceListView.Location = new System.Drawing.Point(332, 32);
             this.deviceListView.Name = "deviceListView";
             this.deviceListView.Size = new System.Drawing.Size(121, 16);
             this.deviceListView.TabIndex = 12;
