@@ -206,8 +206,14 @@ namespace MT3
 
             imgdata.init(wi, appSettings.Height);
             // FIFO init
-            fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir);
-
+            if (appSettings.CamPlatform == Platform.MT2)
+            {
+                fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir, 2);
+            }
+            else
+            {
+                fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir);
+            }
         }
 
         # region Settings

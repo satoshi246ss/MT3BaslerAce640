@@ -102,6 +102,9 @@ namespace MT3
         int mask;
 
         CvVideoWriter vw;
+
+        public int MtMode { get; set; } // MtMode  MT3:3   MT2:2
+ 
         private int _width;
         public int Width
         {
@@ -174,8 +177,9 @@ namespace MT3
         /// 初期最大容量を指定して初期化。
         /// </summary>
         /// <param name="capacity">初期最大容量</param>
-        public void init(int capacity, int width, int height, int no_cap_dev, string save_dir)
+        public void init(int capacity, int width, int height, int no_cap_dev, string save_dir, int mtmode=3)
         {
+            MtMode = mtmode; //3:MT3    2:MT2
             _no_cap_dev = no_cap_dev;
             _save_dir   = save_dir;
             _width      = width;
@@ -513,12 +517,22 @@ namespace MT3
             vd.kgy = this.data[this.bottom].kgy;
             vd.kvx = this.data[this.bottom].kvx;
             vd.kvy = this.data[this.bottom].kvy;
+
             vd.x2pos = this.data[this.bottom].udpkv1.x2pos;
             vd.y2pos = this.data[this.bottom].udpkv1.y2pos;
             vd.x2v = this.data[this.bottom].udpkv1.x2v;
             vd.y2v = this.data[this.bottom].udpkv1.y2v;
             vd.az2_c = this.data[this.bottom].udpkv1.az2_c;
             vd.alt2_c = this.data[this.bottom].udpkv1.alt2_c;
+            if (MtMode == 2) {
+                vd.x2pos = this.data[this.bottom].udpkv1.xpos;
+                vd.y2pos = this.data[this.bottom].udpkv1.ypos;
+                vd.x2v = this.data[this.bottom].udpkv1.x1v;
+                vd.y2v = this.data[this.bottom].udpkv1.y1v;
+                vd.az2_c = this.data[this.bottom].udpkv1.az1_c;
+                vd.alt2_c = this.data[this.bottom].udpkv1.alt1_c;
+            }
+
             vd.kvaz = this.data[this.bottom].udpkv1.kvaz;
             vd.kvalt = this.data[this.bottom].udpkv1.kvalt;
             vd.vaz2_kv = this.data[this.bottom].udpkv1.vaz2_kv;
