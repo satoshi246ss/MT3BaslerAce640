@@ -17,6 +17,10 @@ namespace MT3
         public void detect()
         {
             ++id;
+            if (appSettings.CamPlatform == Platform.MT2)
+            {
+                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode) - appSettings.Theta;
+            }
 
             if (!appSettings.UseDetect) return;
 

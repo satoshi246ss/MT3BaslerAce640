@@ -85,6 +85,8 @@ namespace MT3
                 worker.DoWork += new DoWorkEventHandler(worker_DoWork);
                 worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+           
+                appTitle = "MT3 analog " + appSettings.ID.ToString();
             }
 
             // IDS
@@ -908,7 +910,7 @@ namespace MT3
                 Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
                 Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
 
-                String str = String.Format("ID:{4,7:D1} dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00})", gx, gy, max_val, max_label, id, daz, dalt);
+                String str = String.Format("ID:{4,7:D1} dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
                 img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
                 img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), 15, new CvColor(0, 100, 255));
 
