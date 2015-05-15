@@ -374,7 +374,7 @@ namespace MT3
             sett.FifoMaxFrame = 64;
             sett.PreSaveNum = 4;
             sett.UseDetect = true;
-            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdBlob = 64;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             //sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortRecieve = 24410; // Broadcast0

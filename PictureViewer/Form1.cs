@@ -469,11 +469,47 @@ namespace MT3
                 Cv.Flip(imgdata.img, imgdata.img, appSettings.Flipmode);
             }
 
+            // MT2 CCD Hot pixel (2015/5/16)
+            ccd_defect_correct(452, 272);
+            ccd_defect_correct(396, 330);
+            ccd_defect_correct(397, 330);
+            ccd_defect_correct(398, 330);
+            ccd_defect_correct(293, 433);
+            ccd_defect_correct(292, 433);
+            ccd_defect_correct(169, 408);
+            ccd_defect_correct(107, 303);
+            ccd_defect_correct( 52, 320);
+            ccd_defect_correct( 53, 320);
+            ccd_defect_correct( 26, 340);
+            ccd_defect_correct( 27, 191);
+            ccd_defect_correct( 28, 191);
+            ccd_defect_correct(553, 243);
+            ccd_defect_correct(554, 243);
+            ccd_defect_correct(555, 243);
+            ccd_defect_correct(556, 243);
+            ccd_defect_correct(624, 252);
+            ccd_defect_correct(220,  41);
+
             detect();
             imgdata_push_FIFO();
 
             Cv.RunningAvg(imgdata.img, imgAvg, 0.01);
             //Cv.ShowImage("Video", imgAvg);
+        }
+
+        public void ccd_defect_correct(int x, int y)
+        {
+            CvScalar v1;
+            v1 = Cv.Get2D(imgdata.img, y-3, x );
+            Cv.Set2D(imgdata.img, y-1, x, v1);
+            v1 = Cv.Get2D(imgdata.img, y-2, x );
+            Cv.Set2D(imgdata.img, y, x, v1);
+            v1 = Cv.Get2D(imgdata.img, y+3, x );
+            Cv.Set2D(imgdata.img, y+1, x, v1);
+
+            //v1.Val0 = 256;
+            //Cv.Set2D(imgdata.img, y+1, x, v1);
+
         }
 
         //BCB互換TDatetime値に変換
