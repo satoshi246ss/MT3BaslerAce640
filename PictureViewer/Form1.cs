@@ -478,23 +478,26 @@ namespace MT3
             ccd_defect_correct(292, 433);
             ccd_defect_correct(169, 408);
             ccd_defect_correct(107, 303);
-            ccd_defect_correct( 52, 320);
-            ccd_defect_correct( 53, 320);
-            ccd_defect_correct( 26, 340);
-            ccd_defect_correct( 27, 191);
-            ccd_defect_correct( 28, 191);
+            ccd_defect_correct(52, 320);
+            ccd_defect_correct(53, 320);
+            ccd_defect_correct(26, 340);
+            ccd_defect_correct(27, 191);
+            ccd_defect_correct(28, 191);
             ccd_defect_correct(553, 243);
             ccd_defect_correct(554, 243);
             ccd_defect_correct(555, 243);
             ccd_defect_correct(556, 243);
             ccd_defect_correct(624, 252);
-            ccd_defect_correct(220,  41);
+            ccd_defect_correct(220, 41);
 
             detect();
             imgdata_push_FIFO();
 
-            Cv.RunningAvg(imgdata.img, imgAvg, 0.01);
-            //Cv.ShowImage("Video", imgAvg);
+            if (checkBoxDispAvg.Checked == true)
+            {
+                Cv.RunningAvg(imgdata.img, imgAvg, 0.01);
+                //Cv.ShowImage("Video", imgAvg);
+            }
         }
 
         public void ccd_defect_correct(int x, int y)
