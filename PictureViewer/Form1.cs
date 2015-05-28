@@ -931,25 +931,55 @@ namespace MT3
 
                 CvPoint2D64f Point1 ;
                 CvPoint2D64f Point2 ;
+                String str;
 
-                Point1 = Rotation(OCPoint, k1 * roa, theta_c);
-                Point2 = Rotation(OCPoint, k2 * roa, theta_c);
-                Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
-                Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+                if (udpkv.mt2mode == udpkv.mmWest)
+                {
+                    Point1 = Rotation(OCPoint, k1 * roa, theta_c);
+                    Point2 = Rotation(OCPoint, k2 * roa, theta_c);
+                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
 
-                Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
-                Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
-                Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
+                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
+                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
 
-                Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
-                Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
-                Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
+                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
+                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
 
-                Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
-                Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
-                Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
+                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
+                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
+                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
 
-                String str = String.Format("ID:{4,7:D1} dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                    str = String.Format("ID:{4,7:D1} W: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                }
+                else
+                {
+                    Point1 = Rotation(OCPoint, k1 * roa, theta_c);
+                    Point2 = Rotation(OCPoint, k2 * roa, theta_c);
+                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    //Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+
+                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
+                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
+                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
+                    //Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+
+                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
+                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
+                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+
+                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
+                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
+                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    //Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
+
+                    str = String.Format("ID:{4,7:D1} E: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+
+                }
+                
                 img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
                 img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), 15, new CvColor(0, 100, 255));
 
