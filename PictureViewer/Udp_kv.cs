@@ -238,10 +238,10 @@ namespace MT3
             //udp_time_code = EndianChange(kd.UdpTimeCode);
             MT2Pos2AzAlt();
 
-            if ((int)(kv_status & (1 << 10)) != 0) vaz1_kv = -x1v / 1000.0;
+            if ((int)(data_request & (1 << 12)) != 0) vaz1_kv = -x1v / 1000.0;
             else vaz1_kv = +x1v / 1000.0;
-            if ((int)(kv_status & (1 << 11)) != 0)
-            { //mr107:Y2モータ回転方向
+            if ((int)(data_request & (1 << 13)) != 0)
+            { //mr1107:Y1モータ回転方向
                 if (mt2mode == mmEast) valt1_kv = -y1v / 1000.0;
                 else valt1_kv = y1v / 1000.0;
             }
