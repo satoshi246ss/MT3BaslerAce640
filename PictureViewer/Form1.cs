@@ -41,7 +41,7 @@ namespace MT3
                 cam_maker = Camera_Maker.analog;
                // cam_color = Camera_Color.mono;
             }
-            if (cmds[1].StartsWith("/ba") || cmds[1].StartsWith("/Ba")) // Basler
+            if (cmds[1].StartsWith("/BA") || cmds[1].StartsWith("/ba") || cmds[1].StartsWith("/Ba")) // Basler
             {
                 cam_maker = Camera_Maker.Basler;
                 // cam_color = Camera_Color.mono;

@@ -18,7 +18,7 @@ namespace MT3
         [STAThread]
         static void Main(string[] args)
         {
-            if (args.Length == 0 || args[0].StartsWith("/b") )
+            if (args.Length == 0 || args[0].StartsWith("/BA") || args[0].StartsWith("/ba") || args[0].StartsWith("/Ba"))
             {
 #if DEBUG
             /* This is a special debug setting needed only for GigE cameras.
