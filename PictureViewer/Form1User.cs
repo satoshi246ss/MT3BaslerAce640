@@ -302,7 +302,7 @@ namespace MT3
             sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
             sett.Width  = 659;
             sett.Height = 494;
-            sett.FocalLength = 50;      //[mm]
+            sett.FocalLength = 12.5;      //[mm]
             sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
             sett.Ccdpy = 0.0056; //[mm]
             sett.Xoa = 320;
@@ -310,14 +310,14 @@ namespace MT3
             sett.Roa = 240/3.1; //直径1deg     192/2;  // 255x192:ace640の縦視野
             sett.Theta = 0;
             sett.Framerate = 120.0; //[fps]
-            sett.FifoMaxFrame = 32;
+            sett.FifoMaxFrame = 16;
             sett.Exposure = 8.3; //[ms]
-            sett.Gain = 300; // 100-1023  要検討
+            sett.Gain = 500; // 100-1023  要検討
             sett.UseDetect = true;
-            sett.ThresholdBlob = 128;    // 検出閾値（０－２５５）
+            sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            //sett.UdpPortRecieve = 24410; // Broadcast0
-            sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            //sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortSend = 24431;
             sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
@@ -340,7 +340,7 @@ namespace MT3
             sett.Ccdpy = 0.0074; //[mm]
             sett.Theta = 0.0;
             sett.Framerate = 15.0; //[fps]
-            sett.FifoMaxFrame = 32;
+            sett.FifoMaxFrame = 4;
             sett.PreSaveNum = 0;
             sett.Exposure = 66; //[ms]
             sett.Gain = 30; // 0-30  要検討
@@ -376,8 +376,8 @@ namespace MT3
             sett.UseDetect = true;
             sett.ThresholdBlob = 64;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            //sett.UdpPortRecieve = 24442; //Broadcast2
-            sett.UdpPortRecieve = 24410; // Broadcast0
+            sett.UdpPortRecieve = 24442; //Broadcast2
+            //sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend = 24451;
             sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
