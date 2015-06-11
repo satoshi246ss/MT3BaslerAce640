@@ -53,8 +53,8 @@ namespace MT3
         public double az, alt, vaz, valt;
         public Udp_kv udpkv1;
 
-        // デフォルトコンストラクタ
- /*       public ImageData()
+        // デフォルトコンストラクタ structはだめ
+ /*       public ImageData() // structはだめ
         {
             id = 0;
             detect_mode = 0;
