@@ -300,8 +300,8 @@ namespace MT3
             sett.CamPlatform = Platform.MT2;
             sett.Flipmode = OpenCvSharp.FlipMode.XY;
             sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
-            sett.Width  = 659;
-            sett.Height = 494;
+            sett.Width  = 652; // Max 659    4の倍数でメモリ確保される。
+            sett.Height = 494; // Max 494
             sett.FocalLength = 12.5;      //[mm]
             sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
             sett.Ccdpy = 0.0056; //[mm]
@@ -328,7 +328,8 @@ namespace MT3
             sett.NoCapDev = 11;
             sett.CameraType = "AVT"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 2;       //カメラタイプ毎のID
-            sett.CameraColor = Camera_Color.mono12packed;    // 0:mono(mono8)  1:color 2:mono12packed
+            //sett.CameraColor = Camera_Color.mono12packed;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraColor = Camera_Color.mono;              // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.GIGE;
             sett.CamPlatform = Platform.MT2;
             sett.Flipmode = OpenCvSharp.FlipMode.XY;
@@ -532,7 +533,14 @@ namespace MT3
             }
             // パラメータロード
             feature = features["UserSetSelector"];
-            feature.EnumValue = "UserSet1";
+            if (appSettings.CameraColor == Camera_Color.mono12packed)
+            {
+                feature.EnumValue = "UserSet1";  // packed12
+            }
+            else if (appSettings.CameraColor == Camera_Color.mono)
+            {
+                feature.EnumValue = "UserSet2";  // mono8
+            }
             feature = features["UserSetLoad"];
             feature.RunCommand();
 
