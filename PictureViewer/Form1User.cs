@@ -298,7 +298,7 @@ namespace MT3
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.GIGE;
             sett.CamPlatform = Platform.MT2;
-            sett.Flipmode = OpenCvSharp.FlipMode.XY;
+            sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
             sett.Width  = 652; // Max 659    4の倍数でメモリ確保される。
             sett.Height = 494; // Max 494
@@ -1011,7 +1011,7 @@ namespace MT3
             string remoteHost = "192.168.1.204";
             int remotePort = 24426; //KV1000 UDP   8501(KV1000 cmd); // KV1000SpCam2
 
-            if (appSettings.ID == 20)
+            if (appSettings.ID == 10) // MT2 WideCam 設定
             {
                 //送信するデータを読み込む
                 string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));

@@ -595,6 +595,10 @@ namespace MT3
         private void ShowButton_Click(object sender, EventArgs e)
         {
             Pid_Data_Send_KV1000_SpCam2((short)id, daz, dalt, 1);
+
+            // daz = az - udpkv.az1_c; dalt = alt - udpkv.alt1_c;             //位置誤差 at detect()
+            string s = string.Format("dAz,dAlt:[{0} daz:{1} dalt:{2}] az:{3} azc:{4}  alt:{5} altc:{6}\n", id, daz, dalt, az, udpkv.az1_c, alt, udpkv.alt1_c);
+            richTextBox1.AppendText(s);
  
             //OpenIDScamera();
             //AVT

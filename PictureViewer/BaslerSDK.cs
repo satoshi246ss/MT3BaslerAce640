@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using PylonC.NET;
 using PylonC.NETSupportLibrary;
+using OpenCvSharp;
 
 namespace MT3
 {
@@ -158,6 +159,12 @@ namespace MT3
 
                     try
                     {
+                        // 表示画像反転 実装場所　要検討
+                        if (appSettings.Flipmode == OpenCvSharp.FlipMode.X || appSettings.Flipmode == OpenCvSharp.FlipMode.Y)
+                        {
+                            Cv.Flip(imgdata.img, imgdata.img, appSettings.Flipmode);
+                        }
+
                         detect();
                     }
                     catch (KeyNotFoundException)
