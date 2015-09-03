@@ -288,6 +288,57 @@ namespace MT3
             sett.UdpPortSend    = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
+
+            // IDS
+            sett.Text = "IDS UI-1540";
+            sett.ID = 14;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 14;
+            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 5;       //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.USB2;
+            sett.IP_GIGE_Camera = "192.168.1.xxx"; //GIGE Camera only.
+            sett.Width = 1280;
+            sett.Height = 1024;
+            sett.FocalLength = 50;      //[mm]
+            sett.Ccdpx = 0.0074; //[mm]
+            sett.Ccdpy = 0.0074; //[mm]
+            sett.PixelClock = 43; //[MHz] 5-43MHz  UI-1540
+            sett.Framerate = 25.0; //[fps]
+            sett.FifoMaxFrame = 32;
+            sett.Exposure = 33; //[ms]
+            sett.Gain = 30; // 0-30  要検討
+            sett.UseDetect = false;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410; //Broadcast0
+            sett.UdpPortSend = 24429;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
+            SettingsSave(sett);
+
+            //IDS UI-3240CP-NIR  NIR Cam
+            sett.Text = "IDS UI-3240CP-NIR";
+            sett.ID = 15;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12  MT3NIR:15 等々
+            sett.NoCapDev = 15;
+            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 4;       //カメラタイプ毎のID
+            sett.CameraColor = 0;    // 0:mono  1:color
+            sett.Width = 1280;
+            sett.Height =1024;
+            sett.FocalLength = 23.0;      //[mm]
+            sett.Ccdpx = 0.0053; //[mm]
+            sett.Ccdpy = 0.0053; //[mm]
+            sett.Framerate = 60.0; //[fps]
+            sett.FifoMaxFrame = 16;
+            sett.Exposure = 13; //[ms]
+            sett.Gain = 100;
+            sett.UseDetect = true;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410;
+            sett.UdpPortSend = 24435;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
+            SettingsSave(sett);
             
             // MT2 Basler Guide
             sett.Text = "Basler acA640-120gm";
@@ -411,33 +462,6 @@ namespace MT3
             sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend = 24451;
             sett.SaveDir = @"D:\img_data\";
-            SettingsSave(sett);
-
-            // IDS
-            sett.Text = "IDS UI-1540";
-            sett.ID = 14;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.NoCapDev = 14;
-            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 5;       //カメラタイプ毎のID
-            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
-            sett.CameraInterface = Camera_Interface.USB2;
-            sett.IP_GIGE_Camera = "192.168.1.xxx"; //GIGE Camera only.
-            sett.Width  = 1280;
-            sett.Height = 1024;
-            sett.FocalLength = 50;      //[mm]
-            sett.Ccdpx = 0.0074; //[mm]
-            sett.Ccdpy = 0.0074; //[mm]
-            sett.PixelClock = 43; //[MHz] 5-43MHz  UI-1540
-            sett.Framerate = 25.0; //[fps]
-            sett.FifoMaxFrame = 32;
-            sett.Exposure = 33; //[ms]
-            sett.Gain = 30; // 0-30  要検討
-            sett.UseDetect = false;
-            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
-            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410; //Broadcast0
-            sett.UdpPortSend = 24429;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
             /*

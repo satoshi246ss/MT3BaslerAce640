@@ -94,6 +94,7 @@ namespace MT3
             {
                 u32DisplayID = pictureBox1.Handle.ToInt32();
                 cam = new uEye.Camera();
+                appTitle = "MT3IDS " + appSettings.ID.ToString();
             }
 
              //AVT
