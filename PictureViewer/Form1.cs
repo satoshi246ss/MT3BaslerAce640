@@ -76,6 +76,14 @@ namespace MT3
             xoa = xoa_mes;
             yoa = yoa_mes;
 
+            // local ip address
+            mmLocalHost = Dns.GetHostName();
+            IPAddress[] addresses = Dns.GetHostAddresses(mmLocalHost);
+            foreach (IPAddress address in addresses)
+            {
+                mmLocalIP = address.ToString();
+            } 
+
             // VideoInput
             if (cam_maker == Camera_Maker.analog)
             {
@@ -86,7 +94,7 @@ namespace MT3
                 worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
            
-                appTitle = "MT3 analog " + appSettings.ID.ToString();
+                appTitle = "MT3 analog " + appSettings.ID.ToString() ;
             }
 
             // IDS
@@ -131,7 +139,6 @@ namespace MT3
                 /* Update the list of available devices in the upper left area. */
                 UpdateDeviceList();
             }
-
             Pid_Data_Send_Init();
         }
 
@@ -139,7 +146,7 @@ namespace MT3
         {
             this.worker_udp.RunWorkerAsync();
 
-            appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString();
+            appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString()+"  " + mmLocalHost +"(" + mmLocalIP+")";
             this.Text = appTitle;
 
             // 有効な画像取り込みデバイスが選択されているかをチェック。

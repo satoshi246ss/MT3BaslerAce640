@@ -172,6 +172,8 @@ namespace MT3
         int mmUdpPortBroadCastSent = 24411;            // （送信）
         int mmFsiUdpPortMTmonitor  = 24415;
         string mmFsiCore_i5 = "192.168.1.211"; // for MTmon
+        string mmLocalIP = "";
+        string mmLocalHost = "";
         System.Net.Sockets.UdpClient udpc3 = null;
         DriveInfo cDrive = new DriveInfo("C");
         long diskspace;
@@ -328,9 +330,10 @@ namespace MT3
             sett.FocalLength = 23.0;      //[mm]
             sett.Ccdpx = 0.0053; //[mm]
             sett.Ccdpy = 0.0053; //[mm]
-            sett.Framerate = 60.0; //[fps]
+            sett.PixelClock = 86; //[MHz] 5-43MHz  UI1540    -86 UI3240
+            sett.Framerate = 50.0; //[fps]
             sett.FifoMaxFrame = 16;
-            sett.Exposure = 13; //[ms]
+            sett.Exposure = 19.2; //[ms]
             sett.Gain = 100;
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
