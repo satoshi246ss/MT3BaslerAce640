@@ -274,7 +274,9 @@ namespace MT3
             sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 2;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
-            sett.Width  = 640;
+            sett.CameraInterface = Camera_Interface.USB2;
+            sett.CamPlatform = Platform.MT3;
+            sett.Width = 640;
             sett.Height = 480;
             sett.FocalLength = 12.5;      //[mm]
             sett.Ccdpx = 0.0074; //[mm]
@@ -325,6 +327,8 @@ namespace MT3
             sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 4;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
+            sett.CameraInterface = Camera_Interface.USB3;
+            sett.CamPlatform = Platform.MT3;
             sett.Width = 1280;
             sett.Height =1024;
             sett.FocalLength = 23.0;      //[mm]
@@ -341,8 +345,8 @@ namespace MT3
             sett.Gain = 100;
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
-            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410;
+            sett.ThresholdMinArea = 0.25; // 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410;  // Broadcast0
             sett.UdpPortSend = 24435;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
