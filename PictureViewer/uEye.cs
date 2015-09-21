@@ -143,6 +143,7 @@ namespace MT3
             cam.Memory.Unlock(s32MemID);
 
             detect();
+            imgdata_push_FIFO();
         }
 
         // 毎フレーム呼び出し(120fr/s)

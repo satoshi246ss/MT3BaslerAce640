@@ -330,6 +330,10 @@ namespace MT3
             sett.FocalLength = 23.0;      //[mm]
             sett.Ccdpx = 0.0053; //[mm]
             sett.Ccdpy = 0.0053; //[mm]
+            sett.Xoa = 640;
+            sett.Yoa = 512;
+            sett.Roa = 1024 / 13 ; //直径1deg     192/2;  // 255x192:ace640の縦視野
+            sett.Theta = 0;
             sett.PixelClock = 86; //[MHz] 5-43MHz  UI1540    -86 UI3240
             sett.Framerate = 50.0; //[fps]
             sett.FifoMaxFrame = 16;
@@ -404,6 +408,39 @@ namespace MT3
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24441; //Broadcast1
             sett.UdpPortSend    = 24433;
+            sett.SaveDir = @"D:\img_data\";
+            SettingsSave(sett);
+
+            // MT2 Basler Test 
+            sett.Text = "Basler A102f";
+            sett.ID = 16;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 16;
+            sett.CameraType = "Basler"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 3;          //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.IEEE1394 ;
+            sett.CamPlatform = Platform.MT2;
+            sett.Flipmode = OpenCvSharp.FlipMode.XY;
+            sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            sett.Width  = 1280; // Max 659    4の倍数でメモリ確保される。
+            sett.Height = 1024; // Max 494
+            sett.FocalLength = 12.5;      //[mm]
+            sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
+            sett.Ccdpy = 0.0056; //[mm]
+            sett.Xoa = 320;
+            sett.Yoa = 240;
+            sett.Roa = 240 / 3.1; //直径1deg     192/2;  // 255x192:ace640の縦視野
+            sett.Theta = 0;
+            sett.Framerate = 20.0; //[fps]
+            sett.FifoMaxFrame = 16;
+            sett.Exposure = 8.3; //[ms]
+            sett.Gain = 500; // 100-1023  要検討
+            sett.UseDetect = true;
+            sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortSend = 24431;
             sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
 
