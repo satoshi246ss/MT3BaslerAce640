@@ -27,7 +27,8 @@ namespace MT3
     {
         mono,
         color,
-        mono12packed
+        mono12packed,
+        mono16
     }
     public enum Camera_Interface
     {
@@ -45,6 +46,12 @@ namespace MT3
         MT2,
         MT3,
     }
+    public enum uEye_Shutter_Mode
+    {
+        Global,
+        Rolling
+    }
+
     #endregion
 
     public partial class Form1 : Form
@@ -326,7 +333,7 @@ namespace MT3
             sett.NoCapDev = 15;
             sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 4;       //カメラタイプ毎のID
-            sett.CameraColor = 0;    // 0:mono  1:color
+            sett.CameraColor = Camera_Color.mono;     // 0:mono  1:color
             sett.CameraInterface = Camera_Interface.USB3;
             sett.CamPlatform = Platform.MT3;
             sett.Width = 1280;
@@ -334,6 +341,7 @@ namespace MT3
             sett.FocalLength = 23.0;      //[mm]
             sett.Ccdpx = 0.0053; //[mm]
             sett.Ccdpy = 0.0053; //[mm]
+            sett.uEyeShutterMode = uEye_Shutter_Mode.Rolling;
             sett.Xoa = 640;
             sett.Yoa = 512;
             sett.Roa = 1024 / 13 ; //直径1deg     192/2;  // 255x192:ace640の縦視野
@@ -421,7 +429,7 @@ namespace MT3
             sett.NoCapDev = 16;
             sett.CameraType = "Basler"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 3;          //カメラタイプ毎のID
-            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed 3:mono16
             sett.CameraInterface = Camera_Interface.IEEE1394 ;
             sett.CamPlatform = Platform.MT2;
             sett.Flipmode = OpenCvSharp.FlipMode.XY;

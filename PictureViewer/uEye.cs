@@ -66,11 +66,16 @@ namespace MT3
                     Environment.Exit(0);
                 }
 
-                // PixelFormat MONO 8
-                uEye.Defines.ColorMode mode;
-                cam.PixelFormat.Get(out mode);
-                cam.PixelFormat.Set(uEye.Defines.ColorMode.MONO8);
-                cam.PixelFormat.Get(out mode);
+                if (appSettings.CameraColor == Camera_Color.mono)
+                {
+                    // PixelFormat MONO 8
+                    set_PixelFormat_mono8();
+                }
+                else if (appSettings.CameraColor == Camera_Color.mono16)
+                {
+                    // PixelFormat MONO 16
+                    set_PixelFormat_mono16();
+                }                  
 
                 // Allocate Memory
                 statusRet = cam.Memory.Allocate(out s32MemID, true);
@@ -102,21 +107,52 @@ namespace MT3
                 }
 
                 cam.Gain.Hardware.Scaled.SetMaster((int)appSettings.Gain);
+
+                if (appSettings.uEyeShutterMode == uEye_Shutter_Mode.Rolling)
+                {
+                    set_uEye_Rolling_shutter_mode();
+                } 
             }
         }
-        // IDS event追加
-        private void onFrameEvent1(object sender, EventArgs e)
+        /// <summary>
+        /// シャッターモードをローリングシャッターに設定
+        /// </summary>
+        public void set_uEye_Rolling_shutter_mode()
         {
-            uEye.Camera Camera = sender as uEye.Camera;
+            if (cam.DeviceFeature.ShutterMode.IsSupported(uEye.Defines.Shuttermode.Rolling))
+            {
+                cam.DeviceFeature.ShutterMode.Set(uEye.Defines.Shuttermode.Rolling);
+            }
 
-            Int32 s32MemID;
-            Camera.Memory.GetActive(out s32MemID);
-
-            Camera.Display.DisplayImage.Set(s32MemID, u32DisplayID, uEye.Defines.DisplayRenderMode.FitToWindow);
-            ++id;
         }
-        //
-        // 毎フレーム呼び出し(75fr/s)
+        /// <summary>
+        /// シャッターモードをグローバルシャッターに設定
+        /// </summary>
+        public void set_uEye_Global_shutter_mode()
+        {
+            if (cam.DeviceFeature.ShutterMode.IsSupported(uEye.Defines.Shuttermode.Global))
+            {
+                cam.DeviceFeature.ShutterMode.Set(uEye.Defines.Shuttermode.Global);
+            }
+
+        }
+        public void set_PixelFormat_mono8()
+        {
+            // PixelFormat MONO 8
+            uEye.Defines.ColorMode mode;
+            cam.PixelFormat.Get(out mode);
+            cam.PixelFormat.Set(uEye.Defines.ColorMode.MONO8);
+            cam.PixelFormat.Get(out mode);
+        }        //
+        public void set_PixelFormat_mono16()
+        {
+            // PixelFormat MONO 16
+            uEye.Defines.ColorMode mode;
+            cam.PixelFormat.Get(out mode);
+            cam.PixelFormat.Set(uEye.Defines.ColorMode.MONO16);
+            cam.PixelFormat.Get(out mode);
+        }        //
+        // 毎フレーム呼び出し use:2015/9 
         // IDS event追加
         private void onFrameEvent(object sender, EventArgs e)
         {
@@ -146,6 +182,18 @@ namespace MT3
             imgdata_push_FIFO();
         }
 
+        // IDS event追加
+        private void onFrameEvent1(object sender, EventArgs e)
+        {
+            uEye.Camera Camera = sender as uEye.Camera;
+
+            Int32 s32MemID;
+            Camera.Memory.GetActive(out s32MemID);
+
+            Camera.Display.DisplayImage.Set(s32MemID, u32DisplayID, uEye.Defines.DisplayRenderMode.FitToWindow);
+            ++id;
+        }
+ 
         // 毎フレーム呼び出し(120fr/s)
         // IDS event追加
         private void onFrameEvent2(object sender, EventArgs e)

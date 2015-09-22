@@ -154,7 +154,14 @@ namespace MT3
             get { return _gain; }
             set { _gain = value; }
         }
- 
+
+        private uEye_Shutter_Mode _ueye_shutter_mode;
+        public uEye_Shutter_Mode uEyeShutterMode
+        {
+            get { return _ueye_shutter_mode; }
+            set { _ueye_shutter_mode = value; }
+        }
+
         private int _fifo_max_frame;
         public int FifoMaxFrame
         {
@@ -309,6 +316,7 @@ namespace MT3
             _no_cap_dev = _id;
             _save_dir = @"C:\Users\Public\img_data\";
             _pre_save_num = 0;
+            _ueye_shutter_mode = uEye_Shutter_Mode.Global;
         }
 
      }
