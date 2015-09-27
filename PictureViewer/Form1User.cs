@@ -476,7 +476,7 @@ namespace MT3
             sett.Theta = 180;
             sett.Framerate = 30.0; //[fps]
             sett.FifoMaxFrame = 64;
-            sett.PreSaveNum = 4;
+            sett.PreSaveNum = 30;
             sett.UseDetect = true;
             sett.ThresholdBlob = 64;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
