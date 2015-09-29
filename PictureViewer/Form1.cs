@@ -472,9 +472,12 @@ namespace MT3
             Cv.Split(image, imgdata.img, null, null, null);
 
             // 表示画像反転 実装場所　要検討
-            if (appSettings.Flipmode == OpenCvSharp.FlipMode.X || appSettings.Flipmode == OpenCvSharp.FlipMode.Y)
+            if (appSettings.FlipOn)
             {
-                Cv.Flip(imgdata.img, imgdata.img, appSettings.Flipmode);
+                if (appSettings.Flipmode == OpenCvSharp.FlipMode.X || appSettings.Flipmode == OpenCvSharp.FlipMode.Y)
+                {
+                    Cv.Flip(imgdata.img, imgdata.img, appSettings.Flipmode);
+                }
             }
 
             // MT2 CCD Hot pixel (2015/5/16)
@@ -503,7 +506,7 @@ namespace MT3
 
             if (checkBoxDispAvg.Checked == true)
             {
-                Cv.RunningAvg(imgdata.img, imgAvg, 0.01);
+                Cv.RunningAvg(imgdata.img, imgAvg, 0.1);
                 //Cv.ShowImage("Video", imgAvg);
             }
         }
@@ -916,7 +919,7 @@ namespace MT3
                     if (checkBoxDispAvg.Checked == true)
                     {
                         // 移動平均画像の表示
-                        double scale = 4.0;
+                        double scale = 1.0;
                         Cv.ConvertScale(imgAvg, img_dmk, scale);
                         Cv.CvtColor(img_dmk, img_dmk3, ColorConversion.GrayToBgr);
                     }
@@ -1204,7 +1207,7 @@ namespace MT3
             string remoteHost = mmFsiCore_i5;
             int remotePort = mmFsiUdpPortMTmonitor;
             //送信するデータを読み込む
-            mtmon_data.id = 7; //MT3Wide
+            mtmon_data.id = (byte)appSettings.ID; //MT3Wide
             mtmon_data.diskspace = (int)(diskspace / (1024 * 1024 * 1024));
             mtmon_data.obs = (byte)this.States;
 
@@ -1265,9 +1268,5 @@ namespace MT3
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
         }
 
-        private void checkBoxDispAvg_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

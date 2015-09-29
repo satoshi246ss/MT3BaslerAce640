@@ -236,7 +236,6 @@
             this.checkBoxDispAvg.TabIndex = 11;
             this.checkBoxDispAvg.Text = "DispAvg";
             this.checkBoxDispAvg.UseVisualStyleBackColor = true;
-            this.checkBoxDispAvg.CheckedChanged += new System.EventHandler(this.checkBoxDispAvg_CheckedChanged);
             // 
             // label_frame_rate
             // 

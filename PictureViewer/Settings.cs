@@ -56,6 +56,8 @@ namespace MT3
             set { _platform = value; }
         }
 
+        public bool FlipOn { get; set; }
+
         private OpenCvSharp.FlipMode _flip_mode;
         public  OpenCvSharp.FlipMode Flipmode
         {
@@ -64,19 +66,8 @@ namespace MT3
         }
 
         //CCD
-        private int _width;
-        public int Width
-        {
-            get { return _width; }
-            set { _width = value; }
-        }
-
-        private int _height;
-        public int Height
-        {
-            get { return _height; }
-            set { _height = value; }
-        }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         private double _focal_length;
         public double FocalLength
@@ -286,15 +277,16 @@ namespace MT3
             _camera_color = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             _camera_interface = Camera_Interface.USB2 ;
             _platform = Platform.MT2;
+            FlipOn = false;
             _flip_mode = OpenCvSharp.FlipMode.XY; // XY:負値　は回転させない。X,Yのみ有効
             _ip_gige_camera = "192.168.1.150"; //GIGE Camera only.
-            _width  = 640;
-            _height = 480;
+            Width = 640;
+            Height = 480;
             _focal_length = 12.5;      //[mm]
             _ccdpx = 0.0074; //[mm]
             _ccdpy = 0.0074; //[mm]
-            _xoa = _width / 2;
-            _yoa = _height / 2;
+            _xoa = Width / 2;
+            _yoa = Height / 2;
             _roa = 40;
             _theta = 0;
             _pixel_clock = 43;//[MHz] int

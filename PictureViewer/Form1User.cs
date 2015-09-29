@@ -464,6 +464,7 @@ namespace MT3
             sett.CameraID = 0;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
             sett.CamPlatform = Platform.MT2;
+            sett.FlipOn = false;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.Width = 640;
             sett.Height = 480;
@@ -484,6 +485,7 @@ namespace MT3
             //sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend = 24451;
             sett.SaveDir = @"D:\img_data\";
+            sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
             // Wat100N Cam ID 21
