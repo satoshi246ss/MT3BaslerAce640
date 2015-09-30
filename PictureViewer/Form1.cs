@@ -1209,8 +1209,15 @@ namespace MT3
             //送信するデータを読み込む
             mtmon_data.id = (byte)appSettings.ID; //MT3Wide
             mtmon_data.diskspace = (int)(diskspace / (1024 * 1024 * 1024));
-            mtmon_data.obs = (byte)this.States;
-
+            if (id == id_mon)
+            {
+                mtmon_data.obs = (byte)STOP;
+            }
+            else
+            {
+                mtmon_data.obs = (byte)this.States;
+            }
+            id_mon = id;
             //mtmon_data.obs = this.States ; 
             byte[] sendBytes = ToBytes(mtmon_data);
 

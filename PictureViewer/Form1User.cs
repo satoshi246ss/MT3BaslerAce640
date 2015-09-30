@@ -121,6 +121,7 @@ namespace MT3
 
         // 観測開始からのフレーム番号
         int id = 0;
+        int id_mon = 0;
         DateTime LiveStartTime;
         //long timestamp; // [us]
         long frame_timestamp; //[us]
