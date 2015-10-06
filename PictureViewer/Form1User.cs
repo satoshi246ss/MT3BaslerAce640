@@ -329,6 +329,7 @@ namespace MT3
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410; //Broadcast0
             sett.UdpPortSend = 24429;
+            sett.MtMon_ID = 14;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
@@ -361,7 +362,8 @@ namespace MT3
             sett.ThresholdMinArea = 0.25; // 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;  // Broadcast0
             sett.UdpPortSend = 24435;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
+            sett.MtMon_ID = 15;
+            sett.SaveDir = @"E:\img_data\";
             SettingsSave(sett);
             
             // MT2 Basler Guide
