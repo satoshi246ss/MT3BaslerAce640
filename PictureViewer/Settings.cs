@@ -21,6 +21,8 @@ namespace MT3
             set { _id = value; }
         }
 
+        public int MtMon_ID { get; set; }
+
         private string _camera_type;
         public string CameraType
         {
