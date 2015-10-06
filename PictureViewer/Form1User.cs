@@ -276,29 +276,31 @@ namespace MT3
         {
             //保存する設定を作成する
             Settings sett = new Settings();
-            sett.Text = "IDS UI-2410SE-M";
-            sett.ID = 4;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.NoCapDev = 4;
+            sett.Text = "NUV (IDS UI-2410SE-M) ";
+            sett.ID = 7;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 7;
             sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 2;       //カメラタイプ毎のID
+            sett.CameraID = 3;       //カメラタイプ毎のID 
             sett.CameraColor = 0;    // 0:mono  1:color
             sett.CameraInterface = Camera_Interface.USB2;
             sett.CamPlatform = Platform.MT3;
             sett.Width = 640;
             sett.Height = 480;
-            sett.FocalLength = 12.5;      //[mm]
+            sett.FocalLength = 80;      //[mm]
             sett.Ccdpx = 0.0074; //[mm]
             sett.Ccdpy = 0.0074; //[mm]
-            sett.Framerate = 75.0; //[fps]
+            sett.PixelClock = 30; //[MHz] 5-43MHz  UI-1540
+            sett.Framerate  = 75.0; //[fps]
             sett.FifoMaxFrame = 64;
-            sett.Exposure = 13; //[ms]
+            sett.Exposure = 13.3; //[ms]
             sett.Gain = 100;
-            sett.UseDetect = true;
+            sett.UseDetect = false;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410;
-            sett.UdpPortSend    = 24429;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
+            sett.UdpPortRecieve = 24422;
+            sett.UdpPortSend    = 24423;
+            sett.MtMon_ID = 3;
+            sett.SaveDir = @"F:\img_data\";
             SettingsSave(sett);
 
             // IDS

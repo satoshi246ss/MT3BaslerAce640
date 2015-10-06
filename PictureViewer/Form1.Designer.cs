@@ -388,7 +388,6 @@
             // 
             // updateDeviceListTimer
             // 
-            this.updateDeviceListTimer.Enabled = true;
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
             // 

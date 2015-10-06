@@ -45,6 +45,7 @@ namespace MT3
             {
                 cam_maker = Camera_Maker.Basler;
                 // cam_color = Camera_Color.mono;
+                updateDeviceListTimer.Enabled = true;
             }
             if (cmds[1].StartsWith("/AV") || cmds[1].StartsWith("/av")) // AVT
             {
@@ -1207,7 +1208,7 @@ namespace MT3
             string remoteHost = mmFsiCore_i5;
             int remotePort = mmFsiUdpPortMTmonitor;
             //送信するデータを読み込む
-            mtmon_data.id = (byte)appSettings.ID; //MT3Wide
+            mtmon_data.id = (byte)appSettings.MtMon_ID; 
             mtmon_data.diskspace = (int)(diskspace / (1024 * 1024 * 1024));
             if (id == id_mon)
             {
@@ -1274,6 +1275,7 @@ namespace MT3
             string s = string.Format("(x,y)=({0},{1})\n", e.X, e.Y);
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
         }
+
 
     }
 }
