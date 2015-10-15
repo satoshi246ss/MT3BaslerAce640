@@ -18,14 +18,52 @@ namespace MT3
         [STAThread]
         static void Main(string[] args)
         {
-            if (args.Length == 0 || args[0].StartsWith("/BA") || args[0].StartsWith("/ba") || args[0].StartsWith("/Ba"))
+            string prog_name="0";
+            if (args.Length == 2)
             {
-#if DEBUG
-            /* This is a special debug setting needed only for GigE cameras.
-                See 'Building Applications with pylon' in the Programmer's Guide. */
-                Environment.SetEnvironmentVariable("PYLON_GIGE_HEARTBEAT", "300000" /*ms*/);
-#endif
+                prog_name = "MT3Basler_" + args[1];
+            }
+            else
+            {
+                Application.Exit();
+            }
 
+            int basler_mode = 0;
+            if (args[0].StartsWith("/BA") || args[0].StartsWith("/ba") || args[0].StartsWith("/Ba"))
+            {
+                basler_mode = 1;
+            }
+
+            //
+            using (var mutex = new Mutex(false, prog_name))
+            {
+                try
+                {
+                    if (mutex.WaitOne(0))
+                    {
+                        Run(mutex, basler_mode);
+                    }
+                    else
+                    {
+                        // 起動済みのウィンドウをアクティブにすると親切かも
+                        MessageBox.Show("多重起動はできません  "+prog_name);
+                    }
+                }
+                catch (AbandonedMutexException)
+                {
+                    // new Mutex()～WaitOne()の間で、既に起動中のプロセスが強制終了した
+                    // この場合もMutexの所有権は取得できているので、起動して問題ない
+                    Run(mutex, basler_mode);
+                }
+            }
+        }
+
+        static void Run(Mutex mutex, int basler_mode)
+        {
+
+            if (basler_mode == 1)
+            {
+                /// Basler only
                 Pylon.Initialize();
                 try
                 {
