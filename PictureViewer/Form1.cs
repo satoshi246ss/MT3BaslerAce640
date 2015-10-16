@@ -315,8 +315,8 @@ namespace MT3
                         //Mode = LOST;
                         //ButtonSaveEnd_Click(sender, e);
                         //匿名デリゲートで表示する
-                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
-                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSavePostTime, RUN });
+                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
+                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSavePostTime, RUN });
                     }
                     else if (kmd3.cmd == 17) // mmMoveEnd             17  // 位置決め完了
                     {
@@ -1276,6 +1276,11 @@ namespace MT3
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
         }
 
+ /*       private void timerSavePostTime_Tick_1(object sender, EventArgs e)
+        {
+
+        }
+*/
 
     }
 }

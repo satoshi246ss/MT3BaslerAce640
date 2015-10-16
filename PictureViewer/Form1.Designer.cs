@@ -64,6 +64,7 @@
             this.timerWaitShutdown = new System.Windows.Forms.Timer(this.components);
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
+            this.timerSavePostTime = new System.Windows.Forms.Timer(this.components);
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -391,6 +392,11 @@
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
             // 
+            // timerSavePostTime
+            // 
+            this.timerSavePostTime.Interval = 2000;
+            this.timerSavePostTime.Tick += new System.EventHandler(this.timerSavePostTime_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -454,6 +460,7 @@
         private System.Windows.Forms.Label label_X2Y2;
         private System.Windows.Forms.ListView deviceListView;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGain;
+        private System.Windows.Forms.Timer timerSavePostTime;
     }
 }
 
