@@ -36,12 +36,14 @@ namespace MT3
         USB3,
         GIGE,
         IEEE1394,
-        NTSC
+        NTSC,
+        HDMI
     }
     public enum Platform
     {
         Fish1,
         Fish2,
+        Wide,
         MT1,
         MT2,
         MT3,
@@ -327,6 +329,7 @@ namespace MT3
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410; //Broadcast0
             sett.UdpPortSend = 24429;
+            sett.MtMon_ID = 14;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
@@ -359,7 +362,8 @@ namespace MT3
             sett.ThresholdMinArea = 0.25; // 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;  // Broadcast0
             sett.UdpPortSend = 24435;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
+            sett.MtMon_ID = 15;
+            sett.SaveDir = @"E:\img_data\";
             SettingsSave(sett);
             
             // MT2 Basler Guide
@@ -466,7 +470,7 @@ namespace MT3
             sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 0;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
-            sett.CamPlatform = Platform.MT2;
+            sett.CamPlatform = Platform.Wide;
             sett.FlipOn = false;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.Width = 640;
@@ -474,8 +478,8 @@ namespace MT3
             sett.FocalLength = 35;      //[mm]
             sett.Ccdpx = 0.010; //[mm]
             sett.Ccdpy = 0.010; //[mm]
-            sett.Xoa = 327; //435;
-            sett.Yoa = 292; //(480 - 197);// for flip
+            sett.Xoa = 320; //435;
+            sett.Yoa = 240; //(480 - 197);// for flip
             sett.Roa = 91; //直径3deg     192/2;  // 255x192:ace640の縦視野
             sett.Theta = 180;
             sett.Framerate = 30.0; //[fps]
