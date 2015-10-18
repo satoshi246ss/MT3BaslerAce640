@@ -312,7 +312,7 @@ namespace MT3
             sett.Framerate = 120.0; //[fps]
             sett.FifoMaxFrame = 16;
             sett.Exposure = 8.3; //[ms]
-            sett.Gain = 500; // 100-1023  要検討
+            sett.Gain = 1023; // 100-1023  要検討
             sett.UseDetect = true;
             sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
