@@ -45,6 +45,7 @@ namespace MT3
             {
                 cam_maker = Camera_Maker.Basler;
                 // cam_color = Camera_Color.mono;
+                updateDeviceListTimer.Enabled = true;
             }
             if (cmds[1].StartsWith("/AV") || cmds[1].StartsWith("/av")) // AVT
             {
@@ -76,6 +77,14 @@ namespace MT3
             xoa = xoa_mes;
             yoa = yoa_mes;
 
+            // local ip address
+            mmLocalHost = Dns.GetHostName();
+            IPAddress[] addresses = Dns.GetHostAddresses(mmLocalHost);
+            foreach (IPAddress address in addresses)
+            {
+                mmLocalIP = address.ToString();
+            } 
+
             // VideoInput
             if (cam_maker == Camera_Maker.analog)
             {
@@ -86,7 +95,7 @@ namespace MT3
                 worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
            
-                appTitle = "MT3 analog " + appSettings.ID.ToString();
+                appTitle = "MT3 analog " + appSettings.ID.ToString() ;
             }
 
             // IDS
@@ -94,6 +103,7 @@ namespace MT3
             {
                 u32DisplayID = pictureBox1.Handle.ToInt32();
                 cam = new uEye.Camera();
+                appTitle = "MT3IDS " + appSettings.ID.ToString();
             }
 
              //AVT
@@ -130,7 +140,6 @@ namespace MT3
                 /* Update the list of available devices in the upper left area. */
                 UpdateDeviceList();
             }
-
             Pid_Data_Send_Init();
         }
 
@@ -138,7 +147,7 @@ namespace MT3
         {
             this.worker_udp.RunWorkerAsync();
 
-            appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString();
+            appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString()+"  " + mmLocalHost +"(" + mmLocalIP+")";
             this.Text = appTitle;
 
             // 有効な画像取り込みデバイスが選択されているかをチェック。
@@ -464,9 +473,12 @@ namespace MT3
             Cv.Split(image, imgdata.img, null, null, null);
 
             // 表示画像反転 実装場所　要検討
+            if (appSettings.FlipOn)
+            {
             if (appSettings.Flipmode == OpenCvSharp.FlipMode.X || appSettings.Flipmode == OpenCvSharp.FlipMode.Y)
             {
                 Cv.Flip(imgdata.img, imgdata.img, appSettings.Flipmode);
+            }
             }
 
             // MT2 CCD Hot pixel (2015/5/16)
@@ -495,7 +507,7 @@ namespace MT3
 
             if (checkBoxDispAvg.Checked == true)
             {
-                Cv.RunningAvg(imgdata.img, imgAvg, 0.01);
+                Cv.RunningAvg(imgdata.img, imgAvg, 0.1);
                 //Cv.ShowImage("Video", imgAvg);
             }
         }
@@ -595,7 +607,7 @@ namespace MT3
         private void ShowButton_Click(object sender, EventArgs e)
         {
             Pid_Data_Send_KV1000_SpCam2((short)id, daz, dalt, 1);
-
+ 
             // daz = az - udpkv.az1_c; dalt = alt - udpkv.alt1_c;             //位置誤差 at detect()
             string s = string.Format("dAz,dAlt:[{0} daz:{1} dalt:{2}] az:{3} azc:{4}  alt:{5} altc:{6}\n", id, daz, dalt, az, udpkv.az1_c, alt, udpkv.alt1_c);
             richTextBox1.AppendText(s);
@@ -912,7 +924,7 @@ namespace MT3
                     if (checkBoxDispAvg.Checked == true)
                     {
                         // 移動平均画像の表示
-                        double scale = 4.0;
+                        double scale = 1.0;
                         Cv.ConvertScale(imgAvg, img_dmk, scale);
                         Cv.CvtColor(img_dmk, img_dmk3, ColorConversion.GrayToBgr);
                     }
@@ -1200,10 +1212,17 @@ namespace MT3
             string remoteHost = mmFsiCore_i5;
             int remotePort = mmFsiUdpPortMTmonitor;
             //送信するデータを読み込む
-            mtmon_data.id = 7; //MT3Wide
+            mtmon_data.id = (byte)appSettings.MtMon_ID; 
             mtmon_data.diskspace = (int)(diskspace / (1024 * 1024 * 1024));
+            if (id == id_mon)
+            {
+                mtmon_data.obs = (byte)STOP;
+            }
+            else
+            {
             mtmon_data.obs = (byte)this.States;
-
+            }
+            id_mon = id;
             //mtmon_data.obs = this.States ; 
             byte[] sendBytes = ToBytes(mtmon_data);
 
@@ -1261,9 +1280,6 @@ namespace MT3
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
         }
 
-        private void checkBoxDispAvg_CheckedChanged(object sender, EventArgs e)
-        {
 
         }
     }
-}

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>OpenCvSharp-AnyCPU</id>
+    <version>2.4.10.20150820</version>
+    <title>OpenCvSharp2</title>
+    <authors>shimat</authors>
+    <owners>shimat</owners>
+    <licenseUrl>http://opensource.org/licenses/BSD-3-Clause</licenseUrl>
+    <projectUrl>https://github.com/shimat/opencvsharp</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/shimat/opencvsharp/master/nuget/icon/lenna-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>OpenCV wrapper for .NET Framework</description>
+    <summary>OpenCV 2.x wrapper</summary>
+    <releaseNotes>- Added ChamferMatching</releaseNotes>
+    <copyright>Copyright 2008-2015</copyright>
+    <tags>Image Processing OpenCV Wrapper FFI</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Drawing" targetFramework=".NETFramework2.0, .NETFramework3.5" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework2.0, .NETFramework3.5" />
+      <frameworkAssembly assemblyName="PresentationCore" targetFramework=".NETFramework3.5" />
+      <frameworkAssembly assemblyName="System.Core" targetFramework=".NETFramework3.5" />
+      <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework3.5" />
+    </frameworkAssemblies>
+  </metadata>
+</package>
