@@ -11,6 +11,7 @@ using OpenCvSharp;
 using OpenCvSharp.Blob;
 
 using PylonC.NETSupportLibrary;
+using uEye;
 
 namespace MT3
 {
@@ -27,7 +28,8 @@ namespace MT3
     {
         mono,
         color,
-        mono12packed
+        mono12packed,
+        mono16
     }
     public enum Camera_Interface
     {
@@ -35,16 +37,24 @@ namespace MT3
         USB3,
         GIGE,
         IEEE1394,
-        NTSC
+        NTSC,
+        HDMI
     }
     public enum Platform
     {
         Fish1,
         Fish2,
+        Wide,
         MT1,
         MT2,
         MT3,
     }
+    public enum uEye_Shutter_Mode
+    {
+        Global,
+        Rolling
+    }
+
     #endregion
 
     public partial class Form1 : Form
@@ -114,6 +124,7 @@ namespace MT3
 
         // 観測開始からのフレーム番号
         int id = 0;
+        int id_mon = 0;
         DateTime LiveStartTime;
         //long timestamp; // [us]
         long frame_timestamp; //[us]
@@ -172,6 +183,8 @@ namespace MT3
         int mmUdpPortBroadCastSent = 24411;            // （送信）
         int mmFsiUdpPortMTmonitor  = 24415;
         string mmFsiCore_i5 = "192.168.1.211"; // for MTmon
+        string mmLocalIP = "";
+        string mmLocalHost = "";
         System.Net.Sockets.UdpClient udpc3 = null;
         DriveInfo cDrive = new DriveInfo("C");
         long diskspace;
