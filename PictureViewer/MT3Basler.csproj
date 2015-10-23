@@ -115,6 +115,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AviTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="BaslerSDK.cs">
       <SubType>Form</SubType>
     </Compile>

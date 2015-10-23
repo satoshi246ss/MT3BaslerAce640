@@ -470,8 +470,11 @@ namespace MT3
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             IplImage image = (IplImage)e.UserState;
-            Cv.Split(image, imgdata.img, null, null, null);
-
+             using (IplImage image2 = Cv.CreateImage(new CvSize(imgdata.img.Width, imgdata.img.Height), BitDepth.U8, 3))
+             {
+                 Cv.Resize(image, image2);
+                 Cv.Split(image2, imgdata.img, null, null, null);
+             }
             // 表示画像反転 実装場所　要検討
             if (appSettings.FlipOn)
             {
@@ -612,15 +615,16 @@ namespace MT3
             // daz = az - udpkv.az1_c; dalt = alt - udpkv.alt1_c;             //位置誤差 at detect()
             string s = string.Format("dAz,dAlt:[{0} daz:{1} dalt:{2}] az:{3} azc:{4}  alt:{5} altc:{6}\n", id, daz, dalt, az, udpkv.az1_c, alt, udpkv.alt1_c);
             richTextBox1.AppendText(s);
- 
-            //OpenIDScamera();
-            //AVT
-            /*
-            if (cam_maker == Camera_Maker.AVT)
-            {
-                avt_cam_start();
-            }
-            */
+
+            id = 0 ;   s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767));            richTextBox1.AppendText(s);
+            id = -1    ; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
+            id = -32000; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
+            id = 32766 ; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
+            id = 32767 ; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
+
+
+            AviTest_init();
+            AviTest_run();
         }
 
         private void CloseButton_Click(object sender, EventArgs e)

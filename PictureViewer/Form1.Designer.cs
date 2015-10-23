@@ -323,46 +323,46 @@
             this.toolStripStatusLabelPixelClock,
             this.toolStripStatusLabelExposure,
             this.toolStripStatusLabelGain});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 596);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 597);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(646, 23);
+            this.statusStrip1.Size = new System.Drawing.Size(646, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabelFramerate
             // 
             this.toolStripStatusLabelFramerate.Name = "toolStripStatusLabelFramerate";
-            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(28, 18);
+            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(27, 17);
             this.toolStripStatusLabelFramerate.Text = "Fps";
             // 
             // toolStripStatusLabelFailed
             // 
             this.toolStripStatusLabelFailed.Name = "toolStripStatusLabelFailed";
-            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(134, 18);
+            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(133, 17);
             this.toolStripStatusLabelFailed.Text = "toolStripStatusLabel2";
             // 
             // toolStripStatusLabelID
             // 
             this.toolStripStatusLabelID.Name = "toolStripStatusLabelID";
-            this.toolStripStatusLabelID.Size = new System.Drawing.Size(60, 18);
+            this.toolStripStatusLabelID.Size = new System.Drawing.Size(59, 17);
             this.toolStripStatusLabelID.Text = "FrameID";
             // 
             // toolStripStatusLabelPixelClock
             // 
             this.toolStripStatusLabelPixelClock.Name = "toolStripStatusLabelPixelClock";
-            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(23, 18);
+            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(22, 17);
             this.toolStripStatusLabelPixelClock.Text = "PC";
             // 
             // toolStripStatusLabelExposure
             // 
             this.toolStripStatusLabelExposure.Name = "toolStripStatusLabelExposure";
-            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(130, 18);
+            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(129, 17);
             this.toolStripStatusLabelExposure.Text = "Exposure: xx.xx[ms]";
             // 
             // toolStripStatusLabelGain
             // 
             this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
-            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(53, 18);
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(52, 17);
             this.toolStripStatusLabelGain.Text = "Gain:xx";
             // 
             // timerMTmonSend
@@ -420,25 +420,13 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.CheckBox checkBox_WideDR;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Button ShowButton;
-        private System.Windows.Forms.Button ObsEndButton;
-        private System.Windows.Forms.Button ButtonSaveEnd;
-        private System.Windows.Forms.Button CloseButton;
-        private System.Windows.Forms.Button ObsStart;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Timer timerSaveTimeOver;
         private System.Windows.Forms.Timer timerSaveMainTime;
-        private System.Windows.Forms.Button buttonMakeSettings;
         private System.Windows.Forms.Timer timerDisplay;
         private System.Windows.Forms.Timer timerObsOnOff;
-        private System.Windows.Forms.CheckBox checkBoxObsAuto;
         //private TIS.Imaging.ICImagingControl icImagingControl1;
-        private System.Windows.Forms.Label label_frame_rate;
-        private System.Windows.Forms.Label label_ID;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelFramerate;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelFailed;
@@ -447,13 +435,25 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelID;
         private System.Windows.Forms.Timer timerMTmonSend;
         private System.Windows.Forms.Timer timer1min;
-        private System.Windows.Forms.CheckBox checkBoxDispAvg;
         private System.Windows.Forms.Timer timerWaitShutdown;
         private System.Windows.Forms.Timer timerSave;
         private System.Windows.Forms.Timer updateDeviceListTimer;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGain;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Button ShowButton;
+        private System.Windows.Forms.Button CloseButton;
+        private System.Windows.Forms.Button ObsStart;
+        private System.Windows.Forms.Button ObsEndButton;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button ButtonSaveEnd;
+        private System.Windows.Forms.Button buttonMakeSettings;
+        private System.Windows.Forms.CheckBox checkBox_WideDR;
+        private System.Windows.Forms.CheckBox checkBoxObsAuto;
+        private System.Windows.Forms.CheckBox checkBoxDispAvg;
+        private System.Windows.Forms.Label label_frame_rate;
+        private System.Windows.Forms.Label label_ID;
         private System.Windows.Forms.Label label_X2Y2;
         private System.Windows.Forms.ListView deviceListView;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGain;
     }
 }
 

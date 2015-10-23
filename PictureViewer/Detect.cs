@@ -27,6 +27,8 @@ namespace MT3
             #region 位置検出2  //Blob
             try
             {
+                //Cv.Smooth(imgdata.img, img2, SmoothType.Median, 5, 0, 0, 0);
+                //Cv.Threshold(img2, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
                 Cv.Threshold(imgdata.img, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
                 blobs.Label(img2); //1.4ms
             }
