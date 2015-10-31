@@ -622,9 +622,20 @@ namespace MT3
             id = 32766 ; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
             id = 32767 ; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
 
+            if (!appSettings.TestMode)
+            {
+                AviTest_init();
+            }
+            if (!AviTestworker.IsBusy)
+            {
+                //バックグラウンド操作の実行を開始します。
+                AviTest_run();
+            }
+            else
+            {
+                AviTestworker.CancelAsync();
+            }
 
-            AviTest_init();
-            AviTest_run();
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -943,8 +954,8 @@ namespace MT3
                     Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.BayerGbToBgr);
                 }
 
-                double k1 = 1.3333 ; //4deg 
-                double k2 = 0.3333 ; //直径1deg
+                double k1 = 2.0 ; //4deg 
+                double k2 = 0.5 ; //直径1deg
                 double roa = appSettings.Roa;
 
                 CvPoint2D64f OCPoint = new CvPoint2D64f(appSettings.Xoa, appSettings.Yoa);
