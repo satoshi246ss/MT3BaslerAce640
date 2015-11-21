@@ -165,8 +165,8 @@ namespace MT3
                     try
                     {
                         theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode) - appSettings.Theta;
-                        udpkv.cxcy2azalt(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
-                        udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                        udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                        udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
                         vaz = udpkv.vaz1_kv + (az1 - az) * appSettings.Framerate;
                         valt = udpkv.valt1_kv + (alt1 - alt) * appSettings.Framerate;
 
