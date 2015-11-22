@@ -1064,13 +1064,13 @@ namespace MT3
         private void write_star_position_error(string name, double az, double alt, double daz, double dalt, double vmag, double count, double cx, double cy, double xoa, double yoa)
         {
             // appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString()+"  " + mmLocalHost +"(" + mmLocalIP+")";
-            string fn = "MT3" + appSettings.Text + " " + appSettings.ID.ToString() + "_star_position_error_" + DateTime.Today.ToString("yyyymm") + ".txt";
+            string fn = appSettings.ID.ToString() + "_star_position_error_" + DateTime.Today.ToString("yyyyMM") + ".txt";
             Encoding sjisEnc = Encoding.GetEncoding("Shift_JIS");
 
             using (StreamWriter w = new StreamWriter(fn, true, sjisEnc))
             {
                 //        az       alt      daz      dalt     vmag     count    cx       cy       xoa      yoa     name
-                w.Write("{0,7:F3} {1,7:F3} {2,7:F3} {3,7:F3} {4,5:F1} {5,7:F1} {6,7:F3} {7,7:F3} {7,7:F3} {8,7:F3} {9}", az, alt, daz, dalt, vmag, count, xoa, yoa, name); 
+                w.Write("{0,7:F3} {1,7:F3} {2,7:F3} {3,7:F3} {4,5:F1} {5,7:F1} {6,7:F3} {7,7:F3} {8,7:F3} {9,7:F3} {10}\r\n", az, alt, daz, dalt, vmag, count,cx, cy, xoa, yoa, name);
             }
         }
         #endregion
