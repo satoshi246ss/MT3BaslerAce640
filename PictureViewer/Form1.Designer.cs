@@ -39,6 +39,7 @@
             this.buttonSave = new System.Windows.Forms.Button();
             this.ButtonSaveEnd = new System.Windows.Forms.Button();
             this.buttonMakeSettings = new System.Windows.Forms.Button();
+            this.buttonMove = new System.Windows.Forms.Button();
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
             this.checkBoxDispAvg = new System.Windows.Forms.CheckBox();
@@ -64,11 +65,13 @@
             this.timerWaitShutdown = new System.Windows.Forms.Timer(this.components);
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
+            this.numericUpDownStarNum = new System.Windows.Forms.NumericUpDown();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarNum)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -113,6 +116,8 @@
             this.flowLayoutPanel1.Controls.Add(this.buttonSave);
             this.flowLayoutPanel1.Controls.Add(this.ButtonSaveEnd);
             this.flowLayoutPanel1.Controls.Add(this.buttonMakeSettings);
+            this.flowLayoutPanel1.Controls.Add(this.buttonMove);
+            this.flowLayoutPanel1.Controls.Add(this.numericUpDownStarNum);
             this.flowLayoutPanel1.Controls.Add(this.checkBox_WideDR);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxObsAuto);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxDispAvg);
@@ -125,13 +130,14 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(640, 47);
             this.flowLayoutPanel1.TabIndex = 2;
+            this.flowLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel1_Paint);
             // 
             // ShowButton
             // 
             this.ShowButton.AutoSize = true;
             this.ShowButton.Location = new System.Drawing.Point(3, 3);
             this.ShowButton.Name = "ShowButton";
-            this.ShowButton.Size = new System.Drawing.Size(58, 23);
+            this.ShowButton.Size = new System.Drawing.Size(42, 23);
             this.ShowButton.TabIndex = 0;
             this.ShowButton.Text = "Show";
             this.ShowButton.UseVisualStyleBackColor = true;
@@ -140,7 +146,7 @@
             // CloseButton
             // 
             this.CloseButton.AutoSize = true;
-            this.CloseButton.Location = new System.Drawing.Point(67, 3);
+            this.CloseButton.Location = new System.Drawing.Point(51, 3);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(60, 23);
             this.CloseButton.TabIndex = 3;
@@ -150,7 +156,7 @@
             // 
             // ObsStart
             // 
-            this.ObsStart.Location = new System.Drawing.Point(133, 3);
+            this.ObsStart.Location = new System.Drawing.Point(117, 3);
             this.ObsStart.Name = "ObsStart";
             this.ObsStart.Size = new System.Drawing.Size(75, 23);
             this.ObsStart.TabIndex = 4;
@@ -161,7 +167,7 @@
             // ObsEndButton
             // 
             this.ObsEndButton.AutoSize = true;
-            this.ObsEndButton.Location = new System.Drawing.Point(214, 3);
+            this.ObsEndButton.Location = new System.Drawing.Point(198, 3);
             this.ObsEndButton.Name = "ObsEndButton";
             this.ObsEndButton.Size = new System.Drawing.Size(75, 23);
             this.ObsEndButton.TabIndex = 1;
@@ -172,7 +178,7 @@
             // buttonSave
             // 
             this.buttonSave.AutoSize = true;
-            this.buttonSave.Location = new System.Drawing.Point(295, 3);
+            this.buttonSave.Location = new System.Drawing.Point(279, 3);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 5;
@@ -183,7 +189,7 @@
             // ButtonSaveEnd
             // 
             this.ButtonSaveEnd.AutoSize = true;
-            this.ButtonSaveEnd.Location = new System.Drawing.Point(376, 3);
+            this.ButtonSaveEnd.Location = new System.Drawing.Point(360, 3);
             this.ButtonSaveEnd.Name = "ButtonSaveEnd";
             this.ButtonSaveEnd.Size = new System.Drawing.Size(75, 23);
             this.ButtonSaveEnd.TabIndex = 2;
@@ -193,20 +199,31 @@
             // 
             // buttonMakeSettings
             // 
-            this.buttonMakeSettings.Location = new System.Drawing.Point(457, 3);
+            this.buttonMakeSettings.Location = new System.Drawing.Point(441, 3);
             this.buttonMakeSettings.Name = "buttonMakeSettings";
-            this.buttonMakeSettings.Size = new System.Drawing.Size(70, 23);
+            this.buttonMakeSettings.Size = new System.Drawing.Size(57, 23);
             this.buttonMakeSettings.TabIndex = 6;
             this.buttonMakeSettings.Text = "MakeSet";
             this.buttonMakeSettings.UseVisualStyleBackColor = true;
             this.buttonMakeSettings.Click += new System.EventHandler(this.buttonMakeDark_Click);
+            // 
+            // buttonMove
+            // 
+            this.buttonMove.AutoSize = true;
+            this.buttonMove.Location = new System.Drawing.Point(504, 3);
+            this.buttonMove.Name = "buttonMove";
+            this.buttonMove.Size = new System.Drawing.Size(42, 23);
+            this.buttonMove.TabIndex = 14;
+            this.buttonMove.Text = "Move";
+            this.buttonMove.UseVisualStyleBackColor = true;
+            this.buttonMove.Click += new System.EventHandler(this.buttonMove_Click);
             // 
             // checkBox_WideDR
             // 
             this.checkBox_WideDR.AutoSize = true;
             this.checkBox_WideDR.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBox_WideDR.CheckAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.checkBox_WideDR.Location = new System.Drawing.Point(533, 3);
+            this.checkBox_WideDR.Location = new System.Drawing.Point(3, 32);
             this.checkBox_WideDR.Name = "checkBox_WideDR";
             this.checkBox_WideDR.Size = new System.Drawing.Size(95, 16);
             this.checkBox_WideDR.TabIndex = 1;
@@ -219,7 +236,7 @@
             this.checkBoxObsAuto.AutoSize = true;
             this.checkBoxObsAuto.Checked = true;
             this.checkBoxObsAuto.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxObsAuto.Location = new System.Drawing.Point(3, 32);
+            this.checkBoxObsAuto.Location = new System.Drawing.Point(104, 32);
             this.checkBoxObsAuto.Name = "checkBoxObsAuto";
             this.checkBoxObsAuto.Size = new System.Drawing.Size(68, 16);
             this.checkBoxObsAuto.TabIndex = 7;
@@ -230,7 +247,7 @@
             // checkBoxDispAvg
             // 
             this.checkBoxDispAvg.AutoSize = true;
-            this.checkBoxDispAvg.Location = new System.Drawing.Point(77, 32);
+            this.checkBoxDispAvg.Location = new System.Drawing.Point(178, 32);
             this.checkBoxDispAvg.Name = "checkBoxDispAvg";
             this.checkBoxDispAvg.Size = new System.Drawing.Size(67, 16);
             this.checkBoxDispAvg.TabIndex = 11;
@@ -240,7 +257,7 @@
             // label_frame_rate
             // 
             this.label_frame_rate.AutoSize = true;
-            this.label_frame_rate.Location = new System.Drawing.Point(150, 29);
+            this.label_frame_rate.Location = new System.Drawing.Point(251, 29);
             this.label_frame_rate.Name = "label_frame_rate";
             this.label_frame_rate.Size = new System.Drawing.Size(35, 12);
             this.label_frame_rate.TabIndex = 9;
@@ -249,7 +266,7 @@
             // label_ID
             // 
             this.label_ID.AutoSize = true;
-            this.label_ID.Location = new System.Drawing.Point(191, 29);
+            this.label_ID.Location = new System.Drawing.Point(292, 29);
             this.label_ID.Name = "label_ID";
             this.label_ID.Size = new System.Drawing.Size(44, 12);
             this.label_ID.TabIndex = 10;
@@ -258,7 +275,7 @@
             // label_X2Y2
             // 
             this.label_X2Y2.AutoSize = true;
-            this.label_X2Y2.Location = new System.Drawing.Point(241, 29);
+            this.label_X2Y2.Location = new System.Drawing.Point(342, 29);
             this.label_X2Y2.Name = "label_X2Y2";
             this.label_X2Y2.Size = new System.Drawing.Size(85, 12);
             this.label_X2Y2.TabIndex = 13;
@@ -268,7 +285,7 @@
             // 
             this.deviceListView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.deviceListView.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.deviceListView.Location = new System.Drawing.Point(332, 32);
+            this.deviceListView.Location = new System.Drawing.Point(433, 32);
             this.deviceListView.Name = "deviceListView";
             this.deviceListView.Size = new System.Drawing.Size(121, 16);
             this.deviceListView.TabIndex = 12;
@@ -391,6 +408,23 @@
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
             // 
+            // numericUpDownStarNum
+            // 
+            this.numericUpDownStarNum.Location = new System.Drawing.Point(552, 3);
+            this.numericUpDownStarNum.Maximum = new decimal(new int[] {
+            92,
+            0,
+            0,
+            0});
+            this.numericUpDownStarNum.Name = "numericUpDownStarNum";
+            this.numericUpDownStarNum.Size = new System.Drawing.Size(33, 19);
+            this.numericUpDownStarNum.TabIndex = 15;
+            this.numericUpDownStarNum.Value = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -412,6 +446,7 @@
             this.flowLayoutPanel1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarNum)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -454,6 +489,8 @@
         private System.Windows.Forms.Label label_ID;
         private System.Windows.Forms.Label label_X2Y2;
         private System.Windows.Forms.ListView deviceListView;
+        private System.Windows.Forms.Button buttonMove;
+        private System.Windows.Forms.NumericUpDown numericUpDownStarNum;
     }
 }
 

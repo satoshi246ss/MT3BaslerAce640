@@ -12,6 +12,7 @@ using OpenCvSharp.Blob;
 using VideoInputSharp;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -1296,6 +1297,44 @@ namespace MT3
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
         }
 
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void buttonMove_Click(object sender, EventArgs e)
+        {
+            string s;
+            //double az = 45;
+            //double alt = 30;
+
+            Star.init();
+            Star.ID = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            Star.cal_azalt();
+            s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", Star.Count, Star.ID, Star.Name, Star.Az, Star.Alt);
+            richTextBox1.AppendText(s);
+            if (Star.Alt <= 0) return;
+
+            // KV1000通信
+            Common.Send_cmd_KV1000_init();
+            s = Common.Send_cmd_KV1000(Common.MT2SetPos(Star.Az, Star.Alt));
+            richTextBox1.AppendText(s);
+
+            s = string.Format("ST 01001\r");
+            s = Common.Send_cmd_KV1000(s);
+            richTextBox1.AppendText(s);
+
+            Common.Send_cmd_KV1000_close();
+
+            sleepAsync(3); // 3sec sleep
+            //データ保存
+            write_star_position_error(Star.Name, Star.Az, Star.Alt, daz, dalt, Star.Mag, max_val, gx, gy, xoa, yoa);            
+        }
+
+        private async void sleepAsync(int sec)
+        {
+            await Task.Delay(sec * 1000);
+        }
 
         }
     }
