@@ -40,6 +40,7 @@
             this.ButtonSaveEnd = new System.Windows.Forms.Button();
             this.buttonMakeSettings = new System.Windows.Forms.Button();
             this.buttonMove = new System.Windows.Forms.Button();
+            this.numericUpDownStarNum = new System.Windows.Forms.NumericUpDown();
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
             this.checkBoxDispAvg = new System.Windows.Forms.CheckBox();
@@ -65,13 +66,12 @@
             this.timerWaitShutdown = new System.Windows.Forms.Timer(this.components);
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
-            this.numericUpDownStarNum = new System.Windows.Forms.NumericUpDown();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarNum)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -217,6 +217,23 @@
             this.buttonMove.Text = "Move";
             this.buttonMove.UseVisualStyleBackColor = true;
             this.buttonMove.Click += new System.EventHandler(this.buttonMove_Click);
+            // 
+            // numericUpDownStarNum
+            // 
+            this.numericUpDownStarNum.Location = new System.Drawing.Point(552, 3);
+            this.numericUpDownStarNum.Maximum = new decimal(new int[] {
+            92,
+            0,
+            0,
+            0});
+            this.numericUpDownStarNum.Name = "numericUpDownStarNum";
+            this.numericUpDownStarNum.Size = new System.Drawing.Size(33, 19);
+            this.numericUpDownStarNum.TabIndex = 15;
+            this.numericUpDownStarNum.Value = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
             // 
             // checkBox_WideDR
             // 
@@ -408,23 +425,6 @@
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
             // 
-            // numericUpDownStarNum
-            // 
-            this.numericUpDownStarNum.Location = new System.Drawing.Point(552, 3);
-            this.numericUpDownStarNum.Maximum = new decimal(new int[] {
-            92,
-            0,
-            0,
-            0});
-            this.numericUpDownStarNum.Name = "numericUpDownStarNum";
-            this.numericUpDownStarNum.Size = new System.Drawing.Size(33, 19);
-            this.numericUpDownStarNum.TabIndex = 15;
-            this.numericUpDownStarNum.Value = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -444,9 +444,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarNum)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarNum)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

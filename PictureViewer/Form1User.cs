@@ -56,6 +56,16 @@ namespace MT3
         Rolling
     }
 
+    public class StarAzAlt
+    {
+        // propaty
+        public int ID { get; set; }
+        public double Az { get; set; }
+        public double Alt { get; set; }
+        public double Vmag { get; set; }
+        public string Name { get; set; }
+    } 
+
     #endregion
 
     public partial class Form1 : Form
@@ -1069,8 +1079,8 @@ namespace MT3
 
             using (StreamWriter w = new StreamWriter(fn, true, sjisEnc))
             {
-                //        az       alt      daz      dalt     vmag     count    cx       cy       xoa      yoa     name
-                w.Write("{0,7:F3} {1,7:F3} {2,7:F3} {3,7:F3} {4,5:F1} {5,7:F1} {6,7:F3} {7,7:F3} {8,7:F3} {9,7:F3} {10}\r\n", az, alt, daz, dalt, vmag, count,cx, cy, xoa, yoa, name);
+                //             az       alt      daz      dalt     vmag     count    cx       cy       xoa      yoa     name
+                w.Write("{11} {0,7:F3} {1,7:F3} {2,7:F3} {3,7:F3} {4,5:F1} {5,7:F1} {6,7:F3} {7,7:F3} {8,7:F3} {9,7:F3} {10}\r\n", az, alt, daz, dalt, vmag, count,cx, cy, xoa, yoa, name, DateTime.Now.ToString());
             }
         }
         #endregion

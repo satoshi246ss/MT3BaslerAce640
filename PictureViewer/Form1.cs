@@ -1304,31 +1304,74 @@ namespace MT3
 
         private void buttonMove_Click(object sender, EventArgs e)
         {
-            string s;
-            //double az = 45;
-            //double alt = 30;
+            string s, name="";
+            int star_id_min = 6;
+            int star_id_max = 32;
+            double az0=90, alt0=90;
+            double az = 90, alt = 90, vmag = 0;
 
             Star.init();
             Star.ID = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
-            Star.cal_azalt();
-            s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", Star.Count, Star.ID, Star.Name, Star.Az, Star.Alt);
-            richTextBox1.AppendText(s);
-            if (Star.Alt <= 0) return;
+            //Star.cal_azalt();
+            //s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", Star.Count, Star.ID, Star.Name, Star.Az, Star.Alt);
+            //richTextBox1.AppendText(s);
+            //if (Star.Alt <= 0) return;
 
-            // KV1000通信
-            Common.Send_cmd_KV1000_init();
-            s = Common.Send_cmd_KV1000(Common.MT2SetPos(Star.Az, Star.Alt));
-            richTextBox1.AppendText(s);
+            // for star mes
+            List<StarAzAlt> star_azalt = new List<StarAzAlt>();
+            for (int i = star_id_min; i < star_id_max; i++)
+            {
+                Star.ID = i;
+                Star.cal_azalt();
+                if (Star.Alt > 0)
+                {
+                    StarAzAlt sta = new StarAzAlt();
+                    sta.Az = Star.Az;
+                    sta.Alt = Star.Alt;
+                    sta.Vmag = Star.Mag;
+                    sta.Name = Star.Name;
+                    star_azalt.Add(sta);
+                    s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", i, Star.ID, Star.Name, Star.Az, Star.Alt);
+                    richTextBox1.Focus(); richTextBox1.AppendText(s);
+                }
+            }
 
-            s = string.Format("ST 01001\r");
-            s = Common.Send_cmd_KV1000(s);
-            richTextBox1.AppendText(s);
+            while (star_azalt.Count > 0)
+            {
+                int ii = 0;
+                double len_max = 1000000;
+                for (int i = 0; i < star_azalt.Count; i++)
+                {
+                    double len = Common.Cal_Distance(az0, alt0, star_azalt[i].Az, star_azalt[i].Alt);
+                    if (len < len_max)
+                    {
+                        ii = i;
+                        len_max = len;
+                        az = star_azalt[i].Az;
+                        alt = star_azalt[i].Alt;
+                        vmag = star_azalt[i].Vmag;
+                        name = star_azalt[i].Name;
+                    }
+                }
+                star_azalt.RemoveAt(ii);
 
-            Common.Send_cmd_KV1000_close();
+                // KV1000通信
+                Common.Send_cmd_KV1000_init();
+                s = Common.Send_cmd_KV1000(Common.MT2SetPos(az, alt));
+                richTextBox1.Focus();richTextBox1.AppendText(s);
 
-            sleepAsync(3); // 3sec sleep
-            //データ保存
-            write_star_position_error(Star.Name, Star.Az, Star.Alt, daz, dalt, Star.Mag, max_val, gx, gy, xoa, yoa);            
+                s = string.Format("ST 01001\r");
+                s = Common.Send_cmd_KV1000(s);
+                richTextBox1.Focus(); richTextBox1.AppendText(s);
+                Common.Send_cmd_KV1000_close();
+
+                Thread.Sleep(3000);
+                //データ保存
+                if (max_val > 0)
+                {
+                    write_star_position_error(name, az, alt, daz, dalt, vmag, max_val, gx, gy, xoa, yoa);
+                }
+            }
         }
 
         private async void sleepAsync(int sec)
