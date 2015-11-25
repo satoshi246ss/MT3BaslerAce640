@@ -173,6 +173,7 @@ namespace MT3
                     }
 
                     try{
+                        detect();
                         imgdata_push_FIFO();
                     }
                     catch (KeyNotFoundException)

@@ -1306,12 +1306,12 @@ namespace MT3
         {
             string s, name="";
             int star_id_min = 6;
-            int star_id_max = 32;
+            int star_id_max = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
             double az0=90, alt0=90;
             double az = 90, alt = 90, vmag = 0;
 
             Star.init();
-            Star.ID = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            //Star.ID = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
             //Star.cal_azalt();
             //s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", Star.Count, Star.ID, Star.Name, Star.Az, Star.Alt);
             //richTextBox1.AppendText(s);
