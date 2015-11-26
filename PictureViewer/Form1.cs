@@ -1357,7 +1357,7 @@ namespace MT3
 
                 // KV1000通信
                 Common.Send_cmd_KV1000_init();
-                s = Common.Send_cmd_KV1000(Common.MT2SetPos(az, alt));
+                s = Common.Send_cmd_KV1000(Common.MT2SetPos(az+(double)numericUpDown_daz.Value, alt+(double)numericUpDown_dalt.Value));
                 richTextBox1.Focus();richTextBox1.AppendText(s);
 
                 s = string.Format("ST 01001\r");
