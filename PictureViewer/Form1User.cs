@@ -7,11 +7,12 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Threading.Tasks;
 using OpenCvSharp;
 using OpenCvSharp.Blob;
-
 using PylonC.NETSupportLibrary;
 using uEye;
+using MtLibrary;
 
 namespace MT3
 {
@@ -1071,6 +1072,96 @@ namespace MT3
 
             //  this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s1 });
         }
+
+        private async void star_auto_check()
+        {
+
+            string s, name = "";
+            int star_id_min = 6;
+            int star_id_max = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            double az0 = 90, alt0 = 90;
+            double az_t = 90, alt_t = 90, vmag = 0;
+
+            Star.init();
+            //Star.ID = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            //Star.cal_azalt();
+            //s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", Star.Count, Star.ID, Star.Name, Star.Az, Star.Alt);
+            //richTextBox1.AppendText(s);
+            //if (Star.Alt <= 0) return;
+
+            // for star mes
+            List<StarAzAlt> star_azalt = new List<StarAzAlt>();
+            for (int i = star_id_min; i < star_id_max; i++)
+            {
+                Star.ID = i;
+                Star.cal_azalt();
+                if (Star.Alt > 0)
+                {
+                    StarAzAlt sta = new StarAzAlt();
+                    sta.Az = Star.Az;
+                    sta.Alt = Star.Alt;
+                    sta.Vmag = Star.Mag;
+                    sta.Name = Star.Name;
+                    star_azalt.Add(sta);
+                    s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", i, Star.ID, Star.Name, Star.Az, Star.Alt);
+                    richTextBox1.Focus(); richTextBox1.AppendText(s);
+                }
+            }
+
+            while (star_azalt.Count > 0)
+            {
+                // 次のターゲットを選択（距離）
+                int ii = 0;
+                double len_max = 1000000;
+                for (int i = 0; i < star_azalt.Count; i++)
+                {
+                    double len = Common.Cal_Distance(az0, alt0, star_azalt[i].Az, star_azalt[i].Alt);
+                    if (len < len_max)
+                    {
+                        ii = i;
+                        len_max = len;
+                        az_t  = star_azalt[i].Az;
+                        alt_t = star_azalt[i].Alt;
+                        vmag = star_azalt[i].Vmag;
+                        name = star_azalt[i].Name;
+                    }
+                }
+                star_azalt.RemoveAt(ii);
+
+                // KV1000通信  MT2 move
+                s = send_cmd(az_t + (double)numericUpDown_daz.Value, alt_t + (double)numericUpDown_dalt.Value);
+                richTextBox1.Focus(); richTextBox1.AppendText(s);
+                await Task.Delay(3000);
+                s = "3s wait\n"; richTextBox1.Focus(); richTextBox1.AppendText(s);
+               
+                //データ保存
+                if (max_val > 0)
+                {
+                    write_star_position_error(name, az_t, alt_t, daz + (double)numericUpDown_daz.Value, dalt + (double)numericUpDown_dalt.Value, vmag, max_val, gx, gy, xoa, yoa);
+                }
+            }
+        }
+
+        private async void sleepAsync(int sec)
+        {
+            await Task.Delay(sec * 1000);
+        }
+
+        // KV1000通信
+        private string send_cmd(double az_t, double alt_t)
+        {
+            string s, ss;
+            Common.Send_cmd_KV1000_init();
+            ss = Common.Send_cmd_KV1000(Common.MT2SetPos(az_t , alt_t ));
+            s = string.Format("WRS DM00964 4 00000 00000 00000 00000\r"); // vaz,valt = 0
+            ss += Common.Send_cmd_KV1000(s);
+            s = string.Format("ST 01001\r");
+            ss += Common.Send_cmd_KV1000(s);
+            Common.Send_cmd_KV1000_close();
+            return ss;
+        }
+
+        //誤差測定ルーチン
         private void write_star_position_error(string name, double az, double alt, double daz, double dalt, double vmag, double count, double cx, double cy, double xoa, double yoa)
         {
             // appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString()+"  " + mmLocalHost +"(" + mmLocalIP+")";
@@ -1079,8 +1170,9 @@ namespace MT3
 
             using (StreamWriter w = new StreamWriter(fn, true, sjisEnc))
             {
+                string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 //             az       alt      daz      dalt     vmag     count    cx       cy       xoa      yoa     name
-                w.Write("{11} {0,7:F3} {1,7:F3} {2,7:F3} {3,7:F3} {4,5:F1} {5,7:F1} {6,7:F3} {7,7:F3} {8,7:F3} {9,7:F3} {10}\r\n", az, alt, daz, dalt, vmag, count,cx, cy, xoa, yoa, name, DateTime.Now.ToString());
+                w.Write("{11} {0,7:F3} {1,7:F3} {2,7:F3} {3,7:F3} {4,5:F1} {5,7:F1} {6,7:F3} {7,7:F3} {8,7:F3} {9,7:F3} {10}\r\n", az, alt, daz, dalt, vmag, count,cx, cy, xoa, yoa, name, dt);
             }
         }
         #endregion
