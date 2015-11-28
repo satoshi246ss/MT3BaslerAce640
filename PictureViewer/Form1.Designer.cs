@@ -40,7 +40,9 @@
             this.ButtonSaveEnd = new System.Windows.Forms.Button();
             this.buttonMakeSettings = new System.Windows.Forms.Button();
             this.buttonMove = new System.Windows.Forms.Button();
-            this.numericUpDownStarNum = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownStarMin = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_daz = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_dalt = new System.Windows.Forms.NumericUpDown();
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
             this.checkBoxDispAvg = new System.Windows.Forms.CheckBox();
@@ -66,16 +68,16 @@
             this.timerWaitShutdown = new System.Windows.Forms.Timer(this.components);
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
-            this.numericUpDown_daz = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown_dalt = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownStarCount = new System.Windows.Forms.NumericUpDown();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarNum)).BeginInit();
-            this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_daz)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_dalt)).BeginInit();
+            this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -121,7 +123,8 @@
             this.flowLayoutPanel1.Controls.Add(this.ButtonSaveEnd);
             this.flowLayoutPanel1.Controls.Add(this.buttonMakeSettings);
             this.flowLayoutPanel1.Controls.Add(this.buttonMove);
-            this.flowLayoutPanel1.Controls.Add(this.numericUpDownStarNum);
+            this.flowLayoutPanel1.Controls.Add(this.numericUpDownStarMin);
+            this.flowLayoutPanel1.Controls.Add(this.numericUpDownStarCount);
             this.flowLayoutPanel1.Controls.Add(this.numericUpDown_daz);
             this.flowLayoutPanel1.Controls.Add(this.numericUpDown_dalt);
             this.flowLayoutPanel1.Controls.Add(this.checkBox_WideDR);
@@ -154,7 +157,7 @@
             this.CloseButton.AutoSize = true;
             this.CloseButton.Location = new System.Drawing.Point(51, 3);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(47, 23);
+            this.CloseButton.Size = new System.Drawing.Size(44, 23);
             this.CloseButton.TabIndex = 3;
             this.CloseButton.Text = "Close";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -162,20 +165,20 @@
             // 
             // ObsStart
             // 
-            this.ObsStart.Location = new System.Drawing.Point(104, 3);
+            this.ObsStart.Location = new System.Drawing.Point(101, 3);
             this.ObsStart.Name = "ObsStart";
-            this.ObsStart.Size = new System.Drawing.Size(68, 23);
+            this.ObsStart.Size = new System.Drawing.Size(58, 23);
             this.ObsStart.TabIndex = 4;
-            this.ObsStart.Text = "Obs Start";
+            this.ObsStart.Text = "ObsStart";
             this.ObsStart.UseVisualStyleBackColor = true;
             this.ObsStart.Click += new System.EventHandler(this.ObsStart_Click);
             // 
             // ObsEndButton
             // 
             this.ObsEndButton.AutoSize = true;
-            this.ObsEndButton.Location = new System.Drawing.Point(178, 3);
+            this.ObsEndButton.Location = new System.Drawing.Point(165, 3);
             this.ObsEndButton.Name = "ObsEndButton";
-            this.ObsEndButton.Size = new System.Drawing.Size(67, 23);
+            this.ObsEndButton.Size = new System.Drawing.Size(58, 23);
             this.ObsEndButton.TabIndex = 1;
             this.ObsEndButton.Text = "Obs End";
             this.ObsEndButton.UseVisualStyleBackColor = true;
@@ -184,28 +187,30 @@
             // buttonSave
             // 
             this.buttonSave.AutoSize = true;
-            this.buttonSave.Location = new System.Drawing.Point(251, 3);
+            this.buttonSave.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.buttonSave.Location = new System.Drawing.Point(229, 3);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(69, 23);
+            this.buttonSave.Size = new System.Drawing.Size(62, 23);
             this.buttonSave.TabIndex = 5;
-            this.buttonSave.Text = "Save Start";
+            this.buttonSave.Text = "SaveStart";
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // ButtonSaveEnd
             // 
             this.ButtonSaveEnd.AutoSize = true;
-            this.ButtonSaveEnd.Location = new System.Drawing.Point(326, 3);
+            this.ButtonSaveEnd.Font = new System.Drawing.Font("MS UI Gothic", 8F);
+            this.ButtonSaveEnd.Location = new System.Drawing.Point(297, 3);
             this.ButtonSaveEnd.Name = "ButtonSaveEnd";
-            this.ButtonSaveEnd.Size = new System.Drawing.Size(63, 23);
+            this.ButtonSaveEnd.Size = new System.Drawing.Size(55, 23);
             this.ButtonSaveEnd.TabIndex = 2;
-            this.ButtonSaveEnd.Text = "Save End";
+            this.ButtonSaveEnd.Text = "SaveEnd";
             this.ButtonSaveEnd.UseVisualStyleBackColor = true;
             this.ButtonSaveEnd.Click += new System.EventHandler(this.ButtonSaveEnd_Click);
             // 
             // buttonMakeSettings
             // 
-            this.buttonMakeSettings.Location = new System.Drawing.Point(395, 3);
+            this.buttonMakeSettings.Location = new System.Drawing.Point(358, 3);
             this.buttonMakeSettings.Name = "buttonMakeSettings";
             this.buttonMakeSettings.Size = new System.Drawing.Size(57, 23);
             this.buttonMakeSettings.TabIndex = 6;
@@ -216,7 +221,7 @@
             // buttonMove
             // 
             this.buttonMove.AutoSize = true;
-            this.buttonMove.Location = new System.Drawing.Point(458, 3);
+            this.buttonMove.Location = new System.Drawing.Point(421, 3);
             this.buttonMove.Name = "buttonMove";
             this.buttonMove.Size = new System.Drawing.Size(42, 23);
             this.buttonMove.TabIndex = 14;
@@ -224,22 +229,60 @@
             this.buttonMove.UseVisualStyleBackColor = true;
             this.buttonMove.Click += new System.EventHandler(this.buttonMove_Click);
             // 
-            // numericUpDownStarNum
+            // numericUpDownStarMin
             // 
-            this.numericUpDownStarNum.Location = new System.Drawing.Point(506, 3);
-            this.numericUpDownStarNum.Maximum = new decimal(new int[] {
-            92,
+            this.numericUpDownStarMin.Location = new System.Drawing.Point(469, 3);
+            this.numericUpDownStarMin.Maximum = new decimal(new int[] {
+            98,
             0,
             0,
             0});
-            this.numericUpDownStarNum.Name = "numericUpDownStarNum";
-            this.numericUpDownStarNum.Size = new System.Drawing.Size(33, 19);
-            this.numericUpDownStarNum.TabIndex = 15;
-            this.numericUpDownStarNum.Value = new decimal(new int[] {
+            this.numericUpDownStarMin.Name = "numericUpDownStarMin";
+            this.numericUpDownStarMin.Size = new System.Drawing.Size(33, 19);
+            this.numericUpDownStarMin.TabIndex = 15;
+            this.numericUpDownStarMin.Value = new decimal(new int[] {
             6,
             0,
             0,
             0});
+            // 
+            // numericUpDown_daz
+            // 
+            this.numericUpDown_daz.Font = new System.Drawing.Font("MS UI Gothic", 8F);
+            this.numericUpDown_daz.Location = new System.Drawing.Point(547, 3);
+            this.numericUpDown_daz.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.numericUpDown_daz.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDown_daz.Name = "numericUpDown_daz";
+            this.numericUpDown_daz.Size = new System.Drawing.Size(36, 18);
+            this.numericUpDown_daz.TabIndex = 16;
+            this.numericUpDown_daz.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // numericUpDown_dalt
+            // 
+            this.numericUpDown_dalt.Font = new System.Drawing.Font("MS UI Gothic", 8F);
+            this.numericUpDown_dalt.Location = new System.Drawing.Point(589, 3);
+            this.numericUpDown_dalt.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.numericUpDown_dalt.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDown_dalt.Name = "numericUpDown_dalt";
+            this.numericUpDown_dalt.Size = new System.Drawing.Size(36, 18);
+            this.numericUpDown_dalt.TabIndex = 17;
+            this.numericUpDown_dalt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // checkBox_WideDR
             // 
@@ -431,39 +474,27 @@
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
             // 
-            // numericUpDown_daz
+            // numericUpDownStarCount
             // 
-            this.numericUpDown_daz.Location = new System.Drawing.Point(545, 3);
-            this.numericUpDown_daz.Maximum = new decimal(new int[] {
-            10,
+            this.numericUpDownStarCount.Location = new System.Drawing.Point(508, 3);
+            this.numericUpDownStarCount.Maximum = new decimal(new int[] {
+            98,
             0,
             0,
             0});
-            this.numericUpDown_daz.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown_daz.Name = "numericUpDown_daz";
-            this.numericUpDown_daz.Size = new System.Drawing.Size(33, 19);
-            this.numericUpDown_daz.TabIndex = 16;
-            // 
-            // numericUpDown_dalt
-            // 
-            this.numericUpDown_dalt.Location = new System.Drawing.Point(584, 3);
-            this.numericUpDown_dalt.Maximum = new decimal(new int[] {
-            10,
+            this.numericUpDownStarCount.Minimum = new decimal(new int[] {
+            1,
             0,
             0,
             0});
-            this.numericUpDown_dalt.Minimum = new decimal(new int[] {
-            10,
+            this.numericUpDownStarCount.Name = "numericUpDownStarCount";
+            this.numericUpDownStarCount.Size = new System.Drawing.Size(33, 19);
+            this.numericUpDownStarCount.TabIndex = 18;
+            this.numericUpDownStarCount.Value = new decimal(new int[] {
+            1,
             0,
             0,
-            -2147483648});
-            this.numericUpDown_dalt.Name = "numericUpDown_dalt";
-            this.numericUpDown_dalt.Size = new System.Drawing.Size(33, 19);
-            this.numericUpDown_dalt.TabIndex = 17;
+            0});
             // 
             // Form1
             // 
@@ -484,11 +515,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarNum)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_daz)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_dalt)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -532,9 +564,10 @@
         private System.Windows.Forms.Label label_X2Y2;
         private System.Windows.Forms.ListView deviceListView;
         private System.Windows.Forms.Button buttonMove;
-        private System.Windows.Forms.NumericUpDown numericUpDownStarNum;
+        private System.Windows.Forms.NumericUpDown numericUpDownStarMin;
         private System.Windows.Forms.NumericUpDown numericUpDown_daz;
         private System.Windows.Forms.NumericUpDown numericUpDown_dalt;
+        private System.Windows.Forms.NumericUpDown numericUpDownStarCount;
     }
 }
 

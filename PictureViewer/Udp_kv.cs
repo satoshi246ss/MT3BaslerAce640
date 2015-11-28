@@ -184,7 +184,7 @@ namespace MT3
             data_request = (UInt16)((kd.x3 << 8) + kd.x2);   //KV1000 DM499
             binStr_status = Convert.ToString(kv_status, 2);
             binStr_request = Convert.ToString(data_request, 2);
-            //udp_time_code = EndianChange(kd.UdpTimeCode);
+            udp_time_code = EndianChange(kd.UdpTimeCode);
             MT3Pos2AzAlt();
 
             if ((int)(kv_status & (1 << 10)) != 0) vaz2_kv = -x2v / 1000.0;
@@ -235,7 +235,7 @@ namespace MT3
             data_request = (UInt16)((kd.x3 << 8) + kd.x2);   //KV1000 DM499
             binStr_status = Convert.ToString(kv_status, 2);
             binStr_request = Convert.ToString(data_request, 2);
-            //udp_time_code = EndianChange(kd.UdpTimeCode);
+            udp_time_code = EndianChange(kd.UdpTimeCode);
             MT2Pos2AzAlt();
 
             if ((int)(data_request & (1 << 12)) != 0) vaz1_kv = -x1v / 1000.0;

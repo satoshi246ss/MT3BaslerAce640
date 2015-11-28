@@ -1042,11 +1042,11 @@ namespace MT3
             if (appSettings.CamPlatform == Platform.MT2)
             {
                 //string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
-                s = string.Format("KV:[x1:{0:D6} y1:{1:D6} Az1:{2,6:F1} Alt1:{3,6:F1}]\n", udpkv.xpos, udpkv.ypos, udpkv.az1_c, udpkv.alt1_c);
+                s = string.Format("KV:[x1:{0:D6} y1:{1:D6} Az1:{2,6:F1} Alt1:{3,6:F1}]TC:{4:D5}\n", udpkv.xpos, udpkv.ypos, udpkv.az1_c, udpkv.alt1_c, udpkv.udp_time_code);
             }
             if (appSettings.CamPlatform == Platform.MT3)
             {
-                s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c);
+                s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]TC:{4:D5}\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c, udpkv.udp_time_code);
             }
             label_X2Y2.Text = s;
 

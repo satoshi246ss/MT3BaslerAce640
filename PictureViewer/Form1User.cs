@@ -1077,8 +1077,9 @@ namespace MT3
         {
 
             string s, name = "";
-            int star_id_min = 6;
-            int star_id_max = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            int star_id_min = (int)numericUpDownStarMin.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            int star_id_max = star_id_min + (int)numericUpDownStarCount.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            if (star_id_max > 98) star_id_max = 98; 
             double az0 = 90, alt0 = 90;
             double az_t = 90, alt_t = 90, vmag = 0;
 
@@ -1129,15 +1130,25 @@ namespace MT3
                 star_azalt.RemoveAt(ii);
 
                 // KV1000通信  MT2 move
-                s = send_cmd(az_t + (double)numericUpDown_daz.Value, alt_t + (double)numericUpDown_dalt.Value);
+                s = send_cmd(az_t + (double)numericUpDown_daz.Value/10.0, alt_t + (double)numericUpDown_dalt.Value/10.0);
                 richTextBox1.Focus(); richTextBox1.AppendText(s);
+                //await Task.Run(() => System.Threading.Thread.Sleep(3000)); 
                 await Task.Delay(3000);
                 s = "3s wait\n"; richTextBox1.Focus(); richTextBox1.AppendText(s);
-               
+
+                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode) - appSettings.Theta;
+                //udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                udpkv.cxcy2azalt_mt2(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+
+                daz = az - az_t; dalt = alt - alt_t;             //位置誤差
+                s = string.Format("daz[{0}] = az_t[{1}] -KV_az_c[{2}]\r", daz, az_t, udpkv.az2_c);
+                richTextBox1.Focus(); richTextBox1.AppendText(s);
                 //データ保存
                 if (max_val > 0)
                 {
-                    write_star_position_error(name, az_t, alt_t, daz + (double)numericUpDown_daz.Value, dalt + (double)numericUpDown_dalt.Value, vmag, max_val, gx, gy, xoa, yoa);
+                    write_star_position_error(name, az_t, alt_t, daz - (double)numericUpDown_daz.Value/10.0, dalt - (double)numericUpDown_dalt.Value/10.0, vmag, max_val, gx, gy, xoa, yoa);
                 }
             }
         }
@@ -1153,8 +1164,9 @@ namespace MT3
             string s, ss;
             Common.Send_cmd_KV1000_init();
             ss = Common.Send_cmd_KV1000(Common.MT2SetPos(az_t , alt_t ));
-            s = string.Format("WRS DM00964 4 00000 00000 00000 00000\r"); // vaz,valt = 0
-            ss += Common.Send_cmd_KV1000(s);
+            //s = string.Format("WRS DM00964 4 00000 00000 00000 00000\r"); // vaz,valt = 0
+            //ss += Common.Send_cmd_KV1000(s);
+            System.Threading.Thread.Sleep(100);
             s = string.Format("ST 01001\r");
             ss += Common.Send_cmd_KV1000(s);
             Common.Send_cmd_KV1000_close();
