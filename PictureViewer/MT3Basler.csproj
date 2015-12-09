@@ -122,6 +122,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="BitmapFactory.cs" />
+    <Compile Include="CorrectMap.cs" />
     <Compile Include="Detect.cs">
       <SubType>Form</SubType>
     </Compile>

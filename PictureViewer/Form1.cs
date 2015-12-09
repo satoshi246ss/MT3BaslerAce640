@@ -68,7 +68,8 @@ namespace MT3
             appSettings = SettingsLoad(int.Parse(cmds[2]));
 
             IplImageInit();
-            
+            read_grid_data();
+
             worker_udp = new BackgroundWorker();
             worker_udp.WorkerReportsProgress = true;
             worker_udp.WorkerSupportsCancellation = true;
@@ -259,6 +260,7 @@ namespace MT3
             System.Net.IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, localPort);
             while (bw.CancellationPending == false)
             {
+                udp_packet_id++;
                 byte[] rcvBytes = udpc.Receive(ref remoteEP);
                 if (rcvBytes.Length == sizekd)
                 {
@@ -610,6 +612,9 @@ namespace MT3
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
+            read_grid_data();
+            return;
+
             Pid_Data_Send_KV1000_SpCam2((short)(id & 32767), daz, (double)id, 1); // 32767->7FFF
             //Pid_Data_Send_KV1000_SpCam2((short)id, daz, dalt, 1);
  
@@ -653,12 +658,12 @@ namespace MT3
             {
                 if (this.checkBox_WideDR.Checked)
                 {
-                    m_imageProvider.SetupGain(1024);
+                    //m_imageProvider.SetupGain(1024);
                 }
                 //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 else
                 {
-                    m_imageProvider.SetupGain(100);
+                    //m_imageProvider.SetupGain(100);
                     //pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
                 }
             }
@@ -929,6 +934,24 @@ namespace MT3
         /// <param name="capacity">画像表示用タイマールーチン</param>
         private void timerDisplay_Tick(object sender, EventArgs e)
         {
+            //
+            // 常時表示部分
+            //
+            string s = null;
+            if (appSettings.CamPlatform == Platform.MT2)
+            {
+                //string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
+                s = string.Format("KV:[x1:{0:D6} y1:{1:D6} Az1:{2,6:F1} Alt1:{3,6:F1}]TC:{4:D5}\n", udpkv.xpos, udpkv.ypos, udpkv.az1_c, udpkv.alt1_c, udpkv.udp_time_code);
+            }
+            if (appSettings.CamPlatform == Platform.MT3)
+            {
+                s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]TC:{4:D5}\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c, udpkv.udp_time_code);
+            }
+            label_X2Y2.Text = s;
+            toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0")+" "+udp_packet_id.ToString("00");
+            //
+            // 観測中のみ表示部分
+            //
             if (this.States == STOP) return;
             //if (img_dmk3 == null) return;
 
@@ -1038,17 +1061,6 @@ namespace MT3
                     return;
                 }
             }
-            string s = null;
-            if (appSettings.CamPlatform == Platform.MT2)
-            {
-                //string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
-                s = string.Format("KV:[x1:{0:D6} y1:{1:D6} Az1:{2,6:F1} Alt1:{3,6:F1}]TC:{4:D5}\n", udpkv.xpos, udpkv.ypos, udpkv.az1_c, udpkv.alt1_c, udpkv.udp_time_code);
-            }
-            if (appSettings.CamPlatform == Platform.MT3)
-            {
-                s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]TC:{4:D5}\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c, udpkv.udp_time_code);
-            }
-            label_X2Y2.Text = s;
 
      //       label_ID.Text = max_label.ToString("00000");
             //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
@@ -1307,6 +1319,14 @@ namespace MT3
             buttonMove.Enabled = false;
             star_auto_check();
             buttonMove.Enabled = true;
+        }
+
+        private void timerAutoStarData_Tick(object sender, EventArgs e)
+        {
+            if (checkBox_WideDR.Checked)
+            {
+                buttonMove_Click(sender, e);
+            }
         }
 
         }

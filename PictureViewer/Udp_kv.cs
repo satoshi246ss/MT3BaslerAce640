@@ -294,6 +294,25 @@ namespace MT3
             }
             return theta;
         }
+        public double cal_mt2_theta(OpenCvSharp.FlipMode _flipmode, double az1center, double alt1center)
+        {
+            double theta;
+            if (mt2mode == mmWest)
+            {
+                theta = -(az1center + alt1center);
+            }
+            else
+            {
+                theta = -(az1center - alt1center);
+            }
+
+
+            if (_flipmode == OpenCvSharp.FlipMode.XY)
+            {
+                theta = -theta;
+            }
+            return theta;
+        }
         /// <summary>
         /// MT3 Thetaの計算
         /// </summary>

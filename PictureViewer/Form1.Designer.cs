@@ -41,6 +41,7 @@
             this.buttonMakeSettings = new System.Windows.Forms.Button();
             this.buttonMove = new System.Windows.Forms.Button();
             this.numericUpDownStarMin = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownStarCount = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_daz = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_dalt = new System.Windows.Forms.NumericUpDown();
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
@@ -68,16 +69,16 @@
             this.timerWaitShutdown = new System.Windows.Forms.Timer(this.components);
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
-            this.numericUpDownStarCount = new System.Windows.Forms.NumericUpDown();
+            this.timerAutoStarData = new System.Windows.Forms.Timer(this.components);
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_daz)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_dalt)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -246,6 +247,28 @@
             0,
             0});
             // 
+            // numericUpDownStarCount
+            // 
+            this.numericUpDownStarCount.Location = new System.Drawing.Point(508, 3);
+            this.numericUpDownStarCount.Maximum = new decimal(new int[] {
+            98,
+            0,
+            0,
+            0});
+            this.numericUpDownStarCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownStarCount.Name = "numericUpDownStarCount";
+            this.numericUpDownStarCount.Size = new System.Drawing.Size(33, 19);
+            this.numericUpDownStarCount.TabIndex = 18;
+            this.numericUpDownStarCount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // numericUpDown_daz
             // 
             this.numericUpDown_daz.Font = new System.Drawing.Font("MS UI Gothic", 8F);
@@ -388,6 +411,7 @@
             // 
             // timerDisplay
             // 
+            this.timerDisplay.Enabled = true;
             this.timerDisplay.Interval = 200;
             this.timerDisplay.Tick += new System.EventHandler(this.timerDisplay_Tick);
             // 
@@ -474,27 +498,11 @@
             this.updateDeviceListTimer.Interval = 5000;
             this.updateDeviceListTimer.Tick += new System.EventHandler(this.updateDeviceListTimer_Tick);
             // 
-            // numericUpDownStarCount
+            // timerAutoStarData
             // 
-            this.numericUpDownStarCount.Location = new System.Drawing.Point(508, 3);
-            this.numericUpDownStarCount.Maximum = new decimal(new int[] {
-            98,
-            0,
-            0,
-            0});
-            this.numericUpDownStarCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownStarCount.Name = "numericUpDownStarCount";
-            this.numericUpDownStarCount.Size = new System.Drawing.Size(33, 19);
-            this.numericUpDownStarCount.TabIndex = 18;
-            this.numericUpDownStarCount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.timerAutoStarData.Enabled = true;
+            this.timerAutoStarData.Interval = 1200000;
+            this.timerAutoStarData.Tick += new System.EventHandler(this.timerAutoStarData_Tick);
             // 
             // Form1
             // 
@@ -516,11 +524,11 @@
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_daz)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_dalt)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -568,6 +576,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown_daz;
         private System.Windows.Forms.NumericUpDown numericUpDown_dalt;
         private System.Windows.Forms.NumericUpDown numericUpDownStarCount;
+        private System.Windows.Forms.Timer timerAutoStarData;
     }
 }
 

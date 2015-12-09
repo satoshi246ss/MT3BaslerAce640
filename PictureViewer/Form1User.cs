@@ -178,6 +178,10 @@ namespace MT3
         CvMat correction;
         CvMat prediction;
 
+        // 位置補正データ
+        CvMat grid_az = new CvMat(360, 90, MatrixType.F64C1);
+        CvMat grid_alt = new CvMat(360, 90, MatrixType.F64C1); 
+
         Stopwatch sw = new Stopwatch();
         Stopwatch sw2 = new Stopwatch();
         long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
@@ -187,6 +191,7 @@ namespace MT3
         private BackgroundWorker worker;
         private BackgroundWorker worker_udp;
         Udp_kv udpkv = new Udp_kv();
+        long udp_packet_id = 0;
 
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
         KV_PID_DATA kv_pid_data = new KV_PID_DATA();
@@ -1130,25 +1135,69 @@ namespace MT3
                 star_azalt.RemoveAt(ii);
 
                 // KV1000通信  MT2 move
-                s = send_cmd(az_t + (double)numericUpDown_daz.Value/10.0, alt_t + (double)numericUpDown_dalt.Value/10.0);
+                double daz_grid =  (double)numericUpDown_daz.Value / 10.0 - grid_az.Get2D((int)az_t, (int)alt_t);
+                double dalt_grid = (double)numericUpDown_dalt.Value / 10.0 - grid_alt.Get2D((int)az_t, (int)alt_t);
+                s = send_cmd(az_t + daz_grid, alt_t + dalt_grid);
                 richTextBox1.Focus(); richTextBox1.AppendText(s);
                 //await Task.Run(() => System.Threading.Thread.Sleep(3000)); 
-                await Task.Delay(3000);
-                s = "3s wait\n"; richTextBox1.Focus(); richTextBox1.AppendText(s);
+                await Task.Delay(2000);
+                s = "2s wait\n"; richTextBox1.Focus(); richTextBox1.AppendText(s);
 
-                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode) - appSettings.Theta;
+                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, az_t, alt_t) - appSettings.Theta;
                 //udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
                 //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
                 udpkv.cxcy2azalt_mt2(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
                 //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
 
                 daz = az - az_t; dalt = alt - alt_t;             //位置誤差
-                s = string.Format("daz[{0}] = az_t[{1}] -KV_az_c[{2}]\r", daz, az_t, udpkv.az2_c);
+                s = string.Format("daz_grid[ {0}, {3} ] = az_t[{1}] -KV_az_c[{2}]\r", daz_grid, az_t, udpkv.az2_c, dalt_grid);
                 richTextBox1.Focus(); richTextBox1.AppendText(s);
                 //データ保存
                 if (max_val > 0)
                 {
-                    write_star_position_error(name, az_t, alt_t, daz - (double)numericUpDown_daz.Value/10.0, dalt - (double)numericUpDown_dalt.Value/10.0, vmag, max_val, gx, gy, xoa, yoa);
+                    write_star_position_error(name, az_t, alt_t, daz - daz_grid, dalt -  dalt_grid, vmag, max_val, gx, gy, xoa, yoa);
+                }
+            }
+        }
+        // 補正データ読み込み(360x90)
+        public void read_grid_data()
+        {
+            // ファイルからテキストを読み出し。
+            using (StreamReader r = new StreamReader(@"D:\img_data\lib\grid_z1_az.txt"))
+            {
+                int j = 0;
+                string line;
+                while ((line = r.ReadLine()) != null) // 1行ずつ読み出し。
+                {
+                    // 区切りで分割して配列に格納する
+                    string[] stArrayData = line.Split(' ');
+                    int i = 0;
+                    foreach (string s in stArrayData)
+                    {
+                        double data = double.Parse(s);
+                        grid_az.Set2D(j,i, data);
+                        i++;
+                    }
+                    j++;
+                }
+            }
+            // ファイルからテキストを読み出し。
+            using (StreamReader r = new StreamReader(@"D:\img_data\lib\grid_z1_alt.txt"))
+            {
+                int j = 0;
+                string line;
+                while ((line = r.ReadLine()) != null) // 1行ずつ読み出し。
+                {
+                    // 区切りで分割して配列に格納する
+                    string[] stArrayData = line.Split(' ');
+                    int i = 0;
+                    foreach (string s in stArrayData)
+                    {
+                        double data = double.Parse(s);
+                        grid_alt.Set2D(j, i, data);
+                        i++;
+                    }
+                    j++;
                 }
             }
         }
