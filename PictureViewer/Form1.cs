@@ -928,6 +928,26 @@ namespace MT3
 
             return (ans + xy);
         }
+        //矢印
+        public void cvArrow(CvArr img, CvPoint pt1, CvPoint pt2, CvScalar color, int thickness = 1, int lineType = 8, int shift = 0)
+        {
+            Cv.Line(img, pt1, pt2, color, thickness);
+            double vx = (double)(pt2.X - pt1.X);
+            double vy = (double)(pt2.Y - pt1.Y);
+            double v = Math.Sqrt(vx * vx + vy * vy);
+            double ux = vx / v;
+            double uy = vy / v;
+            //矢印の幅の部分
+            double w = 5, h = 10;
+            CvPoint ptl, ptr;
+            ptl.X = (int)((double)pt2.X - uy * w - ux * h);
+            ptl.Y = (int)((double)pt2.Y + ux * w - uy * h);
+            ptr.X = (int)((double)pt2.X + uy * w - ux * h);
+            ptr.Y = (int)((double)pt2.Y - ux * w - uy * h);
+            //矢印の先端を描画する
+            Cv.Line(img, pt2, ptl, color, thickness);
+            Cv.Line(img, pt2, ptr, color, thickness);
+        }
         /// <summary>
         /// 画像表示ルーチン
         /// </summary>
@@ -993,8 +1013,9 @@ namespace MT3
                 {
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c);
-                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
                     Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+                    img_dmk3.PutText("+Alt", Point1, font, new CvColor(0, 150, 250));
 
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
@@ -1006,7 +1027,7 @@ namespace MT3
 
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
-                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
+                    cvArrow(img_dmk3, Point2, Point1, new CvColor(230, 105, 0));
 
                     str = String.Format("ID:{4,7:D1} W: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
                 }
@@ -1014,7 +1035,7 @@ namespace MT3
                 {
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c);
-                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
                     //Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
 
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
@@ -1024,8 +1045,9 @@ namespace MT3
 
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
-                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                    cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
                     Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+                    img_dmk3.PutText("+Alt", Point1, font, new CvColor(0, 150, 250));
 
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
