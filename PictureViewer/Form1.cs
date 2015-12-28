@@ -1009,7 +1009,7 @@ namespace MT3
                 CvPoint2D64f Point2 ;
                 String str;
 
-                if (udpkv.mt2mode == udpkv.mmWest)
+                if (udpkv.mt2mode == udpkv.mmEast)
                 {
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c);
@@ -1035,12 +1035,11 @@ namespace MT3
                 {
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c);
-                    cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
-                    //Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+                    Cv.Line(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
 
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
-                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
+                    cvArrow(img_dmk3, Point2, Point1, new CvColor(230, 105, 0));   // Arrow
                     //Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
 
                     Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);

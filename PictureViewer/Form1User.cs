@@ -1101,7 +1101,7 @@ namespace MT3
             {
                 Star.ID = i;
                 Star.cal_azalt();
-                if (Star.Alt > 0)
+                if (Star.Alt > 5)//最低高度
                 {
                     StarAzAlt sta = new StarAzAlt();
                     sta.Az = Star.Az;
