@@ -401,12 +401,12 @@
             // 
             // timerSaveTimeOver
             // 
-            this.timerSaveTimeOver.Interval = 45000;
+            this.timerSaveTimeOver.Interval = 10000;
             this.timerSaveTimeOver.Tick += new System.EventHandler(this.timerSaveTimeOver_Tick);
             // 
             // timerSaveMainTime
             // 
-            this.timerSaveMainTime.Interval = 3000;
+            this.timerSaveMainTime.Interval = 2000;
             this.timerSaveMainTime.Tick += new System.EventHandler(this.timerSaveMainTime_Tick);
             // 
             // timerDisplay
