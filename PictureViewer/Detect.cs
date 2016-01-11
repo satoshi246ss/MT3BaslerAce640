@@ -182,14 +182,10 @@ namespace MT3
                 if (ImgSaveFlag == TRUE)
                 {
                     // 観測目標移動速作成
-                    double vk;  // [pixel/frame]
+                    double vk=1000;  // [pixel/frame]
                     if (kalman_id > 3)
                     {
                         vk = Math.Sqrt(kvx * kvx + kvy * kvy);
-                    }
-                    else
-                    {
-                        vk = 1000;
                     }
                     // 観測データ送信
                     //Pid_Data_Send(true);
@@ -211,7 +207,7 @@ namespace MT3
                 {
                     // 観測データ送信
                     //Pid_Data_Send(false);
-                    Pid_Data_Send_KV1000_SpCam2((short)(-(id & 32767)), (az - udpkv.az2_c), (alt - udpkv.alt2_c), -1000);
+                    ////Pid_Data_Send_KV1000_SpCam2((short)(-(id & 32767)), (az - udpkv.az2_c), (alt - udpkv.alt2_c), -1000);
                 }
                 gx = gy = 0;
                 sgx = sgy = 0;

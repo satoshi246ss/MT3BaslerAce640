@@ -1044,21 +1044,21 @@ namespace MT3
             if (appSettings.ID == 10) // MT2 WideCam 設定
             {
                 //送信するデータを読み込む
+                /*
                 string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
                 kv_pid_data.mt2_wide_time = (short)udpkv.udp_time_code;
                 kv_pid_data.mt2_wide_id   = id;
                 kv_pid_data.mt2_wide_az   = udpkv.PIDPV_makedata(daz);
                 kv_pid_data.mt2_wide_alt  = udpkv.PIDPV_makedata(dalt);
                 kv_pid_data.mt2_wide_vk   = udpkv.PIDPV_makedata(kv);
-                //送信するデータを読み込む
-                /* for KV1000
+                */
+                //送信するデータを読み込む ( for KV1000 )
                 string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
                 kv_pid_data.mt2_wide_time = udpkv.EndianChange((short)udpkv.udp_time_code);
                 kv_pid_data.mt2_wide_id = udpkv.EndianChange(id);
                 kv_pid_data.mt2_wide_az = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
                 kv_pid_data.mt2_wide_alt = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
                 kv_pid_data.mt2_wide_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(kv));
-                */ 
             }
             else return;
  
