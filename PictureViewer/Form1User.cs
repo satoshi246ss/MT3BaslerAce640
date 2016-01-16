@@ -200,11 +200,13 @@ namespace MT3
         int mmUdpPortBroadCastSent = 24411;            // （送信）
         int mmFsiUdpPortMTmonitor  = 24415;
         string mmFsiCore_i5 = "192.168.1.211"; // for MTmon
+        string mmFsiKV1000  = "192.168.1.10" ; // KV1000 UDP data 送信アドレス
         string mmLocalIP = "";
         string mmLocalHost = "";
         System.Net.Sockets.UdpClient udpc3 = null;
         DriveInfo cDrive = new DriveInfo("D");
         long diskspace;
+        System.IO.StreamWriter log_writer; //= new System.IO.StreamWriter(@"D:\img_data\log.txt", true);
         
         //[DllImport("kernel32.dll")]
         //static extern unsafe void CopyMemory(void* dst, void* src, int size);        
@@ -1034,13 +1036,9 @@ namespace MT3
         /// <summary>
         /// PID data送信ルーチン(KV1000 UDP2)
         /// </summary>
-        private void Pid_Data_Send_KV1000_SpCam2(short id, double daz, double dalt, double kv)
+        private void Pid_Data_Send_KV1000_SpCam2(short id, double daz, double dalt, double vk)
         {
             // PID data send for UDP
-            //データを送信するリモートホストとポート番号
-            string remoteHost = "192.168.1.204";
-            int remotePort = 24426; //KV1000 UDP   8501(KV1000 cmd); // KV1000SpCam2
-
             if (appSettings.ID == 10) // MT2 WideCam 設定
             {
                 //送信するデータを読み込む
@@ -1050,18 +1048,21 @@ namespace MT3
                 kv_pid_data.mt2_wide_id   = id;
                 kv_pid_data.mt2_wide_az   = udpkv.PIDPV_makedata(daz);
                 kv_pid_data.mt2_wide_alt  = udpkv.PIDPV_makedata(dalt);
-                kv_pid_data.mt2_wide_vk   = udpkv.PIDPV_makedata(kv);
+                kv_pid_data.mt2_wide_vk   = udpkv.PIDPV_makedata(vk);
                 */
                 //送信するデータを読み込む ( for KV1000 )
-                string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
+                //string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
                 kv_pid_data.mt2_wide_time = udpkv.EndianChange((short)udpkv.udp_time_code);
                 kv_pid_data.mt2_wide_id = udpkv.EndianChange(id);
                 kv_pid_data.mt2_wide_az = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
                 kv_pid_data.mt2_wide_alt = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
-                kv_pid_data.mt2_wide_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(kv));
+                kv_pid_data.mt2_wide_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
             }
             else return;
- 
+
+            //データを送信するリモートホストとポート番号
+            string remoteHost = "192.168.1.204";                     // KV1000SpCam2
+            int remotePort = 24426; //KV1000 UDP   8501(KV1000 cmd); // KV1000SpCam2
             byte[] sendBytes = udpkv.ToBytes(kv_pid_data);
 
             try
@@ -1074,8 +1075,6 @@ namespace MT3
                 //匿名デリゲートで表示する
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
             }
-
-            //  this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s1 });
         }
 
         private async void star_auto_check()

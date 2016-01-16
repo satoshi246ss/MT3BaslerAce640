@@ -213,6 +213,19 @@ namespace MT3
                 sgx = sgy = 0;
                 max_val = 0;
             }
+
+            // ｋｖデータのチェック用
+            if (ImgSaveFlag == TRUE)
+            {
+                if (log_writer != null)
+                {
+                    //xpos = ((kd.x1 << 8) + kd.x0) << 4; // <<16 ->256*256  <<8 ->256
+                    //ypos = ((kd.y1 << 8) + kd.y0) << 4; // <<16 ->256*256  <<8 ->256
+                    string st = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff ") +"("+ udpkv.xpos + " " + udpkv.ypos + ")( " + udpkv.x2pos + " " + udpkv.y2pos + ") " + udpkv.kd.x1 + " " + udpkv.kd.x0 + " " + udpkv.kd.y1 + " " + udpkv.kd.y0 + "\n";
+                    log_writer.WriteLine(st);
+                }
+            }
+
             #endregion
 
             elapsed2 = sw.ElapsedTicks; sw.Stop(); sw.Reset();

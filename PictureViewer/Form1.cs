@@ -152,6 +152,10 @@ namespace MT3
             appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString()+"  " + mmLocalHost +"(" + mmLocalIP+")";
             this.Text = appTitle;
 
+            string fn = @"D:\img_data\log"+appSettings.ID.ToString()+".txt";
+            log_writer = new System.IO.StreamWriter(@fn, true);
+
+
             // 有効な画像取り込みデバイスが選択されているかをチェック。
             /*  if (!icImagingControl1.DeviceValid)
               {
@@ -178,7 +182,6 @@ namespace MT3
             endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
             string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
             richTextBox1.AppendText(s);
-
 
             // IDS open
             //ShowButton.PerformClick();
@@ -208,6 +211,8 @@ namespace MT3
             }
 
             timeEndPeriod(16);
+
+            log_writer.Close();
         }
 
         #region UDP
@@ -252,9 +257,9 @@ namespace MT3
 
             string str;
             MOTOR_DATA_KV_SP kmd3 = new MOTOR_DATA_KV_SP();
-            int size = Marshal.SizeOf(kmd3);
+            int size_kmd3 = Marshal.SizeOf(kmd3);//40
             KV_DATA kd = new KV_DATA();
-            int sizekd = Marshal.SizeOf(kd);
+            int size_kd = Marshal.SizeOf(kd);//26
 
             //データを受信する
             System.Net.IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, localPort);
@@ -262,7 +267,7 @@ namespace MT3
             {
                 udp_packet_id++;
                 byte[] rcvBytes = udpc.Receive(ref remoteEP);
-                if (rcvBytes.Length == sizekd)
+                if (rcvBytes.Length == size_kd && remoteEP.Address.ToString() == mmFsiKV1000)
                 {
                     kd = ToStruct1(rcvBytes);
                     bw.ReportProgress(0, kd);
@@ -279,11 +284,11 @@ namespace MT3
                         remotePort = 24442;  // アプリ2
                         udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
 
-                        remotePort = 24443;  // アプリ3
-                        udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
+                        //remotePort = 24443;  // アプリ3
+                        //udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
                     }
                 }
-                else if (rcvBytes.Length == size)
+                else if (rcvBytes.Length == size_kmd3)
                 {
                     kmd3 = ToStruct(rcvBytes);
                     if (kmd3.cmd == 1) //mmMove:1
