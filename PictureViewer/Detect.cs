@@ -27,6 +27,8 @@ namespace MT3
             #region 位置検出2  //Blob
             try
             {
+                //Cv.Smooth(imgdata.img, img2, SmoothType.Median, 5, 0, 0, 0);
+                //Cv.Threshold(img2, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
                 Cv.Threshold(imgdata.img, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
                 blobs.Label(img2); //1.4ms
             }
@@ -163,8 +165,8 @@ namespace MT3
                     try
                     {
                         theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode) - appSettings.Theta;
-                        udpkv.cxcy2azalt(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
-                        udpkv.cxcy2azalt(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                        udpkv.cxcy2azalt_mt2(+dx, +dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                        udpkv.cxcy2azalt_mt2(+(dx + kvx), +(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
                         vaz = udpkv.vaz1_kv + (az1 - az) * appSettings.Framerate;
                         valt = udpkv.valt1_kv + (alt1 - alt) * appSettings.Framerate;
 
@@ -180,14 +182,10 @@ namespace MT3
                 if (ImgSaveFlag == TRUE)
                 {
                     // 観測目標移動速作成
-                    double vk;  // [pixel/frame]
+                    double vk=1000;  // [pixel/frame]
                     if (kalman_id > 3)
                     {
                         vk = Math.Sqrt(kvx * kvx + kvy * kvy);
-                    }
-                    else
-                    {
-                        vk = 1000;
                     }
                     // 観測データ送信
                     //Pid_Data_Send(true);
@@ -209,12 +207,25 @@ namespace MT3
                 {
                     // 観測データ送信
                     //Pid_Data_Send(false);
-                    Pid_Data_Send_KV1000_SpCam2((short)(-(id & 32767)), (az - udpkv.az2_c), (alt - udpkv.alt2_c), -1000);
+                    ////Pid_Data_Send_KV1000_SpCam2((short)(-(id & 32767)), (az - udpkv.az2_c), (alt - udpkv.alt2_c), -1000);
                 }
                 gx = gy = 0;
                 sgx = sgy = 0;
                 max_val = 0;
             }
+
+            // ｋｖデータのチェック用
+            if (ImgSaveFlag == TRUE)
+            {
+                if (log_writer != null)
+                {
+                    //xpos = ((kd.x1 << 8) + kd.x0) << 4; // <<16 ->256*256  <<8 ->256
+                    //ypos = ((kd.y1 << 8) + kd.y0) << 4; // <<16 ->256*256  <<8 ->256
+                    string st = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff ") +"("+ udpkv.xpos + " " + udpkv.ypos + ")( " + udpkv.x2pos + " " + udpkv.y2pos + ") " + udpkv.kd.x1 + " " + udpkv.kd.x0 + " " + udpkv.kd.y1 + " " + udpkv.kd.y0 + "\n";
+                    log_writer.WriteLine(st);
+                }
+            }
+
             #endregion
 
             elapsed2 = sw.ElapsedTicks; sw.Stop(); sw.Reset();

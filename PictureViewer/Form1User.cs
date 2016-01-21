@@ -7,10 +7,12 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Threading.Tasks;
 using OpenCvSharp;
 using OpenCvSharp.Blob;
-
 using PylonC.NETSupportLibrary;
+using uEye;
+using MtLibrary;
 
 namespace MT3
 {
@@ -21,7 +23,8 @@ namespace MT3
         ImagingSouce,
         IDS,
         AVT,
-        Basler
+        Basler,
+        TEST     // avi fileによるテスト
     }
     public enum Camera_Color
     {
@@ -53,6 +56,16 @@ namespace MT3
         Global,
         Rolling
     }
+
+    public class StarAzAlt
+    {
+        // propaty
+        public int ID { get; set; }
+        public double Az { get; set; }
+        public double Alt { get; set; }
+        public double Vmag { get; set; }
+        public string Name { get; set; }
+    } 
 
     #endregion
 
@@ -165,6 +178,10 @@ namespace MT3
         CvMat correction;
         CvMat prediction;
 
+        // 位置補正データ
+        CvMat grid_az = new CvMat(360, 90, MatrixType.F64C1);
+        CvMat grid_alt = new CvMat(360, 90, MatrixType.F64C1); 
+
         Stopwatch sw = new Stopwatch();
         Stopwatch sw2 = new Stopwatch();
         long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
@@ -174,6 +191,7 @@ namespace MT3
         private BackgroundWorker worker;
         private BackgroundWorker worker_udp;
         Udp_kv udpkv = new Udp_kv();
+        long udp_packet_id = 0;
 
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
         KV_PID_DATA kv_pid_data = new KV_PID_DATA();
@@ -182,11 +200,13 @@ namespace MT3
         int mmUdpPortBroadCastSent = 24411;            // （送信）
         int mmFsiUdpPortMTmonitor  = 24415;
         string mmFsiCore_i5 = "192.168.1.211"; // for MTmon
+        string mmFsiKV1000  = "192.168.1.10" ; // KV1000 UDP data 送信アドレス
         string mmLocalIP = "";
         string mmLocalHost = "";
         System.Net.Sockets.UdpClient udpc3 = null;
-        DriveInfo cDrive = new DriveInfo("C");
+        DriveInfo cDrive = new DriveInfo("D");
         long diskspace;
+        System.IO.StreamWriter log_writer; //= new System.IO.StreamWriter(@"D:\img_data\log.txt", true);
         
         //[DllImport("kernel32.dll")]
         //static extern unsafe void CopyMemory(void* dst, void* src, int size);        
@@ -278,92 +298,27 @@ namespace MT3
         {
             //保存する設定を作成する
             Settings sett = new Settings();
-            sett.Text = "NUV (IDS UI-2410SE-M) ";
-            sett.ID = 7;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.NoCapDev = 7;
+            sett.Text = "IDS UI-2410SE-M";
+            sett.ID = 4;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 4;
             sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 3;       //カメラタイプ毎のID 
+            sett.CameraID = 2;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
-            sett.CameraInterface = Camera_Interface.USB2;
-            sett.CamPlatform = Platform.MT3;
-            sett.Width = 640;
+            sett.Width  = 640;
             sett.Height = 480;
-            sett.FocalLength = 80;      //[mm]
+            sett.FocalLength = 12.5;      //[mm]
             sett.Ccdpx = 0.0074; //[mm]
             sett.Ccdpy = 0.0074; //[mm]
-            sett.PixelClock = 30; //[MHz] 5-43MHz  UI-1540
-            sett.Framerate  = 75.0; //[fps]
+            sett.Framerate = 75.0; //[fps]
             sett.FifoMaxFrame = 64;
-            sett.Exposure = 13.3; //[ms]
-            sett.Gain = 100;
-            sett.UseDetect = false;
-            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
-            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24422;
-            sett.UdpPortSend    = 24423;
-            sett.MtMon_ID = 3;
-            sett.SaveDir = @"F:\img_data\";
-            SettingsSave(sett);
-
-            // IDS
-            sett.Text = "IDS UI-1540";
-            sett.ID = 14;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.NoCapDev = 14;
-            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 5;       //カメラタイプ毎のID
-            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
-            sett.CameraInterface = Camera_Interface.USB2;
-            sett.IP_GIGE_Camera = "192.168.1.xxx"; //GIGE Camera only.
-            sett.Width = 1280;
-            sett.Height = 1024;
-            sett.FocalLength = 50;      //[mm]
-            sett.Ccdpx = 0.0074; //[mm]
-            sett.Ccdpy = 0.0074; //[mm]
-            sett.PixelClock = 43; //[MHz] 5-43MHz  UI-1540
-            sett.Framerate = 25.0; //[fps]
-            sett.FifoMaxFrame = 32;
-            sett.Exposure = 33; //[ms]
-            sett.Gain = 30; // 0-30  要検討
-            sett.UseDetect = false;
-            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
-            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410; //Broadcast0
-            sett.UdpPortSend = 24429;
-            sett.MtMon_ID = 14;
-            sett.SaveDir = @"C:\Users\Public\img_data\";
-            SettingsSave(sett);
-
-            //IDS UI-3240CP-NIR  NIR Cam
-            sett.Text = "IDS UI-3240CP-NIR";
-            sett.ID = 15;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12  MT3NIR:15 等々
-            sett.NoCapDev = 15;
-            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 4;       //カメラタイプ毎のID
-            sett.CameraColor = Camera_Color.mono;     // 0:mono  1:color
-            sett.CameraInterface = Camera_Interface.USB3;
-            sett.CamPlatform = Platform.MT3;
-            sett.Width = 1280;
-            sett.Height =1024;
-            sett.FocalLength = 23.0;      //[mm]
-            sett.Ccdpx = 0.0053; //[mm]
-            sett.Ccdpy = 0.0053; //[mm]
-            sett.uEyeShutterMode = uEye_Shutter_Mode.Rolling;
-            sett.Xoa = 640;
-            sett.Yoa = 512;
-            sett.Roa = 1024 / 13 ; //直径1deg     192/2;  // 255x192:ace640の縦視野
-            sett.Theta = 0;
-            sett.PixelClock = 86; //[MHz] 5-43MHz  UI1540    -86 UI3240
-            sett.Framerate = 50.0; //[fps]
-            sett.FifoMaxFrame = 16;
-            sett.Exposure = 19.2; //[ms]
+            sett.Exposure = 13; //[ms]
             sett.Gain = 100;
             sett.UseDetect = true;
             sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
-            sett.ThresholdMinArea = 0.25; // 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410;  // Broadcast0
-            sett.UdpPortSend = 24435;
-            sett.MtMon_ID = 15;
-            sett.SaveDir = @"E:\img_data\";
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410;
+            sett.UdpPortSend    = 24429;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
             
             // MT2 Basler Guide
@@ -375,21 +330,21 @@ namespace MT3
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.GIGE;
             sett.CamPlatform = Platform.MT2;
-            sett.Flipmode = OpenCvSharp.FlipMode.XY;
+            sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
-            sett.Width  = 652; // Max 659    4の倍数でメモリ確保される。
+            sett.Width = 656;// 652; // Max 659    4の倍数でメモリ確保される。
             sett.Height = 494; // Max 494
-            sett.FocalLength = 12.5;      //[mm]
+            sett.FocalLength = 35;      //[mm] fuji 35mm
             sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
             sett.Ccdpy = 0.0056; //[mm]
             sett.Xoa = 320;
-            sett.Yoa = 240;
-            sett.Roa = 240/3.1; //直径1deg     192/2;  // 255x192:ace640の縦視野
+            sett.Yoa = 240;            
+            sett.Roa = 1.0/(Math.Atan(sett.Ccdpx/sett.FocalLength)*180/Math.PI) ; //半径1deg    // 255x192:ace640の縦視野
             sett.Theta = 0;
             sett.Framerate = 120.0; //[fps]
             sett.FifoMaxFrame = 16;
             sett.Exposure = 8.3; //[ms]
-            sett.Gain = 500; // 100-1023  要検討
+            sett.Gain = 1023; // 100-1023  要検討
             sett.UseDetect = true;
             sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
@@ -430,39 +385,6 @@ namespace MT3
             sett.SaveDir = @"D:\img_data\";
             SettingsSave(sett);
 
-            // MT2 Basler Test 
-            sett.Text = "Basler A102f";
-            sett.ID = 16;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.NoCapDev = 16;
-            sett.CameraType = "Basler"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 3;          //カメラタイプ毎のID
-            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed 3:mono16
-            sett.CameraInterface = Camera_Interface.IEEE1394 ;
-            sett.CamPlatform = Platform.MT2;
-            sett.Flipmode = OpenCvSharp.FlipMode.XY;
-            sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
-            sett.Width  = 1280; // Max 659    4の倍数でメモリ確保される。
-            sett.Height = 1024; // Max 494
-            sett.FocalLength = 12.5;      //[mm]
-            sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
-            sett.Ccdpy = 0.0056; //[mm]
-            sett.Xoa = 320;
-            sett.Yoa = 240;
-            sett.Roa = 240 / 3.1; //直径1deg     192/2;  // 255x192:ace640の縦視野
-            sett.Theta = 0;
-            sett.Framerate = 20.0; //[fps]
-            sett.FifoMaxFrame = 16;
-            sett.Exposure = 8.3; //[ms]
-            sett.Gain = 500; // 100-1023  要検討
-            sett.UseDetect = true;
-            sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
-            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
-            sett.UdpPortRecieve = 24410; // Broadcast0
-            //sett.UdpPortRecieve = 24442; //Broadcast2
-            sett.UdpPortSend = 24431;
-            sett.SaveDir = @"D:\img_data\";
-            SettingsSave(sett);
-
             // Wat100N Cam ID 20
             sett.Text = "Watec WAT-100N";
             sett.ID = 20;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
@@ -470,29 +392,27 @@ namespace MT3
             sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 0;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
-            sett.CamPlatform = Platform.Wide;
-            sett.FlipOn = false;
+            sett.CamPlatform = Platform.MT2;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.Width = 640;
             sett.Height = 480;
             sett.FocalLength = 35;      //[mm]
             sett.Ccdpx = 0.010; //[mm]
             sett.Ccdpy = 0.010; //[mm]
-            sett.Xoa = 320; //435;
-            sett.Yoa = 240; //(480 - 197);// for flip
+            sett.Xoa = 327; //435;
+            sett.Yoa = 292; //(480 - 197);// for flip
             sett.Roa = 91; //直径3deg     192/2;  // 255x192:ace640の縦視野
             sett.Theta = 180;
             sett.Framerate = 30.0; //[fps]
             sett.FifoMaxFrame = 64;
-            sett.PreSaveNum = 30;
+            sett.PreSaveNum = 4;
             sett.UseDetect = true;
-            sett.ThresholdBlob = 64;     // 検出閾値（０－２５５）
+            sett.ThresholdBlob = 32;     // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24442; //Broadcast2
             //sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend = 24451;
             sett.SaveDir = @"D:\img_data\";
-            sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
             // Wat100N Cam ID 21
@@ -523,6 +443,33 @@ namespace MT3
             sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend = 24451;
             sett.SaveDir = @"D:\img_data\";
+            SettingsSave(sett);
+
+            // IDS
+            sett.Text = "IDS UI-1540";
+            sett.ID = 14;             //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 14;
+            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 5;       //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.USB2;
+            sett.IP_GIGE_Camera = "192.168.1.xxx"; //GIGE Camera only.
+            sett.Width  = 1280;
+            sett.Height = 1024;
+            sett.FocalLength = 50;      //[mm]
+            sett.Ccdpx = 0.0074; //[mm]
+            sett.Ccdpy = 0.0074; //[mm]
+            sett.PixelClock = 43; //[MHz] 5-43MHz  UI-1540
+            sett.Framerate = 25.0; //[fps]
+            sett.FifoMaxFrame = 32;
+            sett.Exposure = 33; //[ms]
+            sett.Gain = 30; // 0-30  要検討
+            sett.UseDetect = false;
+            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410; //Broadcast0
+            sett.UdpPortSend = 24429;
+            sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
 
             /*
@@ -1089,34 +1036,33 @@ namespace MT3
         /// <summary>
         /// PID data送信ルーチン(KV1000 UDP2)
         /// </summary>
-        private void Pid_Data_Send_KV1000_SpCam2(short id, double daz, double dalt, double kv)
+        private void Pid_Data_Send_KV1000_SpCam2(short id, double daz, double dalt, double vk)
         {
             // PID data send for UDP
-            //データを送信するリモートホストとポート番号
-            string remoteHost = "192.168.1.204";
-            int remotePort = 24426; //KV1000 UDP   8501(KV1000 cmd); // KV1000SpCam2
-
-            if (appSettings.ID == 20)
+            if (appSettings.ID == 10) // MT2 WideCam 設定
             {
                 //送信するデータを読み込む
+                /*
                 string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
                 kv_pid_data.mt2_wide_time = (short)udpkv.udp_time_code;
                 kv_pid_data.mt2_wide_id   = id;
                 kv_pid_data.mt2_wide_az   = udpkv.PIDPV_makedata(daz);
                 kv_pid_data.mt2_wide_alt  = udpkv.PIDPV_makedata(dalt);
-                kv_pid_data.mt2_wide_vk   = udpkv.PIDPV_makedata(kv);
-                //送信するデータを読み込む
-                /* for KV1000
-                string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
+                kv_pid_data.mt2_wide_vk   = udpkv.PIDPV_makedata(vk);
+                */
+                //送信するデータを読み込む ( for KV1000 )
+                //string s1 = string.Format("WRS DM937 3 {0} {1} {2}\r", (ushort)id, udpkv.PIDPV_makedata(daz), udpkv.PIDPV_makedata(dalt));
                 kv_pid_data.mt2_wide_time = udpkv.EndianChange((short)udpkv.udp_time_code);
                 kv_pid_data.mt2_wide_id = udpkv.EndianChange(id);
                 kv_pid_data.mt2_wide_az = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
                 kv_pid_data.mt2_wide_alt = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
-                kv_pid_data.mt2_wide_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(kv));
-                */ 
+                kv_pid_data.mt2_wide_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
             }
             else return;
- 
+
+            //データを送信するリモートホストとポート番号
+            string remoteHost = "192.168.1.204";                     // KV1000SpCam2
+            int remotePort = 24426; //KV1000 UDP   8501(KV1000 cmd); // KV1000SpCam2
             byte[] sendBytes = udpkv.ToBytes(kv_pid_data);
 
             try
@@ -1129,10 +1075,166 @@ namespace MT3
                 //匿名デリゲートで表示する
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
             }
-
-            //  this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s1 });
         }
 
+        private async void star_auto_check()
+        {
+
+            string s, name = "";
+            int star_id_min = (int)numericUpDownStarMin.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            int star_id_max = star_id_min + (int)numericUpDownStarCount.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            if (star_id_max > 98) star_id_max = 98; 
+            double az0 = 90, alt0 = 90;
+            double az_t = 90, alt_t = 90, vmag = 0;
+
+            Star.init();
+            //Star.ID = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
+            //Star.cal_azalt();
+            //s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", Star.Count, Star.ID, Star.Name, Star.Az, Star.Alt);
+            //richTextBox1.AppendText(s);
+            //if (Star.Alt <= 0) return;
+
+            // for star mes
+            List<StarAzAlt> star_azalt = new List<StarAzAlt>();
+            for (int i = star_id_min; i < star_id_max; i++)
+            {
+                Star.ID = i;
+                Star.cal_azalt();
+                if (Star.Alt > 5)//最低高度
+                {
+                    StarAzAlt sta = new StarAzAlt();
+                    sta.Az = Star.Az;
+                    sta.Alt = Star.Alt;
+                    sta.Vmag = Star.Mag;
+                    sta.Name = Star.Name;
+                    star_azalt.Add(sta);
+                    s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", i, Star.ID, Star.Name, Star.Az, Star.Alt);
+                    richTextBox1.Focus(); richTextBox1.AppendText(s);
+                }
+            }
+
+            while (star_azalt.Count > 0)
+            {
+                // 次のターゲットを選択（距離）
+                int ii = 0;
+                double len_max = 1000000;
+                for (int i = 0; i < star_azalt.Count; i++)
+                {
+                    double len = Common.Cal_Distance(az0, alt0, star_azalt[i].Az, star_azalt[i].Alt);
+                    if (len < len_max)
+                    {
+                        ii = i;
+                        len_max = len;
+                        az_t  = star_azalt[i].Az;
+                        alt_t = star_azalt[i].Alt;
+                        vmag = star_azalt[i].Vmag;
+                        name = star_azalt[i].Name;
+                    }
+                }
+                star_azalt.RemoveAt(ii);
+
+                // KV1000通信  MT2 move
+                double daz_grid =  (double)numericUpDown_daz.Value / 10.0 - grid_az.Get2D((int)az_t, (int)alt_t);
+                double dalt_grid = (double)numericUpDown_dalt.Value / 10.0 - grid_alt.Get2D((int)az_t, (int)alt_t);
+                s = send_cmd(az_t + daz_grid, alt_t + dalt_grid);
+                richTextBox1.Focus(); richTextBox1.AppendText(s);
+                //await Task.Run(() => System.Threading.Thread.Sleep(3000)); 
+                await Task.Delay(2000);
+                s = "2s wait\n"; richTextBox1.Focus(); richTextBox1.AppendText(s);
+
+                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, az_t, alt_t) - appSettings.Theta;
+                //udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                udpkv.cxcy2azalt_mt2(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+
+                daz = az - az_t; dalt = alt - alt_t;             //位置誤差
+                s = string.Format("daz_grid[ {0}, {3} ] = az_t[{1}] -KV_az_c[{2}]\r", daz_grid, az_t, udpkv.az2_c, dalt_grid);
+                richTextBox1.Focus(); richTextBox1.AppendText(s);
+                //データ保存
+                if (max_val > 0)
+                {
+                    write_star_position_error(name, az_t, alt_t, daz - daz_grid, dalt -  dalt_grid, vmag, max_val, gx, gy, xoa, yoa);
+                }
+            }
+        }
+        // 補正データ読み込み(360x90)
+        public void read_grid_data()
+        {
+            // ファイルからテキストを読み出し。
+            using (StreamReader r = new StreamReader(@"D:\img_data\lib\grid_z1_az.txt"))
+            {
+                int j = 0;
+                string line;
+                while ((line = r.ReadLine()) != null) // 1行ずつ読み出し。
+                {
+                    // 区切りで分割して配列に格納する
+                    string[] stArrayData = line.Split(' ');
+                    int i = 0;
+                    foreach (string s in stArrayData)
+                    {
+                        double data = double.Parse(s);
+                        grid_az.Set2D(j,i, data);
+                        i++;
+                    }
+                    j++;
+                }
+            }
+            // ファイルからテキストを読み出し。
+            using (StreamReader r = new StreamReader(@"D:\img_data\lib\grid_z1_alt.txt"))
+            {
+                int j = 0;
+                string line;
+                while ((line = r.ReadLine()) != null) // 1行ずつ読み出し。
+                {
+                    // 区切りで分割して配列に格納する
+                    string[] stArrayData = line.Split(' ');
+                    int i = 0;
+                    foreach (string s in stArrayData)
+                    {
+                        double data = double.Parse(s);
+                        grid_alt.Set2D(j, i, data);
+                        i++;
+                    }
+                    j++;
+                }
+            }
+        }
+
+        private async void sleepAsync(int sec)
+        {
+            await Task.Delay(sec * 1000);
+        }
+
+        // KV1000通信
+        private string send_cmd(double az_t, double alt_t)
+        {
+            string s, ss;
+            Common.Send_cmd_KV1000_init();
+            ss = Common.Send_cmd_KV1000(Common.MT2SetPos(az_t , alt_t ));
+            //s = string.Format("WRS DM00964 4 00000 00000 00000 00000\r"); // vaz,valt = 0
+            //ss += Common.Send_cmd_KV1000(s);
+            System.Threading.Thread.Sleep(100);
+            s = string.Format("ST 01001\r");
+            ss += Common.Send_cmd_KV1000(s);
+            Common.Send_cmd_KV1000_close();
+            return ss;
+        }
+
+        //誤差測定ルーチン
+        private void write_star_position_error(string name, double az, double alt, double daz, double dalt, double vmag, double count, double cx, double cy, double xoa, double yoa)
+        {
+            // appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString()+"  " + mmLocalHost +"(" + mmLocalIP+")";
+            string fn = appSettings.ID.ToString() + "_star_position_error_" + DateTime.Today.ToString("yyyyMM") + ".txt";
+            Encoding sjisEnc = Encoding.GetEncoding("Shift_JIS");
+
+            using (StreamWriter w = new StreamWriter(fn, true, sjisEnc))
+            {
+                string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                //             az       alt      daz      dalt     vmag     count    cx       cy       xoa      yoa     name
+                w.Write("{11} {0,7:F3} {1,7:F3} {2,7:F3} {3,7:F3} {4,5:F1} {5,7:F1} {6,7:F3} {7,7:F3} {8,7:F3} {9,7:F3} {10}\r\n", az, alt, daz, dalt, vmag, count,cx, cy, xoa, yoa, name, dt);
+            }
+        }
         #endregion
     }  
 }

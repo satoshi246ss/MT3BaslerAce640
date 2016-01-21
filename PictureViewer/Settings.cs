@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -268,6 +269,10 @@ namespace MT3
             get { return _pre_save_num; }
             set { _pre_save_num = value; }
         }
+
+        public string TestFname { get; set; }
+        public bool TestMode { get; set; }
+
  
         // Default value
         public Settings()
@@ -311,6 +316,9 @@ namespace MT3
             _save_dir = @"C:\Users\Public\img_data\";
             _pre_save_num = 0;
             _ueye_shutter_mode = uEye_Shutter_Mode.Global;
+            //string fn = @"D:\image_data\20151018\20151018_175329_491_10.avi";
+            TestFname = @"20151018_224542_615_10.avi";
+            TestMode = false;
         }
 
      }

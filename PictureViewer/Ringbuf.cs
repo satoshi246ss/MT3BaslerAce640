@@ -524,19 +524,22 @@ namespace MT3
             vd.y2v = this.data[this.bottom].udpkv1.y2v;
             vd.az2_c = this.data[this.bottom].udpkv1.az2_c;
             vd.alt2_c = this.data[this.bottom].udpkv1.alt2_c;
-            if (MtMode == 2) {
+            vd.vaz2_kv = this.data[this.bottom].udpkv1.vaz2_kv;
+            vd.valt2_kv = this.data[this.bottom].udpkv1.valt2_kv;
+            if (MtMode == 2)
+            {
                 vd.x2pos = this.data[this.bottom].udpkv1.xpos;
                 vd.y2pos = this.data[this.bottom].udpkv1.ypos;
                 vd.x2v = this.data[this.bottom].udpkv1.x1v;
                 vd.y2v = this.data[this.bottom].udpkv1.y1v;
                 vd.az2_c = this.data[this.bottom].udpkv1.az1_c;
                 vd.alt2_c = this.data[this.bottom].udpkv1.alt1_c;
+                vd.vaz2_kv = this.data[this.bottom].udpkv1.vaz1_kv;
+                vd.valt2_kv = this.data[this.bottom].udpkv1.valt1_kv;
             }
 
             vd.kvaz = this.data[this.bottom].udpkv1.kvaz;
             vd.kvalt = this.data[this.bottom].udpkv1.kvalt;
-            vd.vaz2_kv = this.data[this.bottom].udpkv1.vaz2_kv;
-            vd.valt2_kv = this.data[this.bottom].udpkv1.valt2_kv;
             vd.kv_status = this.data[this.bottom].udpkv1.kv_status;
             vd.data_request = this.data[this.bottom].udpkv1.data_request;
             vd.mt3mode = this.data[this.bottom].udpkv1.mt3mode;
