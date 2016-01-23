@@ -320,16 +320,88 @@ namespace MT3
             sett.UdpPortSend    = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             SettingsSave(sett);
-            
+
             // MT2 Basler Guide
             sett.Text = "Basler acA640-120gm";
             sett.ID = 10;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.NoCapDev   = 10;
+            sett.NoCapDev = 10;
             sett.CameraType = "Basler"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID   = 2;          //カメラタイプ毎のID
+            sett.CameraID = 2;          //カメラタイプ毎のID
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.GIGE;
             sett.CamPlatform = Platform.MT2;
+            //sett.FlipOn = true;
+            sett.Flipmode = OpenCvSharp.FlipMode.X;
+            sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            sett.Width = 656;// 652; // Max 659    4の倍数でメモリ確保される。
+            sett.Height = 494; // Max 494
+            sett.FocalLength = 35;      //[mm] fuji 35mm
+            sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
+            sett.Ccdpy = 0.0056; //[mm]
+            sett.Xoa = 320;
+            sett.Yoa = 240;
+            sett.Roa = 1.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
+            sett.Theta = 0;
+            sett.Framerate = 120.0; //[fps]
+            sett.FifoMaxFrame = 16;
+            sett.Exposure = 8.3; //[ms]
+            sett.Gain = 1023; // 100-1023  要検討
+            sett.UseDetect = true;
+            sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortSend = 24431;
+            sett.SaveDir = @"D:\img_data\";
+            SettingsSave(sett);
+
+            // MT3Fine ImagingSouce
+            sett.Text = "NUV (IDS UI-2410SE-M)";
+            sett.ID = 7;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 7;
+            sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 1;          //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.USB2;
+            sett.CamPlatform = Platform.MT3;
+            sett.FlipOn = false;
+            //sett.Flipmode = OpenCvSharp.FlipMode.X;
+            //sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            sett.Width  = 640;// 652; // Max 659    4の倍数でメモリ確保される。
+            sett.Height = 480; // Max 494
+            sett.FocalLength = 80;    //[mm] EL Nikkor 80mm f5.6
+            sett.Ccdpx = 0.0074; //[mm] CCD:ICX414
+            sett.Ccdpy = 0.0074; //[mm]
+            sett.Xoa = 320;
+            sett.Yoa = 240;
+            sett.Roa = 1.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
+            sett.Theta = 0;
+            sett.PixelClock = 30;//[MHz]
+            sett.Framerate = 75.0; //[fps]
+            sett.FifoMaxFrame = 64;
+            sett.PreSaveNum = 0;
+            sett.Exposure = 13.3; //[ms]
+            sett.Gain = 100; // 100-1023  要検討
+            sett.UseDetect = false;
+            sett.ThresholdBlob = 128;    // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24441; // Broadcast0
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortSend = 24423;
+            sett.IP_KV1000SpCam2 = "192.168.1.204";
+            sett.UdpPortKV1000SpCam2 = 24426;
+            sett.SaveDir = @"F:\img_data\";
+            SettingsSave(sett);
+
+            // MT3Fine ImagingSouce
+            sett.Text = "MT3Fine IS DMK23G618";
+            sett.ID = 8;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev   = 8;
+            sett.CameraType = "IS"; //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID   = 1;          //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.GIGE;
+            sett.CamPlatform = Platform.MT3;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
             sett.Width = 656;// 652; // Max 659    4の倍数でメモリ確保される。
@@ -392,7 +464,7 @@ namespace MT3
             sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 0;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
-            sett.CamPlatform = Platform.MT2;
+            sett.CamPlatform = Platform.Wide;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.Width = 640;
             sett.Height = 480;
@@ -422,7 +494,7 @@ namespace MT3
             sett.CameraType = "analog"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 0;       //カメラタイプ毎のID
             sett.CameraColor = 0;    // 0:mono  1:color
-            sett.CamPlatform = Platform.MT2;
+            sett.CamPlatform = Platform.Wide;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.Width = 640;
             sett.Height = 480;
@@ -1161,42 +1233,47 @@ namespace MT3
         // 補正データ読み込み(360x90)
         public void read_grid_data()
         {
-            // ファイルからテキストを読み出し。
-            using (StreamReader r = new StreamReader(@"D:\img_data\lib\grid_z1_az.txt"))
+            if (appSettings.CamPlatform == Platform.MT2)
             {
-                int j = 0;
-                string line;
-                while ((line = r.ReadLine()) != null) // 1行ずつ読み出し。
+                // ファイルからテキストを読み出し。
+                string fnaz  = appSettings.SaveDir + "lib\\grid_z1_az.txt";
+                string fnalt = appSettings.SaveDir + "lib\\grid_z1_alt.txt";
+                using (StreamReader r = new StreamReader(fnaz))
                 {
-                    // 区切りで分割して配列に格納する
-                    string[] stArrayData = line.Split(' ');
-                    int i = 0;
-                    foreach (string s in stArrayData)
+                    int j = 0;
+                    string line;
+                    while ((line = r.ReadLine()) != null) // 1行ずつ読み出し。
                     {
-                        double data = double.Parse(s);
-                        grid_az.Set2D(j,i, data);
-                        i++;
+                        // 区切りで分割して配列に格納する
+                        string[] stArrayData = line.Split(' ');
+                        int i = 0;
+                        foreach (string s in stArrayData)
+                        {
+                            double data = double.Parse(s);
+                            grid_az.Set2D(j, i, data);
+                            i++;
+                        }
+                        j++;
                     }
-                    j++;
                 }
-            }
-            // ファイルからテキストを読み出し。
-            using (StreamReader r = new StreamReader(@"D:\img_data\lib\grid_z1_alt.txt"))
-            {
-                int j = 0;
-                string line;
-                while ((line = r.ReadLine()) != null) // 1行ずつ読み出し。
+                // ファイルからテキストを読み出し。
+                using (StreamReader r = new StreamReader(fnalt))  //(@"D:\img_data\lib\grid_z1_alt.txt"))
                 {
-                    // 区切りで分割して配列に格納する
-                    string[] stArrayData = line.Split(' ');
-                    int i = 0;
-                    foreach (string s in stArrayData)
+                    int j = 0;
+                    string line;
+                    while ((line = r.ReadLine()) != null) // 1行ずつ読み出し。
                     {
-                        double data = double.Parse(s);
-                        grid_alt.Set2D(j, i, data);
-                        i++;
+                        // 区切りで分割して配列に格納する
+                        string[] stArrayData = line.Split(' ');
+                        int i = 0;
+                        foreach (string s in stArrayData)
+                        {
+                            double data = double.Parse(s);
+                            grid_alt.Set2D(j, i, data);
+                            i++;
+                        }
+                        j++;
                     }
-                    j++;
                 }
             }
         }
