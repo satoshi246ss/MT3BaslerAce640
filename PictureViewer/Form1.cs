@@ -85,7 +85,13 @@ namespace MT3
             foreach (IPAddress address in addresses)
             {
                 mmLocalIP = address.ToString();
-            } 
+            }
+
+            //自分自身のAssemblyを取得
+            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            //バージョンの取得
+            System.Version ver = asm.GetName().Version;
+
 
             // VideoInput
             if (cam_maker == Camera_Maker.analog)
