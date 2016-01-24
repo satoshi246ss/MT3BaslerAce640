@@ -275,8 +275,7 @@ namespace MT3
             {
                 udp_packet_id++;
                 byte[] rcvBytes = udpc.Receive(ref remoteEP);
-                if (rcvBytes.Length == size_kd && remoteEP.Address.ToString() == mmFsiKV1000)
-                //if (rcvBytes.Length == size_kd && (remoteEP.Address.ToString() == mmFsiKV1000 || remoteEP.Address.ToString() == "127.0.0.1"))
+                if (rcvBytes.Length == size_kd && (remoteEP.Address.ToString() == mmFsiKV1000 || remoteEP.Address.ToString() == "127.0.0.1"))
                 {
                     kd = ToStruct1(rcvBytes);
                     bw.ReportProgress(0, kd);
