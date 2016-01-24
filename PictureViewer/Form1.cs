@@ -158,8 +158,10 @@ namespace MT3
             appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString()+"  " + mmLocalHost +"(" + mmLocalIP+")";
             this.Text = appTitle;
 
-            string fn = @"D:\img_data\log"+appSettings.ID.ToString()+".txt";
+            string fn = appSettings.SaveDir+appSettings.ID.ToString()+".txt";
             log_writer = new System.IO.StreamWriter(@fn, true);
+            cDrive = new DriveInfo(appSettings.SaveDrive);
+
 
 
             // 有効な画像取り込みデバイスが選択されているかをチェック。
@@ -274,7 +276,7 @@ namespace MT3
                 udp_packet_id++;
                 byte[] rcvBytes = udpc.Receive(ref remoteEP);
                 if (rcvBytes.Length == size_kd && remoteEP.Address.ToString() == mmFsiKV1000)
-                if (rcvBytes.Length == size_kd && (remoteEP.Address.ToString() == mmFsiKV1000 || remoteEP.Address.ToString() == "127.0.0.1"))
+                //if (rcvBytes.Length == size_kd && (remoteEP.Address.ToString() == mmFsiKV1000 || remoteEP.Address.ToString() == "127.0.0.1"))
                 {
                     kd = ToStruct1(rcvBytes);
                     bw.ReportProgress(0, kd);

@@ -204,7 +204,7 @@ namespace MT3
         string mmLocalIP = "";
         string mmLocalHost = "";
         System.Net.Sockets.UdpClient udpc3 = null;
-        DriveInfo cDrive = new DriveInfo("D");
+        DriveInfo cDrive ;// = new DriveInfo("D");
         long diskspace;
         System.IO.StreamWriter log_writer; //= new System.IO.StreamWriter(@"D:\img_data\log.txt", true);
         
@@ -319,6 +319,7 @@ namespace MT3
             sett.UdpPortRecieve = 24410;
             sett.UdpPortSend    = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
+            sett.SaveDrive = "C:";
             SettingsSave(sett);
 
             // MT2 Basler Guide
@@ -353,6 +354,7 @@ namespace MT3
             //sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortSend = 24431;
             sett.SaveDir = @"D:\img_data\";
+            sett.SaveDrive = "D:";
             SettingsSave(sett);
 
             // MT3Fine ImagingSouce
@@ -391,6 +393,7 @@ namespace MT3
             sett.IP_KV1000SpCam2 = "192.168.1.204";
             sett.UdpPortKV1000SpCam2 = 24426;
             sett.SaveDir = @"F:\img_data\";
+            sett.SaveDrive = "F:";
             SettingsSave(sett);
 
             // MT3Fine ImagingSouce
@@ -424,6 +427,7 @@ namespace MT3
             //sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortSend = 24431;
             sett.SaveDir = @"D:\img_data\";
+            sett.SaveDrive = "D:";
             SettingsSave(sett);
 
             // MT2 Echelle
@@ -455,6 +459,7 @@ namespace MT3
             sett.UdpPortRecieve = 24441; //Broadcast1
             sett.UdpPortSend    = 24433;
             sett.SaveDir = @"D:\img_data\";
+            sett.SaveDrive = "D:";
             SettingsSave(sett);
 
             // Wat100N Cam ID 20
@@ -484,7 +489,8 @@ namespace MT3
             sett.UdpPortRecieve = 24442; //Broadcast2
             //sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend = 24451;
-            sett.SaveDir = @"D:\img_data\";
+            sett.SaveDir = @"F:\img_data\";
+            sett.SaveDrive = "F:";
             SettingsSave(sett);
 
             // Wat100N Cam ID 21
@@ -515,6 +521,7 @@ namespace MT3
             sett.UdpPortRecieve = 24410; // Broadcast0
             sett.UdpPortSend = 24451;
             sett.SaveDir = @"D:\img_data\";
+            sett.SaveDrive = "D:";
             SettingsSave(sett);
 
             // IDS
@@ -542,6 +549,7 @@ namespace MT3
             sett.UdpPortRecieve = 24410; //Broadcast0
             sett.UdpPortSend = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
+            sett.SaveDrive = "C:";
             SettingsSave(sett);
 
             /*

@@ -269,6 +269,7 @@ namespace MT3
             get { return _pre_save_num; }
             set { _pre_save_num = value; }
         }
+        public string SaveDrive { get; set; }
 
         public string TestFname { get; set; }
         public bool TestMode { get; set; }
@@ -319,6 +320,7 @@ namespace MT3
             //string fn = @"D:\image_data\20151018\20151018_175329_491_10.avi";
             TestFname = @"20151018_224542_615_10.avi";
             TestMode = false;
+            SaveDrive = "D:";
         }
 
      }
