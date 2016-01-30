@@ -179,7 +179,10 @@ namespace MT3
 
         // 位置補正データ
         CvMat grid_az = new CvMat(360, 90, MatrixType.F64C1);
-        CvMat grid_alt = new CvMat(360, 90, MatrixType.F64C1); 
+        CvMat grid_alt = new CvMat(360, 90, MatrixType.F64C1);
+        //frame rate 用
+        Stopwatch sw_fr = new Stopwatch();
+        long elapsed_fr0 = 0, elapsed_fr1 = 0;
 
         Stopwatch sw = new Stopwatch();
         Stopwatch sw2 = new Stopwatch();

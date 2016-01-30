@@ -48,10 +48,10 @@
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
             this.checkBoxDispAvg = new System.Windows.Forms.CheckBox();
-            this.icImagingControl1 = new TIS.Imaging.ICImagingControl();
             this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_ID = new System.Windows.Forms.Label();
             this.label_X2Y2 = new System.Windows.Forms.Label();
+            this.icImagingControl1 = new TIS.Imaging.ICImagingControl();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timerSaveTimeOver = new System.Windows.Forms.Timer(this.components);
@@ -345,21 +345,6 @@
             this.checkBoxDispAvg.Text = "DispAvg";
             this.checkBoxDispAvg.UseVisualStyleBackColor = true;
             // 
-            // icImagingControl1
-            // 
-            this.icImagingControl1.BackColor = System.Drawing.Color.White;
-            this.icImagingControl1.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
-            this.icImagingControl1.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
-            this.icImagingControl1.DeviceState = resources.GetString("icImagingControl1.DeviceState");
-            this.icImagingControl1.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
-            this.icImagingControl1.LiveDisplayPosition = new System.Drawing.Point(0, 0);
-            this.icImagingControl1.Location = new System.Drawing.Point(433, 32);
-            this.icImagingControl1.MemoryCurrentGrabberColorformat = TIS.Imaging.ICImagingControlColorformats.ICY800;
-            this.icImagingControl1.Name = "icImagingControl1";
-            this.icImagingControl1.Size = new System.Drawing.Size(86, 40);
-            this.icImagingControl1.TabIndex = 19;
-            this.icImagingControl1.ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
-            // 
             // label_frame_rate
             // 
             this.label_frame_rate.AutoSize = true;
@@ -386,6 +371,21 @@
             this.label_X2Y2.Size = new System.Drawing.Size(85, 12);
             this.label_X2Y2.TabIndex = 13;
             this.label_X2Y2.Text = "(  X2,      Y2   )";
+            // 
+            // icImagingControl1
+            // 
+            this.icImagingControl1.BackColor = System.Drawing.Color.White;
+            this.icImagingControl1.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
+            this.icImagingControl1.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
+            this.icImagingControl1.DeviceState = resources.GetString("icImagingControl1.DeviceState");
+            this.icImagingControl1.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
+            this.icImagingControl1.LiveDisplayPosition = new System.Drawing.Point(0, 0);
+            this.icImagingControl1.Location = new System.Drawing.Point(433, 32);
+            this.icImagingControl1.MemoryCurrentGrabberColorformat = TIS.Imaging.ICImagingControlColorformats.ICY800;
+            this.icImagingControl1.Name = "icImagingControl1";
+            this.icImagingControl1.Size = new System.Drawing.Size(86, 40);
+            this.icImagingControl1.TabIndex = 19;
+            this.icImagingControl1.ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
             // 
             // textBox1
             // 
@@ -470,8 +470,8 @@
             // toolStripStatusLabelExposure
             // 
             this.toolStripStatusLabelExposure.Name = "toolStripStatusLabelExposure";
-            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(130, 18);
-            this.toolStripStatusLabelExposure.Text = "Exposure: xx.xx[ms]";
+            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(98, 18);
+            this.toolStripStatusLabelExposure.Text = "Exp: xx.xx[ms]";
             // 
             // toolStripStatusLabelGain
             // 

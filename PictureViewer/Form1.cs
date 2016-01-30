@@ -995,7 +995,7 @@ namespace MT3
                 s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]TC:{4:D5}\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c, udpkv.udp_time_code);
             }
             label_X2Y2.Text = s;
-            toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0")+" "+udp_packet_id.ToString("00");
+            //toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0")+" "+udp_packet_id.ToString("00");
             //
             // 観測中のみ表示部分
             //
@@ -1170,8 +1170,19 @@ namespace MT3
                 frame_dropped  = StatFrameDropped();
                 frame_error = frame_underrun + frame_dropped;
             }
+            if (cam_maker == Camera_Maker.ImagingSouce)
+            {
+                // dFramerate ;// 毎フレーム計算
+                dExpo = get_ImagingSouceExpo();
+                igain = get_ImagingSouceGain();                
+                //frame_timestamp = m_imageProvider.GetTimestamp();
+                frame_total = get_CountOfFramesDropped() + get_CountOfFramesNotDropped();
+                //frame_underrun = m_imageProvider.Get_Statistic_feature("Statistic_Buffer_Underrun_Count");
+                //frame_error = frame_underrun + m_imageProvider.Get_Statistic_feature("Statistic_Failed_Buffer_Count");
+                frame_dropped = get_CountOfFramesDropped();
+            }
             toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
-            toolStripStatusLabelExposure.Text = "Exposure: " + (dExpo/1000.0).ToString("00.00")+"[ms]";
+            toolStripStatusLabelExposure.Text = "Exp: " + (dExpo/1000.0).ToString("00.00")+"[ms]";
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
             toolStripStatusLabelFailed.Text = "Failed U:" + frame_underrun.ToString("0000") + " S:" + frame_shoved.ToString("0000") + " D:" + frame_dropped.ToString("0000");
             
