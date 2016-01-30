@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.ShowButton = new System.Windows.Forms.Button();
@@ -47,10 +48,10 @@
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
             this.checkBoxDispAvg = new System.Windows.Forms.CheckBox();
+            this.icImagingControl1 = new TIS.Imaging.ICImagingControl();
             this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_ID = new System.Windows.Forms.Label();
             this.label_X2Y2 = new System.Windows.Forms.Label();
-            this.deviceListView = new System.Windows.Forms.ListView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timerSaveTimeOver = new System.Windows.Forms.Timer(this.components);
@@ -78,6 +79,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_daz)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_dalt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.icImagingControl1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -134,7 +136,7 @@
             this.flowLayoutPanel1.Controls.Add(this.label_frame_rate);
             this.flowLayoutPanel1.Controls.Add(this.label_ID);
             this.flowLayoutPanel1.Controls.Add(this.label_X2Y2);
-            this.flowLayoutPanel1.Controls.Add(this.deviceListView);
+            this.flowLayoutPanel1.Controls.Add(this.icImagingControl1);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 489);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -343,6 +345,21 @@
             this.checkBoxDispAvg.Text = "DispAvg";
             this.checkBoxDispAvg.UseVisualStyleBackColor = true;
             // 
+            // icImagingControl1
+            // 
+            this.icImagingControl1.BackColor = System.Drawing.Color.White;
+            this.icImagingControl1.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
+            this.icImagingControl1.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
+            this.icImagingControl1.DeviceState = resources.GetString("icImagingControl1.DeviceState");
+            this.icImagingControl1.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
+            this.icImagingControl1.LiveDisplayPosition = new System.Drawing.Point(0, 0);
+            this.icImagingControl1.Location = new System.Drawing.Point(433, 32);
+            this.icImagingControl1.MemoryCurrentGrabberColorformat = TIS.Imaging.ICImagingControlColorformats.ICY800;
+            this.icImagingControl1.Name = "icImagingControl1";
+            this.icImagingControl1.Size = new System.Drawing.Size(86, 40);
+            this.icImagingControl1.TabIndex = 19;
+            this.icImagingControl1.ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
+            // 
             // label_frame_rate
             // 
             this.label_frame_rate.AutoSize = true;
@@ -369,16 +386,6 @@
             this.label_X2Y2.Size = new System.Drawing.Size(85, 12);
             this.label_X2Y2.TabIndex = 13;
             this.label_X2Y2.Text = "(  X2,      Y2   )";
-            // 
-            // deviceListView
-            // 
-            this.deviceListView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.deviceListView.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.deviceListView.Location = new System.Drawing.Point(433, 32);
-            this.deviceListView.Name = "deviceListView";
-            this.deviceListView.Size = new System.Drawing.Size(121, 16);
-            this.deviceListView.TabIndex = 12;
-            this.deviceListView.UseCompatibleStateImageBehavior = false;
             // 
             // textBox1
             // 
@@ -430,46 +437,46 @@
             this.toolStripStatusLabelPixelClock,
             this.toolStripStatusLabelExposure,
             this.toolStripStatusLabelGain});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 597);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 596);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(646, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(646, 23);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabelFramerate
             // 
             this.toolStripStatusLabelFramerate.Name = "toolStripStatusLabelFramerate";
-            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(27, 17);
+            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(28, 18);
             this.toolStripStatusLabelFramerate.Text = "Fps";
             // 
             // toolStripStatusLabelFailed
             // 
             this.toolStripStatusLabelFailed.Name = "toolStripStatusLabelFailed";
-            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(133, 17);
+            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(134, 18);
             this.toolStripStatusLabelFailed.Text = "toolStripStatusLabel2";
             // 
             // toolStripStatusLabelID
             // 
             this.toolStripStatusLabelID.Name = "toolStripStatusLabelID";
-            this.toolStripStatusLabelID.Size = new System.Drawing.Size(59, 17);
+            this.toolStripStatusLabelID.Size = new System.Drawing.Size(60, 18);
             this.toolStripStatusLabelID.Text = "FrameID";
             // 
             // toolStripStatusLabelPixelClock
             // 
             this.toolStripStatusLabelPixelClock.Name = "toolStripStatusLabelPixelClock";
-            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(22, 17);
+            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(23, 18);
             this.toolStripStatusLabelPixelClock.Text = "PC";
             // 
             // toolStripStatusLabelExposure
             // 
             this.toolStripStatusLabelExposure.Name = "toolStripStatusLabelExposure";
-            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(129, 17);
+            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(130, 18);
             this.toolStripStatusLabelExposure.Text = "Exposure: xx.xx[ms]";
             // 
             // toolStripStatusLabelGain
             // 
             this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
-            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(52, 17);
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(53, 18);
             this.toolStripStatusLabelGain.Text = "Gain:xx";
             // 
             // timerMTmonSend
@@ -527,6 +534,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_daz)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_dalt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.icImagingControl1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -543,7 +551,6 @@
         private System.Windows.Forms.Timer timerSaveMainTime;
         private System.Windows.Forms.Timer timerDisplay;
         private System.Windows.Forms.Timer timerObsOnOff;
-        //private TIS.Imaging.ICImagingControl icImagingControl1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelFramerate;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelFailed;
@@ -570,13 +577,13 @@
         private System.Windows.Forms.Label label_frame_rate;
         private System.Windows.Forms.Label label_ID;
         private System.Windows.Forms.Label label_X2Y2;
-        private System.Windows.Forms.ListView deviceListView;
         private System.Windows.Forms.Button buttonMove;
         private System.Windows.Forms.NumericUpDown numericUpDownStarMin;
         private System.Windows.Forms.NumericUpDown numericUpDown_daz;
         private System.Windows.Forms.NumericUpDown numericUpDown_dalt;
         private System.Windows.Forms.NumericUpDown numericUpDownStarCount;
         private System.Windows.Forms.Timer timerAutoStarData;
+        private TIS.Imaging.ICImagingControl icImagingControl1;
     }
 }
 

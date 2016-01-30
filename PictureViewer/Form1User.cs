@@ -148,8 +148,7 @@ namespace MT3
         CircularBuffer fifo = new CircularBuffer();
 
         private ImageProvider m_imageProvider = new ImageProvider(); /* Create one image provider. */
-
-        //TIS.Imaging.ImageBuffer CurrentBuffer = null;
+        TIS.Imaging.ImageBuffer CurrentBuffer = null;
 
         // IDS
         private Int32 u32DisplayID = 0;
@@ -357,7 +356,7 @@ namespace MT3
             sett.SaveDrive = "D:";
             SettingsSave(sett);
 
-            // MT3Fine ImagingSouce
+            // MT3 7 IDS
             sett.Text = "NUV (IDS UI-2410SE-M)";
             sett.ID = 7;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
             sett.NoCapDev = 7;
@@ -405,10 +404,11 @@ namespace MT3
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.GIGE;
             sett.CamPlatform = Platform.MT3;
+            sett.FlipOn = false;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
             sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
-            sett.Width = 656;// 652; // Max 659    4の倍数でメモリ確保される。
-            sett.Height = 494; // Max 494
+            sett.Width  = 640; // 652; //Max 659    4の倍数でメモリ確保される。
+            sett.Height = 480; // 949; //Max 494
             sett.FocalLength = 35;      //[mm] fuji 35mm
             sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
             sett.Ccdpy = 0.0056; //[mm]
@@ -426,8 +426,8 @@ namespace MT3
             sett.UdpPortRecieve = 24410; // Broadcast0
             //sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortSend = 24431;
-            sett.SaveDir = @"D:\img_data\";
-            sett.SaveDrive = "D:";
+            sett.SaveDir = @"F:\img_data\";
+            sett.SaveDrive = "F:";
             SettingsSave(sett);
 
             // MT2 Echelle

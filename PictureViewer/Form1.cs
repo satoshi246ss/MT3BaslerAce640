@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using PylonC.NETSupportLibrary;
 using MtLibrary;
+//using TIS.Imaging;
 
 namespace MT3
 {
@@ -58,7 +59,7 @@ namespace MT3
                 cam_maker = Camera_Maker.IDS;
                 // cam_color = Camera_Color.mono;
             }
-            if (cmds[1].StartsWith("/IS") || cmds[1].StartsWith("/Im")) // Imaging Souce
+            if (cmds[1].StartsWith("/IS") || cmds[1].StartsWith("/is") || cmds[1].StartsWith("/Im")) // Imaging Souce
             {
                 cam_maker = Camera_Maker.ImagingSouce;
                 // cam_color = Camera_Color.mono;
@@ -146,8 +147,15 @@ namespace MT3
                 */
 
                 /* Update the list of available devices in the upper left area. */
-                UpdateDeviceList();
+                //UpdateDeviceList();
             }
+
+            //Imaging Souce
+            if (cam_maker == Camera_Maker.ImagingSouce)
+            {
+                appTitle = "MT3ImaginSouce " + appSettings.ID.ToString();
+            }
+
             Pid_Data_Send_Init();
         }
 
@@ -543,7 +551,6 @@ namespace MT3
 
             //v1.Val0 = 256;
             //Cv.Set2D(imgdata.img, y+1, x, v1);
-
         }
 
         //BCB互換TDatetime値に変換
@@ -637,7 +644,7 @@ namespace MT3
             string s = string.Format("dAz,dAlt:[{0} daz:{1} dalt:{2}] az:{3} azc:{4}  alt:{5} altc:{6}\n", id, daz, dalt, az, udpkv.az1_c, alt, udpkv.alt1_c);
             richTextBox1.AppendText(s);
 
-            id = 0 ;   s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767));            richTextBox1.AppendText(s);
+            id = 0     ; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
             id = -1    ; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
             id = -32000; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
             id = 32766 ; s = string.Format("ID:[{0} {1}\n", id, (short)(id & 32767)); richTextBox1.AppendText(s);
@@ -726,7 +733,7 @@ namespace MT3
             //ImaginSouse
             if (cam_maker == Camera_Maker.ImagingSouce)
             {
-                //icImagingControl1.LiveStop();
+                ImagingSouce_cam_end();
             }
             //analog
             if (cam_maker == Camera_Maker.analog)
@@ -773,7 +780,12 @@ namespace MT3
                     this.worker.RunWorkerAsync();
                 }
             }
-
+            //ImaginSouce
+            if (cam_maker == Camera_Maker.ImagingSouce)
+            {
+                ImagingSouce_cam_start();
+            }
+ 
             LiveStartTime = DateTime.Now;
             this.States = RUN;
             timerDisplay.Enabled = true;
@@ -988,8 +1000,6 @@ namespace MT3
             // 観測中のみ表示部分
             //
             if (this.States == STOP) return;
-            //if (img_dmk3 == null) return;
-
             //OpenCV　表示ルーチン
             if (imgdata.img != null)
             {
@@ -1364,6 +1374,7 @@ namespace MT3
                 buttonMove_Click(sender, e);
             }
         }
+
 
         }
     }

@@ -282,7 +282,7 @@ namespace MT3
                 /* Ask the device enumerator for a list of devices. */
                 List<DeviceEnumerator.Device> list = DeviceEnumerator.EnumerateDevices();
 
-                ListView.ListViewItemCollection items = deviceListView.Items;
+                ListView.ListViewItemCollection items = null; ///= deviceListView.Items;
 
                 /* Add each new device to the list. */
                 foreach (DeviceEnumerator.Device device in list)
@@ -315,7 +315,7 @@ namespace MT3
                         item.Tag = device;
 
                         /* Attach the device data. */
-                        deviceListView.Items.Add(item);
+                        ///deviceListView.Items.Add(item);
                     }
                 }
 
@@ -336,7 +336,7 @@ namespace MT3
                     /* If the device has not been found by enumeration then remove from the list view. */
                     if (!exists)
                     {
-                        deviceListView.Items.Remove(item);
+                        ///deviceListView.Items.Remove(item);
                     }
                 }
             }
@@ -372,23 +372,23 @@ namespace MT3
             /* Close the image provider. */
             CloseTheImageProvider();
 
-            /* Open the selected image provider. */
+            /* Open the selected image provider. 
             if (deviceListView.SelectedItems.Count > 0)
             {
-                /* Get the first selected item. */
+                // Get the first selected item.
                 ListViewItem item = deviceListView.SelectedItems[0];
-                /* Get the attached device data. */
+                // Get the attached device data. 
                 DeviceEnumerator.Device device = item.Tag as DeviceEnumerator.Device;
                 try
                 {
-                    /* Open the image provider using the index from the device data. */
+                    // Open the image provider using the index from the device data. 
                     m_imageProvider.Open(device.Index);
                 }
                 catch (Exception e)
                 {
                     ShowException(e, m_imageProvider.GetLastErrorMessage());
                 }
-            }
+            }*/
         }
 
         /* If the F5 key has been pressed update the list of devices. */

@@ -31,6 +31,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <NuGetPackageImportStamp>2a4b9e71</NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -100,6 +102,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TIS.Imaging.ICImagingControl34, Version=3.4.4.2341, Culture=neutral, PublicKeyToken=257805929e8b7928, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\TIS.Imaging.ICImagingControl34.dll</HintPath>
+    </Reference>
     <Reference Include="uEyeDotNetApiLayer, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\uEyeDotNetApiLayer.dll</HintPath>
@@ -149,6 +155,9 @@
     <Compile Include="GE680CCamera.cs" />
     <Compile Include="GenApiParam.cs" />
     <Compile Include="ImageProvider.cs" />
+    <Compile Include="ImagingSouce.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="position_mesure.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -239,6 +248,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\927af0f01b3db2b2c5799e6badb661f5_xxo.ico" />
+    <Content Include="TIS.Imaging.ICImagingControl34.dll" />
+    <Content Include="TIS_UDSHL11.dll" />
     <Content Include="uEyeDotNetApiLayer.dll" />
     <Content Include="uEyeDotNetUserLayer.dll" />
     <Content Include="VideoInputSharp.dll" />
@@ -251,6 +262,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\OpenCvSharp-AnyCPU.2.4.10.20150820\build\OpenCvSharp-AnyCPU.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCvSharp-AnyCPU.2.4.10.20150820\build\OpenCvSharp-AnyCPU.props'))" />
   </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
