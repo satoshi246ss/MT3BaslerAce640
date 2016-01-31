@@ -165,8 +165,9 @@ namespace MT3
             cam.Memory.Lock(s32MemID);
             cam.Information.GetImageInfo(s32MemID, out imageInfo);
             cam.Memory.ToIntPtr(s32MemID, out ptr);
-            CopyMemory( img_dmk.ImageDataOrigin, ptr,img_dmk.ImageSize);
-            Cv.Copy(img_dmk, imgdata.img);
+            CopyMemory(imgdata.img.ImageDataOrigin, ptr, imgdata.img.ImageSize);
+            ///CopyMemory(img_dmk.ImageDataOrigin, ptr, img_dmk.ImageSize);
+            ///Cv.Copy(img_dmk, imgdata.img);
             if (ueye_frame_number == 0) ueye_frame_number = imageInfo.FrameNumber; //frame number初期値
             elapsed0 = sw.ElapsedTicks; // 0.1ms
 
@@ -279,9 +280,6 @@ namespace MT3
 
             double sf = (double)Stopwatch.Frequency / 1000; //msec
             fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2} fr:{4,5:F1}", id, elapsed0 / sf, elapsed1 / sf, elapsed2 / sf, framerate0);
-            // 文字入れ
-            //string st = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff");
-            //img_dmk.PutText(st, new CvPoint(10, 470), font, new CvColor(0, 100, 100));
         }
 
     }

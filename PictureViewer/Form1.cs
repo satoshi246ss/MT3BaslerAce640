@@ -924,7 +924,6 @@ namespace MT3
             System.Diagnostics.Process p = System.Diagnostics.Process.Start(psi);
         }
 
-
         /// <summary>
         /// 回転座標計算ルーチン
         /// IN:中心座標 CvPoint2D64f
@@ -937,8 +936,12 @@ namespace MT3
         {
             double sinth=0, costh=r;
             CvPoint2D64f ans = new CvPoint2D64f();
+            sinth = Math.Sin(-(theta + 90) * Math.PI / 180.0);
+            costh = Math.Cos(-(theta + 90) * Math.PI / 180.0);
+            ans.Y = -costh * r;
+            ans.X = +sinth * r;
 
-            if (appSettings.CamPlatform == Platform.MT2 && udpkv.mt2mode == udpkv.mmWest)
+/*            if (appSettings.CamPlatform == Platform.MT2 && udpkv.mt2mode == udpkv.mmWest)
             {
                 sinth = Math.Sin(-(theta + 90) * Math.PI / 180.0);
                 costh = Math.Cos(-(theta + 90) * Math.PI / 180.0);
@@ -952,7 +955,7 @@ namespace MT3
                 ans.Y = -costh * r;
                 ans.X = +sinth * r;
             }
-
+ */ 
             return (ans + xy);
         }
         //矢印
@@ -995,7 +998,6 @@ namespace MT3
                 s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]TC:{4:D5}\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c, udpkv.udp_time_code);
             }
             label_X2Y2.Text = s;
-            //toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0")+" "+udp_packet_id.ToString("00");
             //
             // 観測中のみ表示部分
             //
@@ -1032,54 +1034,108 @@ namespace MT3
 
                 CvPoint2D64f Point1 ;
                 CvPoint2D64f Point2 ;
-                String str;
+                String str="";
 
-                if (udpkv.mt2mode == udpkv.mmEast)
+                // MT2
+                if (appSettings.CamPlatform == Platform.MT2)
                 {
-                    Point1 = Rotation(OCPoint, k1 * roa, theta_c);
-                    Point2 = Rotation(OCPoint, k2 * roa, theta_c);
-                    cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
-                    Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
-                    img_dmk3.PutText("+Alt", Point1, font, new CvColor(0, 150, 250));
+                    if (udpkv.mt2mode == udpkv.mmEast)
+                    {
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c);
+                        cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
+                        Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+                        img_dmk3.PutText("+Alt", Point1, font, new CvColor(0, 150, 250));
 
-                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
-                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
-                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
+                        Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
 
-                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
-                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
-                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
+                        Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
 
-                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
-                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
-                    cvArrow(img_dmk3, Point2, Point1, new CvColor(230, 105, 0));
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
+                        cvArrow(img_dmk3, Point2, Point1, new CvColor(230, 105, 0));
 
-                    str = String.Format("ID:{4,7:D1} W: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                        str = String.Format("ID:{4,7:D1} W: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                    }
+                    else
+                    {
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c);
+                        Cv.Line(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
+
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
+                        cvArrow(img_dmk3, Point2, Point1, new CvColor(230, 105, 0));   // Arrow
+                        //Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
+                        cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
+                        Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+                        img_dmk3.PutText("+Alt", Point1, font, new CvColor(0, 150, 250));
+
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
+                        Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                        //Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
+
+                        str = String.Format("ID:{4,7:D1} E: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                    }
                 }
-                else
+                // MT3
+                if (appSettings.CamPlatform == Platform.MT3)
                 {
-                    Point1 = Rotation(OCPoint, k1 * roa, theta_c);
-                    Point2 = Rotation(OCPoint, k2 * roa, theta_c);
-                    Cv.Line(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
+                    double theta_c = -90;
+                    if (udpkv.mt3mode == udpkv.mmEast)
+                    {
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c);
+                        cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
+                        Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+                        img_dmk3.PutText("+Alt", Point1, font, new CvColor(0, 150, 250));
 
-                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
-                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
-                    cvArrow(img_dmk3, Point2, Point1, new CvColor(230, 105, 0));   // Arrow
-                    //Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
+                        Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
 
-                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
-                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
-                    cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
-                    Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
-                    img_dmk3.PutText("+Alt", Point1, font, new CvColor(0, 150, 250));
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
+                        Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
 
-                    Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
-                    Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
-                    Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
-                    //Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
+                        cvArrow(img_dmk3, Point2, Point1, new CvColor(230, 105, 0));
 
-                    str = String.Format("ID:{4,7:D1} E: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                        str = String.Format("ID:{4,7:D1} W: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                    }
+                    else
+                    {
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c);
+                        Cv.Line(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
 
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 90);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 90);
+                        cvArrow(img_dmk3, Point2, Point1, new CvColor(230, 105, 0));   // Arrow
+                        //Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 180);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 180);
+                        cvArrow(img_dmk3, Point2, Point1, new CvColor(0, 205, 0));
+                        Cv.Circle(img_dmk3, Point1, 5, new CvColor(0, 255, 0));       // Arrow
+                        img_dmk3.PutText("+Alt", Point1, font, new CvColor(0, 150, 250));
+
+                        Point1 = Rotation(OCPoint, k1 * roa, theta_c + 270);
+                        Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
+                        Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
+                        //Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
+
+                        str = String.Format("ID:{4,7:D1} E: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                    }
                 }
                 
                 img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
@@ -1092,8 +1148,6 @@ namespace MT3
                 catch (System.ArgumentException)
                 {
                     this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
-                    //System.Diagnostics.Trace.WriteLine(ex.Message);
-                    //System.Console.WriteLine(ex.Message);
                     return;
                 }
                 catch (System.Exception ex)
@@ -1102,31 +1156,19 @@ namespace MT3
                     //例外の説明を表示する
                     //匿名デリゲートで表示する
                     this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
-                    //System.Diagnostics.Trace.WriteLine(ex.Message);
-                    //System.Console.WriteLine(ex.Message);
                     return;
                 }
             }
 
-     //       label_ID.Text = max_label.ToString("00000");
-            //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
-            // Status表示
-            //this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_X2Y2, String.Format("({0},{1}", udpkv.az2_c, udpkv.alt2_c) });
-
-            //long frame_timestamp=0;
-            //double dFramerate = 0; // Frame rate[fr/s]
-            //double dExpo = 0; // Exposure[us]
-            //long igain = 0; //Gain
-            // Error rate
             long frame_total = 0, frame_error = 0;
             long frame_underrun = 0, frame_shoved = 0, frame_dropped=0;
             double err_rate = 0;
             
-            // IDS
+            // 各カメラ毎にデータセット
             if (cam_maker == Camera_Maker.IDS)
             {
                 cam.Timing.Framerate.GetCurrentFps(out dFramerate); //IDS
-                statusRet = cam.Timing.Exposure.Get(out dExpo);//[ms]
+                statusRet = cam.Timing.Exposure.Get(out dExpo);
                 dExpo *= 1000; // [us]
                 int ig;
                 cam.Gain.Hardware.Scaled.GetMaster(out ig);
@@ -1135,11 +1177,6 @@ namespace MT3
                 cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
                 frame_error = (long)captureStatus.Total;
                 frame_total = (long)(imageInfo.FrameNumber - ueye_frame_number) ;
-
-                //Int32 s32Value;
-                //statusRet = cam.Timing.PixelClock.Get(out s32Value);
-                //           toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed21-elapsed20)/(double)(Stopwatch.Frequency) +" "+ 10000*(elapsed22-elapsed21)/(double)(Stopwatch.Frequency);
-
             }            
             if (cam_maker == Camera_Maker.Basler)
             {
@@ -1238,11 +1275,9 @@ namespace MT3
             //{
             //Cv.Sub(img_dmk, img_dark8, imgdata.img); // dark減算
             //Cv.Copy(img_dmk, imgdata.img);
-           // cam.Information.GetImageInfo(s32MemID, out imageInfo);
             imgdata.id = (int)id;     // (int)imageInfo.FrameNumber;
             imgdata.t = DateTime.Now; //imageInfo.TimestampSystem;   //  LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime);
             imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
-            //statusRet = cam.Timing.Exposure.Get(out exp);
             imgdata.gx = gx;
             imgdata.gy = gy;
             imgdata.kgx = kgx;

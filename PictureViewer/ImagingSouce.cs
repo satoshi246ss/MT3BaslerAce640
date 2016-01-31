@@ -93,6 +93,7 @@ namespace MT3
             }
             return GainRange.Value;
         }
+        // Exposure [sec]
         public int get_ImagingSouceExpo()
         {
             TIS.Imaging.VCDPropertyItem Expo = null;
@@ -113,8 +114,5 @@ namespace MT3
             }
             return ExpoRange.Value ;
         }
-
-//        TIS.Imaging.VCDPropertyItem Brightness = null;
-//Brightness = icImagingControl1.VCDPropertyItems.FindItem(TIS.Imaging.VCDIDs.VCDID_Brightness);
     }
 }
