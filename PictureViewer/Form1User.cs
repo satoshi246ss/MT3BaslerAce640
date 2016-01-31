@@ -1180,13 +1180,15 @@ namespace MT3
 
         private async void star_auto_check()
         {
+            if (appSettings.ID != 10 && appSettings.ID != 8) return;
 
-            string s, name = "";
+            string s="", name = "";
             int star_id_min = (int)numericUpDownStarMin.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
             int star_id_max = star_id_min + (int)numericUpDownStarCount.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
             if (star_id_max > 98) star_id_max = 98; 
             double az0 = 90, alt0 = 90;
             double az_t = 90, alt_t = 90, vmag = 0;
+            double min_alt = 5.0; //最低高度
 
             Star.init();
             //Star.ID = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
@@ -1201,7 +1203,7 @@ namespace MT3
             {
                 Star.ID = i;
                 Star.cal_azalt();
-                if (Star.Alt > 5)//最低高度
+                if (Star.Alt > min_alt)
                 {
                     StarAzAlt sta = new StarAzAlt();
                     sta.Az = Star.Az;
@@ -1234,32 +1236,39 @@ namespace MT3
                 }
                 star_azalt.RemoveAt(ii);
 
-                // KV1000通信  MT2 move
+                double daz_grid = (double)numericUpDown_daz.Value / 10.0 - grid_az.Get2D((int)az_t, (int)alt_t);
+                double dalt_grid = (double)numericUpDown_dalt.Value / 10.0 - grid_alt.Get2D((int)az_t, (int)alt_t);
+
+                // KV1000通信  MT2,3 move
                 if (appSettings.ID == 10) // MT2 WideCam 設定
                 {
-                    double daz_grid = (double)numericUpDown_daz.Value / 10.0 - grid_az.Get2D((int)az_t, (int)alt_t);
-                    double dalt_grid = (double)numericUpDown_dalt.Value / 10.0 - grid_alt.Get2D((int)az_t, (int)alt_t);
-                    s = send_cmd(az_t + daz_grid, alt_t + dalt_grid);
-                    richTextBox1.Focus(); richTextBox1.AppendText(s);
-                    //await Task.Run(() => System.Threading.Thread.Sleep(3000)); 
-                    await Task.Delay(2000);
-                    s = "2s wait\n"; richTextBox1.Focus(); richTextBox1.AppendText(s);
-
-                    theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, az_t, alt_t) - appSettings.Theta;
-                    //udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
-                    //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
-                    udpkv.cxcy2azalt_mt2(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
-                    //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
-
-                    daz = az - az_t; dalt = alt - alt_t;             //位置誤差
-                    s = string.Format("daz_grid[ {0}, {3} ] = az_t[{1}] -KV_az_c[{2}]\r", daz_grid, az_t, udpkv.az2_c, dalt_grid);
-                    richTextBox1.Focus(); richTextBox1.AppendText(s);
-                    //データ保存
-                    if (max_val > 0)
-                    {
-                        write_star_position_error(name, az_t, alt_t, daz - daz_grid, dalt - dalt_grid, vmag, max_val, gx, gy, xoa, yoa);
-                    }
+                    s = send_mt2_cmd(az_t + daz_grid, alt_t + dalt_grid);
                 }
+                if (appSettings.ID == 8) // MT3 Fine 設定
+                {
+                    s = send_mt3_cmd(az_t + daz_grid, alt_t + dalt_grid,0,0);
+                }                   
+                    
+                richTextBox1.Focus(); richTextBox1.AppendText(s);
+                //await Task.Run(() => System.Threading.Thread.Sleep(3000)); 
+                await Task.Delay(2000);
+                s = "2s wait\n"; richTextBox1.Focus(); richTextBox1.AppendText(s);
+
+                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, az_t, alt_t) - appSettings.Theta;
+                //udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                udpkv.cxcy2azalt_mt2(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+
+                daz = az - az_t; dalt = alt - alt_t;             //位置誤差
+                s = string.Format("daz_grid[ {0}, {3} ] = az_t[{1}] -KV_az_c[{2}]\r", daz_grid, az_t, udpkv.az2_c, dalt_grid);
+                richTextBox1.Focus(); richTextBox1.AppendText(s);
+                //データ保存
+                if (max_val > 0)
+                {
+                    write_star_position_error(name, az_t, alt_t, daz - daz_grid, dalt - dalt_grid, vmag, max_val, gx, gy, xoa, yoa);
+                }
+
             }
         }
         // 補正データ読み込み(360x90)
@@ -1316,15 +1325,25 @@ namespace MT3
         }
 
         // KV1000通信
-        private string send_cmd(double az_t, double alt_t)
+        private string send_mt2_cmd(double az_t, double alt_t)
         {
             string s, ss;
             Common.Send_cmd_KV1000_init();
             ss = Common.Send_cmd_KV1000(Common.MT2SetPos(az_t , alt_t ));
-            //s = string.Format("WRS DM00964 4 00000 00000 00000 00000\r"); // vaz,valt = 0
-            //ss += Common.Send_cmd_KV1000(s);
             System.Threading.Thread.Sleep(100);
             s = string.Format("ST 01001\r");
+            ss += Common.Send_cmd_KV1000(s);
+            Common.Send_cmd_KV1000_close();
+            return ss;
+        }
+        // KV1000通信
+        private string send_mt3_cmd(double az_t, double alt_t, double vaz_t, double valt_t)
+        {
+            string s, ss;
+            Common.Send_cmd_KV1000_init();
+            ss = Common.Send_cmd_KV1000(Common.MT3SetPos(az_t, alt_t, vaz_t, valt_t));
+            System.Threading.Thread.Sleep(100);
+            s = string.Format("ST 01201\r");
             ss += Common.Send_cmd_KV1000(s);
             Common.Send_cmd_KV1000_close();
             return ss;
