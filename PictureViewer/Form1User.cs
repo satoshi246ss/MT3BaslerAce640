@@ -1254,12 +1254,19 @@ namespace MT3
                 await Task.Delay(2000);
                 s = "2s wait\n"; richTextBox1.Focus(); richTextBox1.AppendText(s);
 
-                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, az_t, alt_t) - appSettings.Theta;
-                //udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
-                //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
-                udpkv.cxcy2azalt_mt2(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
-                //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
-
+                if (appSettings.ID == 10) // MT2 WideCam 設定
+                {
+                    theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, az_t, alt_t) - appSettings.Theta;
+                    //udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                    //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                    udpkv.cxcy2azalt_mt2(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                    //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
+                }
+                if (appSettings.ID == 8) // MT3 Fine 設定
+                {
+                    theta_c = appSettings.Theta;
+                    udpkv.cxcy2azalt(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
+                }
                 daz = az - az_t; dalt = alt - alt_t;             //位置誤差
                 s = string.Format("daz_grid[ {0}, {3} ] = az_t[{1}] -KV_az_c[{2}]\r", daz_grid, az_t, udpkv.az2_c, dalt_grid);
                 richTextBox1.Focus(); richTextBox1.AppendText(s);
@@ -1337,7 +1344,7 @@ namespace MT3
             return ss;
         }
         // KV1000通信
-        private string send_mt3_cmd(double az_t, double alt_t, double vaz_t, double valt_t)
+        private string send_mt3_cmd(double az_t, double alt_t, double vaz_t=0, double valt_t=0)
         {
             string s, ss;
             Common.Send_cmd_KV1000_init();
