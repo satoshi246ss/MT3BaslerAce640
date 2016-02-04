@@ -275,7 +275,7 @@ namespace MT3
         /// <remarks>
         /// KV_DATA -> az,alt etcに変換
         /// </remarks>
-        public double cal_mt2_theta(OpenCvSharp.FlipMode _flipmode)
+        public double cal_mt2_theta(OpenCvSharp.FlipMode _flipmode, bool _flipOn = true)
         {
             double theta;
             if (mt2mode == mmWest)
@@ -287,14 +287,16 @@ namespace MT3
                 theta = -(this.az1_c - this.alt1_c);
             }
 
-
-            if (_flipmode == OpenCvSharp.FlipMode.XY)
+            if (_flipOn)
             {
-                theta = -theta;
+                if (_flipmode == OpenCvSharp.FlipMode.XY)
+                {
+                    theta = -theta;
+                }
             }
             return theta;
         }
-        public double cal_mt2_theta(OpenCvSharp.FlipMode _flipmode, double az1center, double alt1center)
+        public double cal_mt2_theta(OpenCvSharp.FlipMode _flipmode, bool _flipOn, double az1center, double alt1center)
         {
             double theta;
             if (mt2mode == mmWest)
@@ -306,10 +308,12 @@ namespace MT3
                 theta = -(az1center - alt1center);
             }
 
-
-            if (_flipmode == OpenCvSharp.FlipMode.XY)
+            if (_flipOn)
             {
-                theta = -theta;
+                if (_flipmode == OpenCvSharp.FlipMode.XY)
+                {
+                    theta = -theta;
+                }
             }
             return theta;
         }
@@ -324,11 +328,13 @@ namespace MT3
             double theta;
             if (mt3mode == mmWest)
             {
-                theta = (this.az2_c + this.alt2_c);
+                theta = 0;
+                //theta = (this.az2_c + this.alt2_c);
             }
             else
             {
-                theta = (this.az2_c - this.alt2_c);
+                theta = 180;
+                //theta = (this.az2_c - this.alt2_c);
             }
             return theta;
         }

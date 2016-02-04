@@ -402,8 +402,8 @@ namespace MT3
             sett.Text = "MT3Fine IS DMK23G618";
             sett.ID = 8;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
             sett.NoCapDev   = 8;
-            sett.CameraType = "IS"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID   = 1;          //カメラタイプ毎のID
+            sett.CameraType = "IS";    //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID   = 1;       //カメラタイプ毎のID
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.GIGE;
             sett.CamPlatform = Platform.MT3;
@@ -1256,7 +1256,7 @@ namespace MT3
 
                 if (appSettings.ID == 10) // MT2 WideCam 設定
                 {
-                    theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, az_t, alt_t) - appSettings.Theta;
+                    theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, appSettings.FlipOn, az_t, alt_t) - appSettings.Theta;
                     //udpkv.cxcy2azalt_mt2(-dx, -dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
                     //udpkv.cxcy2azalt_mt2(-(dx + kvx), -(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
                     udpkv.cxcy2azalt_mt2(-dx, -dy, az_t, alt_t, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);

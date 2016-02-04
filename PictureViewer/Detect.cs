@@ -19,7 +19,7 @@ namespace MT3
             ++id;
             if (appSettings.CamPlatform == Platform.MT2)
             {
-                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode) - appSettings.Theta;
+                theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, appSettings.FlipOn) - appSettings.Theta;
             }
 
             if (!appSettings.UseDetect) return;
@@ -164,7 +164,7 @@ namespace MT3
                 {
                     try
                     {
-                        theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode) - appSettings.Theta;
+                        theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, appSettings.FlipOn) - appSettings.Theta;
                         udpkv.cxcy2azalt_mt2(+dx, +dy, udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az, ref alt);
                         udpkv.cxcy2azalt_mt2(+(dx + kvx), +(dy + kvy), udpkv.az1_c, udpkv.alt1_c, udpkv.mt2mode, theta_c, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpy, ref az1, ref alt1);
                         vaz = udpkv.vaz1_kv + (az1 - az) * appSettings.Framerate;
