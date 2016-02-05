@@ -328,12 +328,12 @@ namespace MT3
             double theta;
             if (mt3mode == mmWest)
             {
-                theta = 0;
+                theta = 180;
                 //theta = (this.az2_c + this.alt2_c);
             }
             else
             {
-                theta = 180;
+                theta = 0;
                 //theta = (this.az2_c - this.alt2_c);
             }
             return theta;

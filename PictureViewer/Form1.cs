@@ -300,8 +300,11 @@ namespace MT3
                         remotePort = 24442;  // アプリ2
                         udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
 
-                        //remotePort = 24443;  // アプリ3
-                        //udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
+                        if (appSettings.ID == 8)
+                        {
+                            remotePort = 24426;  // KV1000SpCam2
+                            udpc2.Send(rcvBytes, rcvBytes.Length, remoteHost, remotePort);
+                        }
                     }
                 }
                 else if (rcvBytes.Length == size_kmd3)

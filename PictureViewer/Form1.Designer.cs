@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.ShowButton = new System.Windows.Forms.Button();
@@ -376,6 +377,7 @@
             this.icImagingControl1.BackColor = System.Drawing.Color.White;
             this.icImagingControl1.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
             this.icImagingControl1.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
+            this.icImagingControl1.DeviceState = resources.GetString("icImagingControl1.DeviceState");
             this.icImagingControl1.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
             this.icImagingControl1.LiveDisplayPosition = new System.Drawing.Point(0, 0);
             this.icImagingControl1.Location = new System.Drawing.Point(433, 32);

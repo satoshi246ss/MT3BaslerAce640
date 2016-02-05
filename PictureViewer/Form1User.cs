@@ -415,8 +415,8 @@ namespace MT3
             sett.FocalLength = 35;      //[mm] fuji 35mm
             sett.Ccdpx = 0.0056; //[mm] CCD:ICX618
             sett.Ccdpy = 0.0056; //[mm]
-            sett.Xoa = 320;
-            sett.Yoa = 240;            
+            sett.Xoa = 307;// 320;
+            sett.Yoa = 184;// 240;            
             sett.Roa = 1.0/(Math.Atan(sett.Ccdpx/sett.FocalLength)*180/Math.PI) ; //半径1deg    // 255x192:ace640の縦視野
             sett.Theta = 0;
             sett.Framerate = 120.0; //[fps]
