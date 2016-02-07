@@ -399,7 +399,7 @@ namespace MT3
             SettingsSave(sett);
 
             // MT3Fine ImagingSouce
-            sett.Text = "MT3Fine IS DMK23G618";
+            sett.Text = "Fine IS DMK23G618";
             sett.ID = 8;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
             sett.NoCapDev   = 8;
             sett.CameraType = "IS";    //カメラタイプ： IDS Basler AVT IS analog

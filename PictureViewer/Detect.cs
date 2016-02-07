@@ -189,7 +189,9 @@ namespace MT3
                     }
                     // 観測データ送信
                     //Pid_Data_Send(true);
-                    Pid_Data_Send_KV1000_SpCam2((short)(id & 32767), daz, dalt, vk); // 32767->7FFF
+                    short id_short = (short)id;
+                    if (id_short < 0) id_short = (short)(-id_short);
+                    Pid_Data_Send_KV1000_SpCam2(id_short, daz, dalt, vk); // 32767->7FFF
 
                     if (Math.Abs(udpkv.vaz2_kv) > 0.1 || Math.Abs(udpkv.valt2_kv) > 0.1)
                     {
