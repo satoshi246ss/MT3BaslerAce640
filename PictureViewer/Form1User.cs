@@ -364,7 +364,7 @@ namespace MT3
             sett.ID = 7;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
             sett.NoCapDev = 7;
             sett.CameraType = "IDS"; //カメラタイプ： IDS Basler AVT IS analog
-            sett.CameraID = 1;          //カメラタイプ毎のID
+            sett.CameraID = 3;       //カメラタイプ毎のID  NUV:3
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.USB2;
             sett.CamPlatform = Platform.MT3;
