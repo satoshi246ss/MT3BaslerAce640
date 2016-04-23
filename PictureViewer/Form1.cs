@@ -43,6 +43,11 @@ namespace MT3
                 cam_maker = Camera_Maker.analog;
                // cam_color = Camera_Color.mono;
             }
+            if (cmds[1].StartsWith("/PG") || cmds[1].StartsWith("/Pg") || cmds[1].StartsWith("/pg")) // PointGreyCamera
+            {
+                cam_maker = Camera_Maker.PointGreyCamera;
+                PgrPrintBuildInfo();
+            }
             if (cmds[1].StartsWith("/BA") || cmds[1].StartsWith("/ba") || cmds[1].StartsWith("/Ba")) // Basler
             {
                 cam_maker = Camera_Maker.Basler;

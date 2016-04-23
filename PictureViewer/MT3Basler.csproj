@@ -59,6 +59,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FlyCapture2Managed, Version=2.9.3.11, Culture=neutral, PublicKeyToken=76c6583b4a4585f4, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\PGR\src\FlyCapture2Managed.dll</HintPath>
+    </Reference>
     <Reference Include="MathNet.Numerics">
       <HintPath>..\packages\MathNet.Numerics.3.10.0\lib\net40\MathNet.Numerics.dll</HintPath>
     </Reference>
@@ -158,6 +162,9 @@
     <Compile Include="ImagingSouce.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PointGreyCamera.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="position_mesure.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -229,6 +236,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FlyCapture2Managed.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Green_button.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

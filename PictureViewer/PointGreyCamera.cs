@@ -2,21 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using OpenCvSharp;
+using FlyCapture2Managed;
 
 namespace MT3
 {
-    partial class Form1 //uEye
+    partial class Form1 //PointGreyCamera
     {
+        static void PgrPrintBuildInfo()
+        {
+            FC2Version version = ManagedUtilities.libraryVersion;
+
+            StringBuilder newStr = new StringBuilder();
+            newStr.AppendFormat(
+                "FlyCapture2 library version: {0}.{1}.{2}.{3}\n",
+                version.major, version.minor, version.type, version.build);
+
+            Console.WriteLine(newStr);
+        }
+
+        static void PrintCameraInfo(CameraInfo camInfo)
+        {
+            StringBuilder newStr = new StringBuilder();
+            newStr.Append("\n*** CAMERA INFORMATION ***\n");
+            newStr.AppendFormat("Serial number - {0}\n", camInfo.serialNumber);
+            newStr.AppendFormat("Camera model - {0}\n", camInfo.modelName);
+            newStr.AppendFormat("Camera vendor - {0}\n", camInfo.vendorName);
+            newStr.AppendFormat("Sensor - {0}\n", camInfo.sensorInfo);
+            newStr.AppendFormat("Resolution - {0}\n", camInfo.sensorResolution);
+
+            Console.WriteLine(newStr);
+        }
+
+
         /// <summary>
         /// 画像表示ルーチン
         /// </summary>
         /// <param name="capacity">画像表示用タイマールーチン</param>
-        private void ids_timerDisplay_Tick(object sender, EventArgs e)
-        {
+     //   private void ids_timerDisplay_Tick(object sender, EventArgs e)
+     //   {
             //uEye.Camera Camera = sender as uEye.Camera;
             //      if (this.States == STOP || cam == null) return;
 
@@ -26,8 +54,8 @@ namespace MT3
             //{
             //    cam.Display.DisplayImage.Set(s32MemID, u32DisplayID, uEye.Defines.DisplayRenderMode.Normal);//FitToWindow);
             //}
-        }        
-
+     //   }
+/*
         public void OpenIDScamera()//(object sender, EventArgs e)
         {
             // IDS camera check
@@ -45,15 +73,6 @@ namespace MT3
                 {
                     statusRet = uEye.Defines.Status.SUCCESS;
                 }
-                /*ListViewItem item = new ListViewItem();
-                item.Text = info.InUse ? "No" : "Yes";
-                item.ImageIndex = info.InUse ? 1 : 0;
-
-                item.SubItems.Add(info.CameraID.ToString());
-                item.SubItems.Add(info.DeviceID.ToString());
-                item.SubItems.Add(info.Model);
-                item.SubItems.Add(info.SerialNumber);
-            */
             }
 
             // Open Camera
@@ -281,6 +300,7 @@ namespace MT3
             double sf = (double)Stopwatch.Frequency / 1000; //msec
             fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2} fr:{4,5:F1}", id, elapsed0 / sf, elapsed1 / sf, elapsed2 / sf, framerate0);
         }
-
+        */
     }
 }
+

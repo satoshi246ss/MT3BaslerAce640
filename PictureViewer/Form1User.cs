@@ -24,6 +24,7 @@ namespace MT3
         IDS,
         AVT,
         Basler,
+        PointGreyCamera,
         TEST     // avi fileによるテスト
     }
     public enum Camera_Color
@@ -394,6 +395,41 @@ namespace MT3
             sett.UdpPortSend = 24423;
             sett.IP_KV1000SpCam2 = "192.168.1.204";
             sett.UdpPortKV1000SpCam2 = 24426;
+            sett.SaveDir = @"F:\img_data\";
+            sett.SaveDrive = "F:";
+            SettingsSave(sett);
+
+            // MT3Wide2 PointGreyCamera
+            sett.Text = "Wide2 PGC GS3-U3-23S6M";
+            sett.ID = 5;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 5;
+            sett.CameraType = "PG";    //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 1;         //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.USB3;
+            sett.CamPlatform = Platform.MT3;
+            sett.FlipOn = false;
+            sett.Flipmode = OpenCvSharp.FlipMode.X;
+            sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            sett.Width = 1920; // 652; //Max 659    4の倍数でメモリ確保される。
+            sett.Height =1200; // 949; //Max 494
+            sett.FocalLength = 50;      //[mm] fuji 35mm
+            sett.Ccdpx = 0.00586; //[mm] CCD:IMX174
+            sett.Ccdpy = 0.00586; //[mm]
+            sett.Xoa = 960;// 320;
+            sett.Yoa = 600;// 240;            
+            sett.Roa = 1.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
+            sett.Theta = 0;
+            sett.Framerate = 100.0; //[fps]
+            sett.FifoMaxFrame = 16;
+            sett.Exposure = 10.0; //[ms]
+            sett.Gain = 1023; // 100-1023  要検討
+            sett.UseDetect = true;
+            sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortSend = 24431;
             sett.SaveDir = @"F:\img_data\";
             sett.SaveDrive = "F:";
             SettingsSave(sett);
