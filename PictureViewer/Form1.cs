@@ -43,7 +43,7 @@ namespace MT3
                 cam_maker = Camera_Maker.analog;
                // cam_color = Camera_Color.mono;
             }
-            if (cmds[1].StartsWith("/PG") || cmds[1].StartsWith("/Pg") || cmds[1].StartsWith("/pg")) // PointGreyCamera
+            if (cmds[1].StartsWith("/PG") || cmds[1].StartsWith("/Pg") || cmds[1].StartsWith("/pg")) // PointGreyReserch
             {
                 cam_maker = Camera_Maker.PointGreyCamera;
                 PgrPrintBuildInfo();
