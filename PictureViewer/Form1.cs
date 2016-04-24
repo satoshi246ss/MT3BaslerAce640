@@ -44,7 +44,6 @@ namespace MT3
             if (cmds[1].StartsWith("/PG") || cmds[1].StartsWith("/Pg") || cmds[1].StartsWith("/pg")) // PointGreyReserch
             {
                 cam_maker = Camera_Maker.PointGreyCamera;
-                //PgrPrintBuildInfo();
             }
             if (cmds[1].StartsWith("/BA") || cmds[1].StartsWith("/ba") || cmds[1].StartsWith("/Ba")) // Basler
             {
@@ -107,7 +106,6 @@ namespace MT3
             if (cam_maker == Camera_Maker.PointGreyCamera)
             {
                 appTitle = "MT3PGR " + appSettings.ID.ToString();
-                OpenPGRcamera();
             }            
 
             // IDS
@@ -732,7 +730,7 @@ namespace MT3
             // PGR
             if (cam_maker == Camera_Maker.PointGreyCamera)
             {
-                InitPGR();
+                //InitPGR();
                 OpenPGRcamera();
             }
 

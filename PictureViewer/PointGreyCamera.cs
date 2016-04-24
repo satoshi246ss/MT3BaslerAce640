@@ -85,8 +85,6 @@ namespace MT3
 
         public void InitPGR()
         {
-            InitializeComponent();
-
             m_rawImage = new ManagedImage();
             m_processedImage = new ManagedImage();
             //m_camCtlDlg = new CameraControlDialog();
