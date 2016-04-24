@@ -207,12 +207,12 @@ namespace MT3
         string mmLocalIP = "";
         string mmLocalHost = "";
         System.Net.Sockets.UdpClient udpc3 = null;
-        DriveInfo cDrive ;// = new DriveInfo("D");
+        DriveInfo cDrive = new DriveInfo("D");
         long diskspace;
         System.IO.StreamWriter log_writer; //= new System.IO.StreamWriter(@"D:\img_data\log.txt", true);
         
-        //[DllImport("kernel32.dll")]
-        //static extern unsafe void CopyMemory(void* dst, void* src, int size);        
+        [DllImport("kernel32.dll")]
+        static extern unsafe void CopyMemory(void* dst, void* src, int size);        
         
         [DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
         public static extern uint timeBeginPeriod(uint uMilliseconds);
@@ -413,7 +413,7 @@ namespace MT3
             sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
             sett.Width = 1920; // 652; //Max 659    4の倍数でメモリ確保される。
             sett.Height =1200; // 949; //Max 494
-            sett.FocalLength = 50;      //[mm] fuji 35mm
+            sett.FocalLength = 50;      //[mm] CBC 50mm f1.8
             sett.Ccdpx = 0.00586; //[mm] CCD:IMX174
             sett.Ccdpy = 0.00586; //[mm]
             sett.Xoa = 960;// 320;
@@ -430,8 +430,8 @@ namespace MT3
             sett.UdpPortRecieve = 24410; // Broadcast0
             //sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortSend = 24431;
-            sett.SaveDir = @"F:\img_data\";
-            sett.SaveDrive = "F:";
+            sett.SaveDir = @"C:\img_data\";
+            sett.SaveDrive = "C:";
             SettingsSave(sett);
 
             // MT3Fine ImagingSouce

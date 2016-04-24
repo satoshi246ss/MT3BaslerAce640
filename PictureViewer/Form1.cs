@@ -39,15 +39,12 @@ namespace MT3
             if (cmds[1].StartsWith("/vi") || cmds[1].StartsWith("/an"))  // analog camera VideoInputを使用
             {
                 cam_maker = Camera_Maker.analog;
-               // cam_color = Camera_Color.mono;
+                // cam_color = Camera_Color.mono;
             }
             if (cmds[1].StartsWith("/PG") || cmds[1].StartsWith("/Pg") || cmds[1].StartsWith("/pg")) // PointGreyReserch
             {
-
                 cam_maker = Camera_Maker.PointGreyCamera;
-
-                PgrPrintBuildInfo();
-
+                //PgrPrintBuildInfo();
             }
             if (cmds[1].StartsWith("/BA") || cmds[1].StartsWith("/ba") || cmds[1].StartsWith("/Ba")) // Basler
             {
@@ -75,7 +72,7 @@ namespace MT3
             appSettings = SettingsLoad(int.Parse(cmds[2]));
 
             IplImageInit();
-            
+
             worker_udp = new BackgroundWorker();
             worker_udp.WorkerReportsProgress = true;
             worker_udp.WorkerSupportsCancellation = true;
@@ -91,7 +88,7 @@ namespace MT3
             foreach (IPAddress address in addresses)
             {
                 mmLocalIP = address.ToString();
-            } 
+            }
 
             // VideoInput
             if (cam_maker == Camera_Maker.analog)
@@ -102,9 +99,16 @@ namespace MT3
                 worker.DoWork += new DoWorkEventHandler(worker_DoWork);
                 worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-           
-                appTitle = "MT3 analog " + appSettings.ID.ToString() ;
+
+                appTitle = "MT3 analog " + appSettings.ID.ToString();
             }
+
+            // PGR
+            if (cam_maker == Camera_Maker.PointGreyCamera)
+            {
+                appTitle = "MT3PGR " + appSettings.ID.ToString();
+                OpenPGRcamera();
+            }            
 
             // IDS
             if (cam_maker == Camera_Maker.IDS)
@@ -114,12 +118,12 @@ namespace MT3
                 appTitle = "MT3IDS " + appSettings.ID.ToString();
             }
 
-             //AVT
+            //AVT
             if (cam_maker == Camera_Maker.AVT)
             {
                 appTitle = "MT3AVT " + appSettings.ID.ToString();
             }
-            
+
             //Basler
             if (cam_maker == Camera_Maker.Basler)
             {
@@ -155,7 +159,7 @@ namespace MT3
         {
             this.worker_udp.RunWorkerAsync();
 
-            appTitle = "MT3" + appSettings.Text +" "+ appSettings.ID.ToString()+"  " + mmLocalHost +"(" + mmLocalIP+")";
+            appTitle = "MT3" + appSettings.Text + " " + appSettings.ID.ToString() + "  " + mmLocalHost + "(" + mmLocalIP + ")";
             this.Text = appTitle;
 
             // 有効な画像取り込みデバイスが選択されているかをチェック。
@@ -180,14 +184,10 @@ namespace MT3
             diskspace = cDrive.TotalFreeSpace;
             timerMTmonSend.Start();
 
-            starttime = Planet.ObsStartTime(DateTime.Now) -DateTime.Today;
+            starttime = Planet.ObsStartTime(DateTime.Now) - DateTime.Today;
             endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
             string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
             richTextBox1.AppendText(s);
-
-
-            // IDS open
-            //ShowButton.PerformClick();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -196,6 +196,11 @@ namespace MT3
             if (worker_udp.IsBusy)
             {
                 worker_udp.CancelAsync();
+            }
+            // PGR
+            if (cam_maker == Camera_Maker.PointGreyCamera)
+            {
+                ClosePGRcamera();
             }
             // IDS
             if (cam_maker == Camera_Maker.IDS)
@@ -323,8 +328,8 @@ namespace MT3
                         //Mode = LOST;
                         //ButtonSaveEnd_Click(sender, e);
                         //匿名デリゲートで表示する
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
-                        this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSavePostTime, RUN });
+                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
+                        //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSavePostTime, RUN });
                     }
                     else if (kmd3.cmd == 17) // mmMoveEnd             17  // 位置決め完了
                     {
@@ -424,7 +429,7 @@ namespace MT3
             //id = 0;
 
             //videoInputオブジェクト
-            int DeviceID   = appSettings.CameraID; // 基本は、0　 // 3 (pro), 4(piccolo)  7(DMK)
+            int DeviceID = appSettings.CameraID; // 基本は、0　 // 3 (pro), 4(piccolo)  7(DMK)
             int CaptureFps = (int)appSettings.Framerate;  // 30
             int interval = (int)(1000 / CaptureFps / 10);
 
@@ -433,7 +438,7 @@ namespace MT3
                 vi.SetIdealFramerate(DeviceID, CaptureFps);
                 vi.SetupDevice(DeviceID, appSettings.Width, appSettings.Height);
 
-                int width  = vi.GetWidth(DeviceID);
+                int width = vi.GetWidth(DeviceID);
                 int height = vi.GetHeight(DeviceID);
 
                 using (IplImage img = new IplImage(width, height, BitDepth.U8, 3))
@@ -458,7 +463,7 @@ namespace MT3
                             framerate1 = framerate0;
                             dFramerate = framerate0;
 
-                            str = String.Format("[{0,0:000}ms]", 1000 * elapsed0/ Stopwatch.Frequency);
+                            str = String.Format("[{0,0:000}ms]", 1000 * elapsed0 / Stopwatch.Frequency);
                             //匿名デリゲートで現在の時間をラベルに表示する
                             this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_frame_rate, str });
                         }
@@ -523,12 +528,12 @@ namespace MT3
         public void ccd_defect_correct(int x, int y)
         {
             CvScalar v1;
-            v1 = Cv.Get2D(imgdata.img, y-3, x );
-            Cv.Set2D(imgdata.img, y-1, x, v1);
-            v1 = Cv.Get2D(imgdata.img, y-2, x );
+            v1 = Cv.Get2D(imgdata.img, y - 3, x);
+            Cv.Set2D(imgdata.img, y - 1, x, v1);
+            v1 = Cv.Get2D(imgdata.img, y - 2, x);
             Cv.Set2D(imgdata.img, y, x, v1);
-            v1 = Cv.Get2D(imgdata.img, y+3, x );
-            Cv.Set2D(imgdata.img, y+1, x, v1);
+            v1 = Cv.Get2D(imgdata.img, y + 3, x);
+            Cv.Set2D(imgdata.img, y + 1, x, v1);
 
             //v1.Val0 = 256;
             //Cv.Set2D(imgdata.img, y+1, x, v1);
@@ -615,7 +620,7 @@ namespace MT3
         private void ShowButton_Click(object sender, EventArgs e)
         {
             Pid_Data_Send_KV1000_SpCam2((short)id, daz, dalt, 1);
- 
+
             //OpenIDScamera();
             //AVT
             /*
@@ -683,6 +688,11 @@ namespace MT3
                 Stop(); /* Stops the grabbing of images. */
                 BaslerEnd();
             }
+            // PGR
+            if (cam_maker == Camera_Maker.PointGreyCamera)
+            {
+                ClosePGRcamera();
+            }
             //IDS
             if (cam_maker == Camera_Maker.IDS)
             {
@@ -718,6 +728,12 @@ namespace MT3
             {
                 BaslerStart(0);   /* 0: Get a handle for the first device found.  */
                 ContinuousShot(); /* Start the grabbing of images until grabbing is stopped. */
+            }
+            // PGR
+            if (cam_maker == Camera_Maker.PointGreyCamera)
+            {
+                InitPGR();
+                OpenPGRcamera();
             }
 
             //IDS
@@ -810,7 +826,7 @@ namespace MT3
             TimeSpan nowtime = DateTime.Now - DateTime.Today;
             //TimeSpan endtime = new TimeSpan(7, 0, 0);
             //TimeSpan starttime = new TimeSpan(16,30, 0);
-            
+
 
             if (nowtime.CompareTo(endtime) >= 0 && nowtime.CompareTo(starttime) <= 0)
             {
@@ -857,7 +873,7 @@ namespace MT3
                 }
             }
         }
- 
+
         private void timerWaitShutdown_Tick(object sender, EventArgs e)
         {
             shutdown(sender, e);
@@ -890,7 +906,7 @@ namespace MT3
         /// <param name="capacity">画像表示用回転座標計算ルーチン</param>
         public CvPoint2D64f Rotation(CvPoint2D64f xy, double r, double theta)
         {
-            double sinth=0, costh=r;
+            double sinth = 0, costh = r;
             CvPoint2D64f ans = new CvPoint2D64f();
 
             if (appSettings.CamPlatform == Platform.MT2 && udpkv.mt2mode == udpkv.mmWest)
@@ -942,15 +958,15 @@ namespace MT3
                     Cv.CvtColor(imgdata.img, img_dmk3, ColorConversion.BayerGbToBgr);
                 }
 
-                double k1 = 1.3333 ; //4deg 
-                double k2 = 0.3333 ; //直径1deg
+                double k1 = 1.3333; //4deg 
+                double k2 = 0.3333; //直径1deg
                 double roa = appSettings.Roa;
 
                 CvPoint2D64f OCPoint = new CvPoint2D64f(appSettings.Xoa, appSettings.Yoa);
                 Cv.Circle(img_dmk3, OCPoint, (int)appSettings.Roa, new CvColor(0, 255, 0));
 
-                CvPoint2D64f Point1 ;
-                CvPoint2D64f Point2 ;
+                CvPoint2D64f Point1;
+                CvPoint2D64f Point2;
                 String str;
 
                 if (udpkv.mt2mode == udpkv.mmWest)
@@ -999,7 +1015,7 @@ namespace MT3
                     str = String.Format("ID:{4,7:D1} E: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
 
                 }
-                
+
                 img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
                 img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), 15, new CvColor(0, 100, 255));
 
@@ -1037,7 +1053,7 @@ namespace MT3
             }
             label_X2Y2.Text = s;
 
-     //       label_ID.Text = max_label.ToString("00000");
+            //       label_ID.Text = max_label.ToString("00000");
             //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
             // Status表示
             //this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_X2Y2, String.Format("({0},{1}", udpkv.az2_c, udpkv.alt2_c) });
@@ -1048,9 +1064,9 @@ namespace MT3
             //long igain = 0; //Gain
             // Error rate
             long frame_total = 0, frame_error = 0;
-            long frame_underrun = 0, frame_shoved = 0, frame_dropped=0;
+            long frame_underrun = 0, frame_shoved = 0, frame_dropped = 0;
             double err_rate = 0;
-            
+
             // IDS
             if (cam_maker == Camera_Maker.IDS)
             {
@@ -1063,13 +1079,13 @@ namespace MT3
                 uEye.Types.CaptureStatus captureStatus;
                 cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
                 frame_error = (long)captureStatus.Total;
-                frame_total = (long)(imageInfo.FrameNumber - ueye_frame_number) ;
+                frame_total = (long)(imageInfo.FrameNumber - ueye_frame_number);
 
                 //Int32 s32Value;
                 //statusRet = cam.Timing.PixelClock.Get(out s32Value);
                 //           toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed21-elapsed20)/(double)(Stopwatch.Frequency) +" "+ 10000*(elapsed22-elapsed21)/(double)(Stopwatch.Frequency);
 
-            }            
+            }
             if (cam_maker == Camera_Maker.Basler)
             {
                 dFramerate = m_imageProvider.GetFrameRate(); // Basler
@@ -1093,17 +1109,17 @@ namespace MT3
                     MessageBox.Show("error1");
                 }
                 igain = GainRaw();
-                frame_total    = StatFrameDelivered();
+                frame_total = StatFrameDelivered();
                 frame_underrun = StatFrameUnderrun();// AVT
-                frame_shoved   = StatFrameShoved();
-                frame_dropped  = StatFrameDropped();
+                frame_shoved = StatFrameShoved();
+                frame_dropped = StatFrameDropped();
                 frame_error = frame_underrun + frame_dropped;
             }
             toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
-            toolStripStatusLabelExposure.Text = "Exposure: " + (dExpo/1000.0).ToString("00.00")+"[ms]";
+            toolStripStatusLabelExposure.Text = "Exposure: " + (dExpo / 1000.0).ToString("00.00") + "[ms]";
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
             toolStripStatusLabelFailed.Text = "Failed U:" + frame_underrun.ToString("0000") + " S:" + frame_shoved.ToString("0000") + " D:" + frame_dropped.ToString("0000");
-            
+
             //label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
 
             //double err_rate = 100.0 * (frame_total / (double)id);
@@ -1112,7 +1128,7 @@ namespace MT3
                 err_rate = 100.0 * (frame_error / (double)frame_total);
             }
             toolStripStatusLabelID.Text = "Frames: " + frame_total.ToString("0000") + " " + frame_error.ToString("0000") + " " + err_rate.ToString("00.00");// +"TS:" + timestamp;
- 
+
             if (this.States == SAVE)
             {
                 this.buttonSave.BackColor = Color.Red;
@@ -1156,7 +1172,7 @@ namespace MT3
             //{
             //Cv.Sub(img_dmk, img_dark8, imgdata.img); // dark減算
             //Cv.Copy(img_dmk, imgdata.img);
-           // cam.Information.GetImageInfo(s32MemID, out imageInfo);
+            // cam.Information.GetImageInfo(s32MemID, out imageInfo);
             imgdata.id = (int)id;     // (int)imageInfo.FrameNumber;
             imgdata.t = DateTime.Now; //imageInfo.TimestampSystem;   //  LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime);
             imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
@@ -1216,7 +1232,7 @@ namespace MT3
             string remoteHost = mmFsiCore_i5;
             int remotePort = mmFsiUdpPortMTmonitor;
             //送信するデータを読み込む
-            mtmon_data.id = (byte)appSettings.MtMon_ID; 
+            mtmon_data.id = (byte)appSettings.MtMon_ID;
             mtmon_data.diskspace = (int)(diskspace / (1024 * 1024 * 1024));
             if (id == id_mon)
             {
@@ -1284,11 +1300,30 @@ namespace MT3
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
         }
 
- /*       private void timerSavePostTime_Tick_1(object sender, EventArgs e)
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+            
+        }
+
+
+
+        private void buttonMove_Click(object sender, EventArgs e)
         {
 
+            buttonMove.Enabled = false;
+
+            star_auto_check();
+
+            buttonMove.Enabled = true;
         }
-*/
+        
+        private void timerAutoStarData_Tick(object sender, EventArgs e)
+        {
+            if (checkBox_WideDR.Checked)
+            {
+                buttonMove_Click(sender, e);
+            }
+        }
 
     }
 }

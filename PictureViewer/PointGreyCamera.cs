@@ -1,18 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;//BackgroundWorker
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using OpenCvSharp;
 using FlyCapture2Managed;
+//using FlyCapture2Managed.Gui;
 
 namespace MT3
 {
     partial class Form1 //PointGreyCamera
     {
+        static uint imageCnt = 0;
+        ManagedBusManager busMgr = new ManagedBusManager();
+        ManagedCamera pgr_cam = new ManagedCamera();
+
+        //        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
+        private ManagedCameraBase m_camera = null;
+        private ManagedImage m_rawImage;
+        private ManagedImage m_processedImage;
+        private bool m_grabImages;
+        private AutoResetEvent m_grabThreadExited;
+        private BackgroundWorker m_grabThread;
+
         static void PgrPrintBuildInfo()
         {
             FC2Version version = ManagedUtilities.libraryVersion;
@@ -38,6 +53,104 @@ namespace MT3
             Console.WriteLine(newStr);
         }
 
+        /// <summary>
+        /// コールバック関数
+        /// </summary>
+        /// <param name="capacity">PGRコールバック</param>
+        void OnImageGrabbed(ManagedImage pgr_image)
+        {
+            Console.WriteLine("Grabbed image {0} - {1}.{2}", imageCnt++,
+                pgr_image.timeStamp.cycleSeconds,
+                pgr_image.timeStamp.cycleCount);
+
+            unsafe
+            {
+                CopyMemory(imgdata.img.ImageDataPtr, pgr_image.data, imgdata.img.ImageSize);
+            }
+            //CopyMemory(imgdata.img.ImageDataOrigin, pgr_image.data, imgdata.img.ImageSize);
+            //imgdata.img.ImageDataPtr
+
+            /*
+            unsafe
+            {
+                int size = imgdata.img.ImageSize;// sizeof(Hoge);
+                byte[] bytes = new byte[size];
+                fixed (byte* pbytes = bytes)
+                {
+                    *(imgdata.img.ImageDataPtr)pbytes = *(pgr_image.data);
+                }
+            }
+             */ 
+        }
+
+        public void InitPGR()
+        {
+            InitializeComponent();
+
+            m_rawImage = new ManagedImage();
+            m_processedImage = new ManagedImage();
+            //m_camCtlDlg = new CameraControlDialog();
+            m_grabThreadExited = new AutoResetEvent(false);
+        }
+
+        public void OpenPGRcamera()//(object sender, EventArgs e)
+        {
+            uint numCameras = busMgr.GetNumOfCameras();
+            if (numCameras > 0)
+            {
+                uint pgr_cam_num = 0;
+                ManagedPGRGuid guid = busMgr.GetCameraFromIndex(pgr_cam_num);
+                RunSingleCamera(guid);
+            }
+            else
+            {
+                //MessageBox.Show("IDS Camera initializing failed");
+                Environment.Exit(0);
+            }
+        }
+        public void ClosePGRcamera()//(object sender, EventArgs e)
+        {
+            // Stop capturing images
+            pgr_cam.StopCapture();
+
+            // Disconnect the camera
+            pgr_cam.Disconnect();           
+        }
+
+        void RunSingleCamera(ManagedPGRGuid guid)
+        {
+            // Connect to a camera
+            pgr_cam.Connect(guid);
+            // Get the camera information
+            CameraInfo camInfo = pgr_cam.GetCameraInfo();
+            PrintCameraInfo(camInfo);
+
+            // Get embedded image info from camera
+            EmbeddedImageInfo embeddedInfo = pgr_cam.GetEmbeddedImageInfo();
+
+            // Enable timestamp collection	
+            if (embeddedInfo.timestamp.available == true)
+            {
+                embeddedInfo.timestamp.onOff = true;
+            }
+
+            // Set embedded image info to camera
+            pgr_cam.SetEmbeddedImageInfo(embeddedInfo);
+
+            // Start capturing images
+            pgr_cam.StartCapture(OnImageGrabbed);
+
+            CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
+
+         //   while (imageCnt < 10)
+         //   {
+         //       int millisecondsToSleep = (int)(1000 / frameRateProp.absValue);
+         //       Thread.Sleep(millisecondsToSleep);
+         //   }
+
+            // Reset counter for next iteration
+            imageCnt = 0;
+        }
 
         /// <summary>
         /// 画像表示ルーチン
@@ -56,84 +169,7 @@ namespace MT3
             //}
      //   }
 /*
-        public void OpenIDScamera()//(object sender, EventArgs e)
-        {
-            // IDS camera check
-            int NumberOfCameras;
-            uEye.Info.Camera.GetNumberOfDevices(out NumberOfCameras);
-            if (NumberOfCameras <= 0) Environment.Exit(0);
-
-            uEye.Types.CameraInformation[] cameraList;
-            uEye.Info.Camera.GetCameraList(out cameraList);
-
-            statusRet = uEye.Defines.Status.NO_SUCCESS;
-            foreach (uEye.Types.CameraInformation info in cameraList)
-            {
-                if (info.CameraID == appSettings.CameraID)
-                {
-                    statusRet = uEye.Defines.Status.SUCCESS;
-                }
-            }
-
-            // Open Camera
-            if (statusRet == uEye.Defines.Status.SUCCESS)
-            {
-                statusRet = cam.Init(appSettings.CameraID);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    //MessageBox.Show("IDS Camera initializing failed");
-                    Environment.Exit(0);
-                }
-
-                if (appSettings.CameraColor == Camera_Color.mono)
-                {
-                    // PixelFormat MONO 8
-                    set_PixelFormat_mono8();
-                }
-                else if (appSettings.CameraColor == Camera_Color.mono16)
-                {
-                    // PixelFormat MONO 16
-                    set_PixelFormat_mono16();
-                }                  
-
-                // Allocate Memory
-                statusRet = cam.Memory.Allocate(out s32MemID, true);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    MessageBox.Show("IDS Allocate Memory failed");
-                }
-
-                // Connect Event
-                cam.EventFrame += onFrameEvent;
-
-                // Set PC,Fr,Exp
-                statusRet = cam.Timing.PixelClock.Set(appSettings.PixelClock);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    MessageBox.Show("IDS Camera Set PixelClock failed");
-                }
-
-                statusRet = cam.Timing.Exposure.Set(appSettings.Exposure);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    MessageBox.Show("IDS Camera Set Exposure failed");
-                }
-
-                statusRet = cam.Timing.Framerate.Set(appSettings.Framerate);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    MessageBox.Show("IDS Camera Set FrameRate failed");
-                }
-
-                cam.Gain.Hardware.Scaled.SetMaster((int)appSettings.Gain);
-
-                if (appSettings.uEyeShutterMode == uEye_Shutter_Mode.Rolling)
-                {
-                    set_uEye_Rolling_shutter_mode();
-                } 
-            }
-        }
-        /// <summary>
+      /// <summary>
         /// シャッターモードをローリングシャッターに設定
         /// </summary>
         public void set_uEye_Rolling_shutter_mode()

@@ -1,26 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MT3Basler", "PictureViewer\MT3Basler.csproj", "{2513BD12-B4D3-4D27-9C4B-563D29EF7705}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|Win32 = Debug|Win32
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|Win32 = Release|Win32
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Debug|Win32.ActiveCfg = Debug|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Debug|Win32.Build.0 = Debug|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Debug|x86.ActiveCfg = Debug|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Debug|x86.Build.0 = Debug|x86
+		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Release|Any CPU.ActiveCfg = Release|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Release|Mixed Platforms.Build.0 = Release|x86
 		{2513BD12-B4D3-4D27-9C4B-563D29EF7705}.Release|Win32.ActiveCfg = Release|x86

@@ -50,7 +50,6 @@
             this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_ID = new System.Windows.Forms.Label();
             this.label_X2Y2 = new System.Windows.Forms.Label();
-            this.icImagingControl1 = new TIS.Imaging.ICImagingControl();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timerSaveTimeOver = new System.Windows.Forms.Timer(this.components);
@@ -78,7 +77,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_daz)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_dalt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.icImagingControl1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -135,7 +133,6 @@
             this.flowLayoutPanel1.Controls.Add(this.label_frame_rate);
             this.flowLayoutPanel1.Controls.Add(this.label_ID);
             this.flowLayoutPanel1.Controls.Add(this.label_X2Y2);
-            this.flowLayoutPanel1.Controls.Add(this.icImagingControl1);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 489);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -371,20 +368,6 @@
             this.label_X2Y2.TabIndex = 13;
             this.label_X2Y2.Text = "(  X2,      Y2   )";
             // 
-            // icImagingControl1
-            // 
-            this.icImagingControl1.BackColor = System.Drawing.Color.White;
-            this.icImagingControl1.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
-            this.icImagingControl1.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
-            this.icImagingControl1.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
-            this.icImagingControl1.LiveDisplayPosition = new System.Drawing.Point(0, 0);
-            this.icImagingControl1.Location = new System.Drawing.Point(433, 32);
-            this.icImagingControl1.MemoryCurrentGrabberColorformat = TIS.Imaging.ICImagingControlColorformats.ICY800;
-            this.icImagingControl1.Name = "icImagingControl1";
-            this.icImagingControl1.Size = new System.Drawing.Size(86, 40);
-            this.icImagingControl1.TabIndex = 19;
-            this.icImagingControl1.ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icImagingControl1_ImageAvailable);
-            // 
             // textBox1
             // 
             tableLayoutPanel1.SetColumnSpan(this.textBox1, 2);
@@ -532,7 +515,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStarCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_daz)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_dalt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.icImagingControl1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
