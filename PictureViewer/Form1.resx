@@ -120,132 +120,38 @@
   <metadata name="tableLayoutPanel1.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
-  <data name="icImagingControl1.DeviceState" xml:space="preserve">
-    <value>&lt;device_state libver="3.4" filemajor="1" fileminor="0"&gt;
-    &lt;device name="DMK 23G618" base_name="DMK 23G618" unique_name="DMK 23G618 35210253"&gt;
-        &lt;videoformat&gt;Y800 (640x480)&lt;/videoformat&gt;
-        &lt;fps&gt;120.00048000192001&lt;/fps&gt;
-        &lt;vcdpropertyitems&gt;
-            &lt;item guid="{284C0E06-010B-45BF-8291-09D90A459B28}" name="Brightness"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{284C0E07-010B-45BF-8291-09D90A459B28}" name="Contrast"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{284C0E0A-010B-45BF-8291-09D90A459B28}" name="Sharpness"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{284C0E0B-010B-45BF-8291-09D90A459B28}" name="Gamma"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="100" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{284C0E0F-010B-45BF-8291-09D90A459B28}" name="Gain"&gt;
-                &lt;element guid="{B57D3001-0AC6-4819-A609-272A33140ACA}" name="Auto"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="1" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{90D5702E-E43B-4366-AAEB-7A7A10B448B4}" name="Exposure"&gt;
-                &lt;element guid="{B57D3001-0AC6-4819-A609-272A33140ACA}" name="Auto"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" /&gt;
-                &lt;/element&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E08}" value="8.3330000000000001e-003" /&gt;
-                &lt;/element&gt;
-                &lt;element guid="{65190390-1AD8-4E91-9021-66D64090CC85}" name="Auto"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" /&gt;
-                &lt;/element&gt;
-                &lt;element guid="{6519038F-1AD8-4E91-9021-66D64090CC85}" name="Auto Max Value"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E08}" value="8.3330000000000001e-003" /&gt;
-                &lt;/element&gt;
-                &lt;element guid="{6519038C-1AD8-4E91-9021-66D64090CC85}" name="Auto Reference"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="128" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{90D57031-E43B-4366-AAEB-7A7A10B448B4}" name="Trigger"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Enable"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" /&gt;
-                &lt;/element&gt;
-                &lt;element guid="{6519038D-1AD8-4E91-9021-66D64090CC85}" name="Polarity"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="1" /&gt;
-                &lt;/element&gt;
-                &lt;element guid="{C337CFB8-EA08-4E69-A655-586937B6AFEC}" name="Delay"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E08}" value="4." /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{A24E5340-BC75-4B5B-B142-0917C2CCFB3D}" name="Named Property Sets"&gt;
-                &lt;element guid="{54F4C7E5-B045-4D63-A277-9B239E8D3129}" name="Available sets"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E06}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{C3C9944A-E6F6-4E25-A0BE-53C066AB65D8}" name="Denoise"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{86D89D69-9880-4618-9BF6-DED5E8383449}" name="GPIO"&gt;
-                &lt;element guid="{7D006621-761D-4B88-9C5F-8B906857A501}" name="GP Out"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{546541AD-C815-4D82-AFA9-9D59AF9F399E}" name="Highlight reduction"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Enable"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{3D505AC4-1A28-428B-83E5-85AA8EB441C1}" name="Tone Mapping"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Enable"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-            &lt;item guid="{DC320EDE-DF2E-4A90-B926-71417C71C57C}" name="Strobe"&gt;
-                &lt;element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Enable"&gt;
-                    &lt;itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" /&gt;
-                &lt;/element&gt;
-            &lt;/item&gt;
-        &lt;/vcdpropertyitems&gt;
-    &lt;/device&gt;
-&lt;/device_state&gt;
-</value>
-  </data>
   <metadata name="timerSaveTimeOver.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>290, 8</value>
+    <value>130, 13</value>
   </metadata>
   <metadata name="timerSaveMainTime.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>549, 17</value>
+    <value>478, 11</value>
   </metadata>
   <metadata name="timerDisplay.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>720, 17</value>
+    <value>658, 12</value>
   </metadata>
   <metadata name="timerObsOnOff.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>847, 17</value>
+    <value>797, 12</value>
   </metadata>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>988, 17</value>
+    <value>943, 12</value>
   </metadata>
   <metadata name="timerMTmonSend.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1112, 17</value>
+    <value>25, 43</value>
   </metadata>
   <metadata name="timer1min.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1271, 17</value>
+    <value>183, 40</value>
   </metadata>
   <metadata name="timerWaitShutdown.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1385, 17</value>
+    <value>295, 43</value>
   </metadata>
   <metadata name="timerSave.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>18, 32</value>
+    <value>17, 8</value>
   </metadata>
   <metadata name="updateDeviceListTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>458, 17</value>
+    <value>289, 10</value>
   </metadata>
-  <metadata name="timerAutoStarData.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>131, 16</value>
+  <metadata name="timerSavePostTime.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>466, 43</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>54</value>
