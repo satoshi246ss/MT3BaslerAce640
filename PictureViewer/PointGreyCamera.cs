@@ -63,15 +63,27 @@ namespace MT3
                 pgr_image.timeStamp.cycleSeconds,
                 pgr_image.timeStamp.cycleCount);
 
+            id++;
+            //
+            unsafe
+            {
+                CopyMemory(imgdata.img.ImageDataOrigin, (IntPtr)pgr_image.data, imgdata.img.ImageSize);
+            }
+            #region 他のコピー方法
+            /*            // unsafe version　上手くいかない(2016.04.29)
             unsafe
             {
                 CopyMemory(imgdata.img.ImageDataPtr, pgr_image.data, imgdata.img.ImageSize);
             }
-            //CopyMemory(imgdata.img.ImageDataOrigin, pgr_image.data, imgdata.img.ImageSize);
-            //imgdata.img.ImageDataPtr
 
-            /*
             unsafe
+            {
+                int size = sizeof(Hoge);
+                IntPtr ptr = Marshal.AllocHGlobal(size);
+                *(Hoge*)ptr = obj;
+            }
+
+             unsafe
             {
                 int size = imgdata.img.ImageSize;// sizeof(Hoge);
                 byte[] bytes = new byte[size];
@@ -80,7 +92,9 @@ namespace MT3
                     *(imgdata.img.ImageDataPtr)pbytes = *(pgr_image.data);
                 }
             }
-             */ 
+             */
+            #endregion
+
         }
 
         public void InitPGR()
@@ -102,7 +116,7 @@ namespace MT3
             }
             else
             {
-                //MessageBox.Show("IDS Camera initializing failed");
+                MessageBox.Show("PGR Camera initializing failed");
                 Environment.Exit(0);
             }
         }
@@ -140,15 +154,16 @@ namespace MT3
 
             CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
 
-         //   while (imageCnt < 10)
-         //   {
-         //       int millisecondsToSleep = (int)(1000 / frameRateProp.absValue);
-         //       Thread.Sleep(millisecondsToSleep);
-         //   }
+            while (imageCnt < 1000)
+            {
+                int millisecondsToSleep = (int)(1000 / frameRateProp.absValue);
+                Thread.Sleep(millisecondsToSleep);
+            }
 
             // Reset counter for next iteration
             imageCnt = 0;
-        }
+        }
+
 
         /// <summary>
         /// 画像表示ルーチン

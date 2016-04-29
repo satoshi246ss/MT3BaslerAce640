@@ -44,6 +44,7 @@ namespace MT3
             if (cmds[1].StartsWith("/PG") || cmds[1].StartsWith("/Pg") || cmds[1].StartsWith("/pg")) // PointGreyReserch
             {
                 cam_maker = Camera_Maker.PointGreyCamera;
+                PgrPrintBuildInfo();
             }
             if (cmds[1].StartsWith("/BA") || cmds[1].StartsWith("/ba") || cmds[1].StartsWith("/Ba")) // Basler
             {
@@ -101,12 +102,6 @@ namespace MT3
 
                 appTitle = "MT3 analog " + appSettings.ID.ToString();
             }
-
-            // PGR
-            if (cam_maker == Camera_Maker.PointGreyCamera)
-            {
-                appTitle = "MT3PGR " + appSettings.ID.ToString();
-            }            
 
             // IDS
             if (cam_maker == Camera_Maker.IDS)
@@ -186,6 +181,10 @@ namespace MT3
             endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
             string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
             richTextBox1.AppendText(s);
+
+
+            // IDS open
+            //ShowButton.PerformClick();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -194,11 +193,6 @@ namespace MT3
             if (worker_udp.IsBusy)
             {
                 worker_udp.CancelAsync();
-            }
-            // PGR
-            if (cam_maker == Camera_Maker.PointGreyCamera)
-            {
-                ClosePGRcamera();
             }
             // IDS
             if (cam_maker == Camera_Maker.IDS)
@@ -686,7 +680,7 @@ namespace MT3
                 Stop(); /* Stops the grabbing of images. */
                 BaslerEnd();
             }
-            // PGR
+            //PGR
             if (cam_maker == Camera_Maker.PointGreyCamera)
             {
                 ClosePGRcamera();
@@ -727,13 +721,11 @@ namespace MT3
                 BaslerStart(0);   /* 0: Get a handle for the first device found.  */
                 ContinuousShot(); /* Start the grabbing of images until grabbing is stopped. */
             }
-            // PGR
+            //PGR
             if (cam_maker == Camera_Maker.PointGreyCamera)
             {
-                //InitPGR();
                 OpenPGRcamera();
             }
-
             //IDS
             if (cam_maker == Camera_Maker.IDS)
             {
