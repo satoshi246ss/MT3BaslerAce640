@@ -21,7 +21,7 @@ namespace MT3
         double pgr_time_now = 0;
         double pgr_frame_rate = 0;
         double pgr_frame_rate_pre = 0;
-        double alpha_pgr_frame_rate = 0.95;
+        double alpha_pgr_frame_rate = 0.99;
         uint pgr_image_expo;
         uint pgr_image_gain;
         uint pgr_image_frame_count;
@@ -117,8 +117,8 @@ namespace MT3
             pgr_frame_rate_pre = pgr_frame_rate;
             pgr_time_pre = pgr_time_now;
 
-            pgr_image_expo = pgr_image.imageMetadata.embeddedExposure;
-            pgr_image_gain = pgr_image.imageMetadata.embeddedGain;
+            pgr_image_expo = (uint)((pgr_image.imageMetadata.embeddedShutter & 65535) * 4.883 ) ; // 1 count = 4.88268 ms
+            pgr_image_gain = pgr_image.imageMetadata.embeddedGain & 65535 ;
             pgr_image_frame_count = pgr_image.imageMetadata.embeddedFrameCounter;
             
             //pgr_image.CalculateStatistics()

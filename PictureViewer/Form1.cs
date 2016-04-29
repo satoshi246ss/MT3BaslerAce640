@@ -1114,7 +1114,7 @@ namespace MT3
                 frame_error = frame_underrun + frame_dropped;
             }
             toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
-            toolStripStatusLabelExposure.Text = "Exposure: " + (dExpo / 1000.0).ToString("00.00") + "[ms]";
+            toolStripStatusLabelExposure.Text = "Expo: " + (dExpo / 1000.0).ToString("00.00") + "[ms]";
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
             toolStripStatusLabelFailed.Text = "Failed U:" + frame_underrun.ToString("0000") + " S:" + frame_shoved.ToString("0000") + " D:" + frame_dropped.ToString("0000");
 
