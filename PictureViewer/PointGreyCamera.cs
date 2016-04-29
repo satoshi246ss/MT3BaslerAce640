@@ -17,6 +17,15 @@ namespace MT3
     partial class Form1 //PointGreyCamera
     {
         static uint imageCnt = 0;
+        double pgr_time_pre = 0;
+        double pgr_time_now = 0;
+        double pgr_frame_rate = 0;
+        double pgr_frame_rate_pre = 0;
+        double alpha_pgr_frame_rate = 0.95;
+        uint pgr_image_expo;
+        uint pgr_image_gain;
+        uint pgr_image_frame_count;
+
         ManagedBusManager busMgr = new ManagedBusManager();
         ManagedCamera pgr_cam = new ManagedCamera();
 
@@ -59,15 +68,15 @@ namespace MT3
         /// <param name="capacity">PGRコールバック</param>
         void OnImageGrabbed(ManagedImage pgr_image)
         {
-            Console.WriteLine("Grabbed image {0} - {1}.{2}", imageCnt++,
-                pgr_image.timeStamp.cycleSeconds,
-                pgr_image.timeStamp.cycleCount);
+            //Console.WriteLine("Grabbed image {0} - {1}.{2}", imageCnt++, pgr_image.timeStamp.cycleSeconds, pgr_image.timeStamp.cycleCount);
 
-            id++;
-            //
-            unsafe
+            //画像データをバッファにコピー
+            lock (this)
             {
-                CopyMemory(imgdata.img.ImageDataOrigin, (IntPtr)pgr_image.data, imgdata.img.ImageSize);
+                unsafe
+                {
+                    CopyMemory(imgdata.img.ImageDataOrigin, (IntPtr)pgr_image.data, imgdata.img.ImageSize);
+                }
             }
             #region 他のコピー方法
             /*            // unsafe version　上手くいかない(2016.04.29)
@@ -95,6 +104,25 @@ namespace MT3
              */
             #endregion
 
+            detect(); // これをはずすと160fps
+            imgdata_push_FIFO();
+
+            TimeStamp timestamp;
+            lock (this)
+            {
+                timestamp = pgr_image.timeStamp;
+            }
+            pgr_time_now = timestamp.cycleSeconds + timestamp.cycleCount/8000.0 ; // count 8kHz, 1394 cycle timer
+            pgr_frame_rate = alpha_pgr_frame_rate * pgr_frame_rate_pre + (1 - alpha_pgr_frame_rate) * 1/(pgr_time_now - pgr_time_pre);
+            pgr_frame_rate_pre = pgr_frame_rate;
+            pgr_time_pre = pgr_time_now;
+
+            pgr_image_expo = pgr_image.imageMetadata.embeddedExposure;
+            pgr_image_gain = pgr_image.imageMetadata.embeddedGain;
+            pgr_image_frame_count = pgr_image.imageMetadata.embeddedFrameCounter;
+            
+            //pgr_image.CalculateStatistics()
+            //.GetProperty(PropertyType.FrameRate).absValue;
         }
 
         public void InitPGR()
@@ -145,6 +173,14 @@ namespace MT3
             {
                 embeddedInfo.timestamp.onOff = true;
             }
+            if (embeddedInfo.exposure.available == true)
+            {
+                embeddedInfo.exposure.onOff = true;
+            }
+            if (embeddedInfo.frameCounter.available == true)
+            {
+                embeddedInfo.frameCounter.onOff = true;
+            }
 
             // Set embedded image info to camera
             pgr_cam.SetEmbeddedImageInfo(embeddedInfo);
@@ -154,12 +190,11 @@ namespace MT3
 
             CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
 
-            while (imageCnt < 1000)
-            {
-                int millisecondsToSleep = (int)(1000 / frameRateProp.absValue);
-                Thread.Sleep(millisecondsToSleep);
-            }
-
+            //while (imageCnt < 1000)
+            //{
+            //    int millisecondsToSleep = (int)(1000 / frameRateProp.absValue);
+            //    Thread.Sleep(millisecondsToSleep);
+            //}
             // Reset counter for next iteration
             imageCnt = 0;
         }

@@ -1070,12 +1070,19 @@ namespace MT3
                 cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
                 frame_error = (long)captureStatus.Total;
                 frame_total = (long)(imageInfo.FrameNumber - ueye_frame_number);
-
-                //Int32 s32Value;
-                //statusRet = cam.Timing.PixelClock.Get(out s32Value);
-                //           toolStripStatusLabelPixelClock.Text = "fr time[0.1ms]: " + 10000*(elapsed21-elapsed20)/(double)(Stopwatch.Frequency) +" "+ 10000*(elapsed22-elapsed21)/(double)(Stopwatch.Frequency);
-
             }
+            // PGR
+            if (cam_maker == Camera_Maker.PointGreyCamera)
+            {
+                dFramerate = pgr_frame_rate ; // frame rate [fps]
+                dExpo = pgr_image_expo ; // [us]
+                igain = pgr_image_gain ;
+                //uEye.Types.CaptureStatus captureStatus;
+                //cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
+                //frame_error = (long)captureStatus.Total;
+                frame_total = (long)( pgr_image_frame_count );
+            }
+            // Basler
             if (cam_maker == Camera_Maker.Basler)
             {
                 dFramerate = m_imageProvider.GetFrameRate(); // Basler
@@ -1087,6 +1094,7 @@ namespace MT3
                 frame_error = frame_underrun + m_imageProvider.Get_Statistic_feature("Statistic_Failed_Buffer_Count");
                 //frame_dropped = m_imageProvider.Get_Statistic_feature("Statistic_Total_Packet_Count");
             }
+            // AVT
             if (cam_maker == Camera_Maker.AVT)
             {
                 try
