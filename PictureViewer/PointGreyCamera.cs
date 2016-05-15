@@ -110,16 +110,15 @@ namespace MT3
             TimeStamp timestamp;
             lock (this)
             {
+                pgr_image_expo = (uint)((pgr_image.imageMetadata.embeddedShutter & 65535) * 4.883); // 1 count = 4.88268 ms
+                pgr_image_gain = pgr_image.imageMetadata.embeddedGain & 65535;
+                pgr_image_frame_count = pgr_image.imageMetadata.embeddedFrameCounter;
                 timestamp = pgr_image.timeStamp;
             }
             pgr_time_now = timestamp.cycleSeconds + timestamp.cycleCount/8000.0 ; // count 8kHz, 1394 cycle timer
             pgr_frame_rate = alpha_pgr_frame_rate * pgr_frame_rate_pre + (1 - alpha_pgr_frame_rate) * 1/(pgr_time_now - pgr_time_pre);
             pgr_frame_rate_pre = pgr_frame_rate;
             pgr_time_pre = pgr_time_now;
-
-            pgr_image_expo = (uint)((pgr_image.imageMetadata.embeddedShutter & 65535) * 4.883 ) ; // 1 count = 4.88268 ms
-            pgr_image_gain = pgr_image.imageMetadata.embeddedGain & 65535 ;
-            pgr_image_frame_count = pgr_image.imageMetadata.embeddedFrameCounter;
             
             //pgr_image.CalculateStatistics()
             //.GetProperty(PropertyType.FrameRate).absValue;
@@ -173,10 +172,22 @@ namespace MT3
             {
                 embeddedInfo.timestamp.onOff = true;
             }
+            // Enable exposure collection	
             if (embeddedInfo.exposure.available == true)
             {
                 embeddedInfo.exposure.onOff = true;
             }
+            // Enable shutter collection	
+            if (embeddedInfo.shutter.available == true)
+            {
+                embeddedInfo.shutter.onOff = true;
+            }
+            // Enable gain collection	
+            if (embeddedInfo.gain.available == true)
+            {
+                embeddedInfo.gain.onOff = true;
+            }
+            // Enable frameCounter collection	
             if (embeddedInfo.frameCounter.available == true)
             {
                 embeddedInfo.frameCounter.onOff = true;
@@ -185,10 +196,12 @@ namespace MT3
             // Set embedded image info to camera
             pgr_cam.SetEmbeddedImageInfo(embeddedInfo);
 
+            //CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
+            //frameRateProp.
+
             // Start capturing images
             pgr_cam.StartCapture(OnImageGrabbed);
 
-            CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
 
             //while (imageCnt < 1000)
             //{

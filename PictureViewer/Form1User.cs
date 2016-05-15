@@ -434,6 +434,41 @@ namespace MT3
             sett.SaveDrive = "C:";
             SettingsSave(sett);
 
+            // MT3SuperFine2 PointGreyCamera
+            sett.Text = "SuperFine2 PGC GS3-U3-23S6C";
+            sett.ID = 9;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 9;
+            sett.CameraType = "PG";    //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 2;         //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.color;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.USB3;
+            sett.CamPlatform = Platform.MT3;
+            sett.FlipOn = false;
+            sett.Flipmode = OpenCvSharp.FlipMode.X;
+            sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            sett.Width = 1920; // 652; //Max 659    4の倍数でメモリ確保される。
+            sett.Height = 1200; // 949; //Max 494
+            sett.FocalLength = 300;      //[mm] CBC 50mm f1.8
+            sett.Ccdpx = 0.00586; //[mm] CCD:IMX174
+            sett.Ccdpy = 0.00586; //[mm]
+            sett.Xoa = 960;// 320;
+            sett.Yoa = 600;// 240;            
+            sett.Roa = 1.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
+            sett.Theta = 0;
+            sett.Framerate = 162.0; //[fps]
+            sett.FifoMaxFrame = 16;
+            sett.Exposure = 6.12; //[ms]
+            sett.Gain = 1023; // 100-1023  要検討
+            sett.UseDetect = false;
+            sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortSend = 24432;
+            sett.SaveDir = @"E:\img_data\";
+            sett.SaveDrive = "E:";
+            SettingsSave(sett);
+
             // MT3Fine ImagingSouce
             sett.Text = "Fine IS DMK23G618";
             sett.ID = 8;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
