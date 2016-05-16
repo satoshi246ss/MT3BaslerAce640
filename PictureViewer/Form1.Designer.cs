@@ -418,46 +418,46 @@
             this.toolStripStatusLabelPixelClock,
             this.toolStripStatusLabelExposure,
             this.toolStripStatusLabelGain});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 596);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 597);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(646, 23);
+            this.statusStrip1.Size = new System.Drawing.Size(646, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabelFramerate
             // 
             this.toolStripStatusLabelFramerate.Name = "toolStripStatusLabelFramerate";
-            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(28, 18);
+            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(24, 17);
             this.toolStripStatusLabelFramerate.Text = "Fps";
             // 
             // toolStripStatusLabelFailed
             // 
             this.toolStripStatusLabelFailed.Name = "toolStripStatusLabelFailed";
-            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(134, 18);
+            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(114, 17);
             this.toolStripStatusLabelFailed.Text = "toolStripStatusLabel2";
             // 
             // toolStripStatusLabelID
             // 
             this.toolStripStatusLabelID.Name = "toolStripStatusLabelID";
-            this.toolStripStatusLabelID.Size = new System.Drawing.Size(60, 18);
+            this.toolStripStatusLabelID.Size = new System.Drawing.Size(48, 17);
             this.toolStripStatusLabelID.Text = "FrameID";
             // 
             // toolStripStatusLabelPixelClock
             // 
             this.toolStripStatusLabelPixelClock.Name = "toolStripStatusLabelPixelClock";
-            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(23, 18);
+            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(20, 17);
             this.toolStripStatusLabelPixelClock.Text = "PC";
             // 
             // toolStripStatusLabelExposure
             // 
             this.toolStripStatusLabelExposure.Name = "toolStripStatusLabelExposure";
-            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(98, 18);
+            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(79, 17);
             this.toolStripStatusLabelExposure.Text = "Exp: xx.xx[ms]";
             // 
             // toolStripStatusLabelGain
             // 
             this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
-            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(53, 18);
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(42, 17);
             this.toolStripStatusLabelGain.Text = "Gain:xx";
             // 
             // timerMTmonSend

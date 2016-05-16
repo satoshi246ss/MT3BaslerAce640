@@ -26,8 +26,11 @@ namespace MT3
         uint pgr_image_gain;
         uint pgr_image_frame_count;
 
-        ManagedBusManager busMgr = new ManagedBusManager();
-        ManagedCamera pgr_cam = new ManagedCamera();
+        //ManagedBusManager busMgr = new ManagedBusManager();
+        //ManagedCamera pgr_cam = new ManagedCamera();
+
+        ManagedBusManager busMgr ;
+        ManagedCamera pgr_cam ;
 
         //        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
         private ManagedCameraBase m_camera = null;
@@ -134,6 +137,10 @@ namespace MT3
 
         public void OpenPGRcamera()//(object sender, EventArgs e)
         {
+            busMgr = new ManagedBusManager();
+            pgr_cam = new ManagedCamera();
+            busMgr.RescanBus();
+
             uint numCameras = busMgr.GetNumOfCameras();
             if (numCameras > 0)
             {
@@ -154,6 +161,12 @@ namespace MT3
 
             // Disconnect the camera
             pgr_cam.Disconnect();           
+        }
+
+        void ReScanBus(ManagedBusManager _busMgr)
+        {
+            // Connect to a camera
+            _busMgr.RescanBus();
         }
 
         void RunSingleCamera(ManagedPGRGuid guid)
@@ -196,8 +209,11 @@ namespace MT3
             // Set embedded image info to camera
             pgr_cam.SetEmbeddedImageInfo(embeddedInfo);
 
-            //CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
-            //frameRateProp.
+            CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
+            Console.WriteLine( frameRateProp.absValue );
+
+            FC2Config fc2conf = pgr_cam.GetConfiguration();
+            Console.WriteLine(fc2conf.isochBusSpeed);
 
             // Start capturing images
             pgr_cam.StartCapture(OnImageGrabbed);
