@@ -26,11 +26,9 @@ namespace MT3
         uint pgr_image_gain;
         uint pgr_image_frame_count;
 
-        //ManagedBusManager busMgr = new ManagedBusManager();
-        //ManagedCamera pgr_cam = new ManagedCamera();
-
         ManagedBusManager busMgr ;
         ManagedCamera pgr_cam ;
+        CameraProperty pgr_frameRateProp ;
 
         //        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
         private ManagedCameraBase m_camera = null;
@@ -162,8 +160,41 @@ namespace MT3
             // Disconnect the camera
             pgr_cam.Disconnect();           
         }
+        // リクエストフレームレート
+        public float pgr_getFrameRate()
+        {
+            CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
+            return(frameRateProp.absValue);
+        }
 
-        void ReScanBus(ManagedBusManager _busMgr)
+//Enumerator: 
+//S100  100Mbits/sec. 
+//S200  200Mbits/sec. 
+        //S400  400Mbits/sec. 
+        //S480  480Mbits/sec.   //Only for USB2 cameras.
+ 
+//S800  800Mbits/sec. 
+//S1600  1600Mbits/sec. 
+//S3200  3200Mbits/sec. 
+//S5000  5000Mbits/sec. 
+//
+//Only for USB3 cameras. 
+// 
+//GigE_10Base_T   
+//GigE_100Base_T   
+//GigE_1000Base_T   
+//GigE_10000Base_T   
+//Fastest  The fastest speed available. 
+//Any  Any speed that is available.  
+//Unknown  Unknown interface. 
+
+        public int pgr_BusSpeed()
+        {
+            CameraInfo camInfo = pgr_cam.GetCameraInfo();
+            return ( (int)camInfo.maximumBusSpeed );
+        }
+
+        public void ReScanBus(ManagedBusManager _busMgr)
         {
             // Connect to a camera
             _busMgr.RescanBus();
@@ -176,6 +207,10 @@ namespace MT3
             // Get the camera information
             CameraInfo camInfo = pgr_cam.GetCameraInfo();
             PrintCameraInfo(camInfo);
+
+            // initialize camera
+            //pgr_cam.WriteRegister(0x0, 1);
+
 
             // Get embedded image info from camera
             EmbeddedImageInfo embeddedInfo = pgr_cam.GetEmbeddedImageInfo();

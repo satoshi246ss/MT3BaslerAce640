@@ -1081,6 +1081,7 @@ namespace MT3
                 //cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
                 //frame_error = (long)captureStatus.Total;
                 frame_total = (long)( pgr_image_frame_count );
+                reqFramerate = pgr_getFrameRate();
             }
             // Basler
             if (cam_maker == Camera_Maker.Basler)
@@ -1113,12 +1114,12 @@ namespace MT3
                 frame_dropped = StatFrameDropped();
                 frame_error = frame_underrun + frame_dropped;
             }
-            toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0");
+            toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0") +" "+ reqFramerate.ToString("000.0");
             toolStripStatusLabelExposure.Text = "Expo: " + (dExpo / 1000.0).ToString("00.00") + "[ms]";
-            toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("00");
+            toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("000");
             toolStripStatusLabelFailed.Text = "Failed U:" + frame_underrun.ToString("0000") + " S:" + frame_shoved.ToString("0000") + " D:" + frame_dropped.ToString("0000");
 
-            //label_frame_rate.Text = (1000 * lap21).ToString("0000") + "[us] " + (1000 * lap22).ToString("0000");
+            label_frame_rate.Text = pgr_BusSpeed().ToString();
 
             //double err_rate = 100.0 * (frame_total / (double)id);
             if (frame_total > 0)

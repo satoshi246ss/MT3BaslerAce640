@@ -142,6 +142,7 @@ namespace MT3
         //long timestamp; // [us]
         long frame_timestamp; //[us]
         double dFramerate = 0; // Frame rate[fr/s]
+        double reqFramerate = 0; // 要求Frame rate[fr/s]
         double dExpo = 0; // Exposure[us]
         long igain = 0; //Gain
 
@@ -430,8 +431,8 @@ namespace MT3
             sett.UdpPortRecieve = 24410; // Broadcast0
             //sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortSend = 24431;
-            sett.SaveDir = @"C:\img_data\";
-            sett.SaveDrive = "C:";
+            sett.SaveDir = @"E:\img_data\";
+            sett.SaveDrive = "E:";
             SettingsSave(sett);
 
             // MT3SuperFine2 PointGreyCamera
