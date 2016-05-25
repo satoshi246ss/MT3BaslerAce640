@@ -1082,6 +1082,8 @@ namespace MT3
                 //frame_error = (long)captureStatus.Total;
                 frame_total = (long)( pgr_image_frame_count );
                 reqFramerate = pgr_getFrameRate();
+                frame_underrun = pgr_PixelClockFreq(pgr_cam);
+                label_frame_rate.Text = pgr_BusSpeed().ToString() +" "+ ((pgr_Temperature(pgr_cam)-2732)/10.0).ToString() ; 
             }
             // Basler
             if (cam_maker == Camera_Maker.Basler)
@@ -1119,7 +1121,7 @@ namespace MT3
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("000");
             toolStripStatusLabelFailed.Text = "Failed U:" + frame_underrun.ToString("0000") + " S:" + frame_shoved.ToString("0000") + " D:" + frame_dropped.ToString("0000");
 
-            label_frame_rate.Text = pgr_BusSpeed().ToString();
+            //label_frame_rate.Text = pgr_BusSpeed().ToString();
 
             //double err_rate = 100.0 * (frame_total / (double)id);
             if (frame_total > 0)

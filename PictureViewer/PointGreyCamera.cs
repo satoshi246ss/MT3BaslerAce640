@@ -200,17 +200,74 @@ namespace MT3
             _busMgr.RescanBus();
         }
 
+        public uint pgr_Temperature(ManagedCamera _cam)
+        {
+            const uint k_addr = 0x82C;
+            const uint k_eVal = 0xFFF;
+            uint regVal = _cam.ReadRegister(k_addr);
+            return (regVal & k_eVal);
+        }
+        public uint pgr_PixelClockFreq(ManagedCamera _cam)        
+        {
+            const uint k_addr = 0x1AF0;
+            uint regVal = _cam.ReadRegister(k_addr);
+            return (regVal);
+        }
+        // Power on the camera
+        public void pgr_PowerOnCamera(ManagedCamera _cam)
+        {
+            const uint k_cameraPower = 0x610;
+            const uint k_powerVal = 0x80000000;
+            _cam.WriteRegister(k_cameraPower, k_powerVal);
+
+            const Int32 k_millisecondsToSleep = 100;
+            uint regVal = 0;
+
+            // Wait for camera to complete power-up
+            do
+            {
+                System.Threading.Thread.Sleep(k_millisecondsToSleep);
+                regVal = _cam.ReadRegister(k_cameraPower);
+            } while ((regVal & k_powerVal) == 0);
+        }
+        // Power off the camera
+        public void pgr_PowerOffCamera(ManagedCamera _cam)
+        {
+            const uint k_cameraPower = 0x610;
+            const uint k_powerVal = 0x00000000;
+            _cam.WriteRegister(k_cameraPower, k_powerVal);
+
+            const Int32 k_millisecondsToSleep = 100;
+            uint regVal = 0;
+
+            // Wait for camera to complete power-down
+            do
+            {
+                System.Threading.Thread.Sleep(k_millisecondsToSleep);
+                regVal = _cam.ReadRegister(k_cameraPower);
+            } while (regVal != 0);
+        }
+        // Memory Set 1
+        public void pgr_SetMemory1(ManagedCamera _cam)
+        {
+            const uint k_cur_mem_ch = 0x624;
+            const uint k_Val = 0x10000000;
+            _cam.WriteRegister(k_cur_mem_ch, k_Val);
+        }
+
         void RunSingleCamera(ManagedPGRGuid guid)
         {
             // Connect to a camera
             pgr_cam.Connect(guid);
+
+            pgr_PowerOnCamera(pgr_cam);
+
             // Get the camera information
             CameraInfo camInfo = pgr_cam.GetCameraInfo();
             PrintCameraInfo(camInfo);
 
-            // initialize camera
-            //pgr_cam.WriteRegister(0x0, 1);
-
+            // set mem 1
+            pgr_SetMemory1(pgr_cam);
 
             // Get embedded image info from camera
             EmbeddedImageInfo embeddedInfo = pgr_cam.GetEmbeddedImageInfo();
