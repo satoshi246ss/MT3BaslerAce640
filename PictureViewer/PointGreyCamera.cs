@@ -25,9 +25,11 @@ namespace MT3
         uint pgr_image_expo;
         uint pgr_image_gain;
         uint pgr_image_frame_count;
+        uint pgr_reg_frame_rate;
 
         ManagedBusManager busMgr = new ManagedBusManager();
         ManagedCamera pgr_cam = new ManagedCamera();
+        CameraProperty pgr_cp;
 
         //        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
         private ManagedCameraBase m_camera = null;
@@ -134,6 +136,7 @@ namespace MT3
 
         public void OpenPGRcamera()//(object sender, EventArgs e)
         {
+            busMgr.RescanBus();
             uint numCameras = busMgr.GetNumOfCameras();
             if (numCameras > 0)
             {
@@ -163,6 +166,9 @@ namespace MT3
             // Get the camera information
             CameraInfo camInfo = pgr_cam.GetCameraInfo();
             PrintCameraInfo(camInfo);
+
+            pgr_reg_frame_rate = pgr_cam.ReadRegister(0x73C);
+            pgr_cp = pgr_cam.GetProperty(PropertyType.FrameRate);
 
             // Get embedded image info from camera
             EmbeddedImageInfo embeddedInfo = pgr_cam.GetEmbeddedImageInfo();
