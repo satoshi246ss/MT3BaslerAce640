@@ -107,7 +107,7 @@ namespace MT3
             if (cam_maker == Camera_Maker.IDS)
             {
                 u32DisplayID = pictureBox1.Handle.ToInt32();
-                cam = new uEye.Camera();
+                //cam = new uEye.Camera();
                 appTitle = "MT3IDS " + appSettings.ID.ToString();
             }
 
@@ -197,7 +197,7 @@ namespace MT3
             // IDS
             if (cam_maker == Camera_Maker.IDS)
             {
-                cam.Exit();
+                //cam.Exit();
             }
             //AVT
             if (cam_maker == Camera_Maker.AVT)
@@ -691,6 +691,7 @@ namespace MT3
                 if (cam.Acquisition.Stop() == uEye.Defines.Status.SUCCESS)
                 {
                 }
+                cam.Exit();
             }
             //ImaginSouse
             if (cam_maker == Camera_Maker.ImagingSouce)

@@ -423,7 +423,7 @@ namespace MT3
             sett.Theta = 0;
             sett.Framerate = 100.0; //[fps]
             sett.FifoMaxFrame = 16;
-            sett.Exposure = 10.0; //[ms]
+            sett.Exposure = 9.946; //[ms]
             sett.Gain = 1023; // 100-1023  要検討
             sett.UseDetect = true;
             sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
@@ -458,7 +458,7 @@ namespace MT3
             sett.Theta = 0;
             sett.Framerate = 162.0; //[fps]
             sett.FifoMaxFrame = 16;
-            sett.Exposure = 6.12; //[ms]
+            sett.Exposure = 6.11; //[ms]
             sett.Gain = 1023; // 100-1023  要検討
             sett.UseDetect = false;
             sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）

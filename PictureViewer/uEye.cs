@@ -30,6 +30,7 @@ namespace MT3
 
         public void OpenIDScamera()//(object sender, EventArgs e)
         {
+            cam = new uEye.Camera();
             // IDS camera check
             int NumberOfCameras;
             uEye.Info.Camera.GetNumberOfDevices(out NumberOfCameras);

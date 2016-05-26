@@ -29,6 +29,7 @@ namespace MT3
         ManagedBusManager busMgr ;
         ManagedCamera pgr_cam ;
         CameraProperty pgr_frameRateProp ;
+        CameraProperty prop ;
 
         //        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
         private ManagedCameraBase m_camera = null;
@@ -120,9 +121,6 @@ namespace MT3
             pgr_frame_rate = alpha_pgr_frame_rate * pgr_frame_rate_pre + (1 - alpha_pgr_frame_rate) * 1/(pgr_time_now - pgr_time_pre);
             pgr_frame_rate_pre = pgr_frame_rate;
             pgr_time_pre = pgr_time_now;
-            
-            //pgr_image.CalculateStatistics()
-            //.GetProperty(PropertyType.FrameRate).absValue;
         }
 
         public void InitPGR()
@@ -137,7 +135,7 @@ namespace MT3
         {
             busMgr = new ManagedBusManager();
             pgr_cam = new ManagedCamera();
-            busMgr.RescanBus();
+            //busMgr.RescanBus();
 
             uint numCameras = busMgr.GetNumOfCameras();
             if (numCameras > 0)
@@ -152,6 +150,7 @@ namespace MT3
                 Environment.Exit(0);
             }
         }
+
         public void ClosePGRcamera()//(object sender, EventArgs e)
         {
             // Stop capturing images
@@ -160,11 +159,50 @@ namespace MT3
             // Disconnect the camera
             pgr_cam.Disconnect();           
         }
+
         // リクエストフレームレート
         public float pgr_getFrameRate()
         {
             CameraProperty frameRateProp = pgr_cam.GetProperty(PropertyType.FrameRate);
             return(frameRateProp.absValue);
+        }
+        public void pgr_setFrameRate(float fr)
+        {
+            //Declare a Property struct. 
+            CameraProperty prop = new CameraProperty();
+            prop.type = PropertyType.FrameRate;
+            prop.autoManualMode = false;
+            prop.absControl = true;
+            prop.absValue = fr;
+            prop.onOff = true;
+
+            pgr_cam.SetProperty(prop);
+        }
+        // Exposure [ms]
+        public void pgr_setShutter(float expo_ms)
+        {
+            //Declare a Property struct. 
+            CameraProperty prop = new CameraProperty();
+            prop.type = PropertyType.Shutter;
+            prop.autoManualMode = false;
+            prop.absControl = true;
+            prop.absValue = expo_ms;
+            prop.onOff = true;
+
+            pgr_cam.SetProperty(prop);
+        }
+        // set EV 
+        public void pgr_setEV(float ev)
+        {
+            //Declare a Property struct. 
+            CameraProperty prop = new CameraProperty();
+            prop.type = PropertyType.AutoExposure;
+            prop.autoManualMode = false;
+            prop.absControl = true;
+            prop.absValue = ev;
+            prop.onOff = true;
+
+            pgr_cam.SetProperty(prop);
         }
 
 //Enumerator: 
@@ -268,6 +306,8 @@ namespace MT3
 
             // set mem 1
             pgr_SetMemory1(pgr_cam);
+            pgr_setFrameRate((float)appSettings.Framerate);
+            pgr_setEV((float)(-0.5));
 
             // Get embedded image info from camera
             EmbeddedImageInfo embeddedInfo = pgr_cam.GetEmbeddedImageInfo();
