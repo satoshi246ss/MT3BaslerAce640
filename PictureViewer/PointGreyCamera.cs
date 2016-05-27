@@ -204,6 +204,18 @@ namespace MT3
 
             pgr_cam.SetProperty(prop);
         }
+        // get EV 
+        public float pgr_getEV()
+        { 
+            return pgr_get_property(PropertyType.AutoExposure);
+        }
+        // get camera property
+        public float pgr_get_property(PropertyType pt )
+        {
+            //Declare a Property struct. 
+            CameraProperty prop = pgr_cam.GetProperty( pt );
+            return (prop.absValue);
+        }
 
 //Enumerator: 
 //S100  100Mbits/sec. 

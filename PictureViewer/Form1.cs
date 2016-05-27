@@ -1083,7 +1083,7 @@ namespace MT3
                 //frame_error = (long)captureStatus.Total;
                 frame_total = (long)( pgr_image_frame_count );
                 reqFramerate = pgr_getFrameRate();
-                frame_underrun = pgr_PixelClockFreq(pgr_cam);
+                frame_underrun = (int)( 100 * pgr_getEV() ) ;
                 label_frame_rate.Text = pgr_BusSpeed().ToString() +" "+ ((pgr_Temperature(pgr_cam)-2732)/10.0).ToString() ; 
             }
             // Basler
