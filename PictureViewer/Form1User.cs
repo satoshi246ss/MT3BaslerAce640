@@ -244,11 +244,11 @@ namespace MT3
             // FIFO init
             if (appSettings.CamPlatform == Platform.MT2)
             {
-                fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir, 2);
+                fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir,appSettings.AviMaxFrame, 2);
             }
             else
             {
-                fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir);
+                fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir, appSettings.AviMaxFrame);
             }
         }
 
@@ -400,6 +400,44 @@ namespace MT3
             sett.SaveDrive = "F:";
             SettingsSave(sett);
 
+            // FishEye2 PointGreyCamera
+            sett.Text = "FishEye2 PGC GS3-U3-23S6M";
+            sett.ID = 1;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 1;
+            sett.CameraType = "PG";    //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 3;         //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.USB3;
+            sett.CamPlatform = Platform.Fish1;
+            sett.FlipOn = false;
+            //sett.Flipmode = OpenCvSharp.FlipMode.X;
+            //sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            sett.Width = 1920; // 652; //Max 659    4の倍数でメモリ確保される。
+            sett.Height = 1200; // 949; //Max 494    約2.2MB／fr
+            sett.FocalLength = 1.8;      //[mm] Fuji 1.8mm f1.8
+            sett.Ccdpx = 0.00586; //[mm] CCD:IMX174
+            sett.Ccdpy = 0.00586; //[mm]
+            sett.Xoa = 960;// 320;
+            sett.Yoa = 600;// 240;            
+            sett.Roa = 10.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
+            sett.Theta = 0;
+            sett.Framerate = 50;// 100.0; //[fps]
+            sett.FifoMaxFrame = 256;
+            sett.ExposureValue = -0.5;
+            sett.Exposure = 19.946; //[ms]
+            sett.Gain = 1023; // 100-1023  要検討
+            sett.UseDetect = true;
+            sett.PreSaveNum = 100 ;
+            sett.AviMaxFrame = 500 ;
+            sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortSend = 24431;
+            sett.SaveDir = @"E:\img_data\";
+            sett.SaveDrive = "E:";
+            SettingsSave(sett);
+
             // MT3Wide2 PointGreyCamera
             sett.Text = "Wide2 PGC GS3-U3-23S6M";
             sett.ID = 5;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
@@ -411,9 +449,9 @@ namespace MT3
             sett.CamPlatform = Platform.MT3;
             sett.FlipOn = false;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
-            sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            //sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
             sett.Width = 1920; // 652; //Max 659    4の倍数でメモリ確保される。
-            sett.Height =1200; // 949; //Max 494
+            sett.Height =1200; // 949; //Max 494    約2.2MB／fr
             sett.FocalLength = 50;      //[mm] CBC 50mm f1.8
             sett.Ccdpx = 0.00586; //[mm] CCD:IMX174
             sett.Ccdpy = 0.00586; //[mm]
@@ -421,8 +459,8 @@ namespace MT3
             sett.Yoa = 600;// 240;            
             sett.Roa = 1.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
             sett.Theta = 0;
-            sett.Framerate = 100.0; //[fps]
-            sett.FifoMaxFrame = 16;
+            sett.Framerate = 50;// 100.0; //[fps]
+            sett.FifoMaxFrame = 256;
             sett.Exposure = 9.946; //[ms]
             sett.Gain = 1023; // 100-1023  要検討
             sett.UseDetect = true;
@@ -446,7 +484,7 @@ namespace MT3
             sett.CamPlatform = Platform.MT3;
             sett.FlipOn = false;
             sett.Flipmode = OpenCvSharp.FlipMode.X;
-            sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
+            //sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
             sett.Width = 1920; // 652; //Max 659    4の倍数でメモリ確保される。
             sett.Height = 1200; // 949; //Max 494
             sett.FocalLength = 300;      //[mm] CBC 50mm f1.8

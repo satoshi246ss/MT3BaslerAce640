@@ -102,9 +102,13 @@ namespace MT3
         int mask;
 
         CvVideoWriter vw;
+        int save_frame_count;
+        int save_frame_count_max;
+        int avi_id;
 
         public int MtMode { get; set; } // MtMode  MT3:3   MT2:2
- 
+        public string FileName { get; set; } 
+
         private int _width;
         public int Width
         {
@@ -177,14 +181,16 @@ namespace MT3
         /// 初期最大容量を指定して初期化。
         /// </summary>
         /// <param name="capacity">初期最大容量</param>
-        public void init(int capacity, int width, int height, int no_cap_dev, string save_dir, int mtmode=3)
+        public void init(int capacity, int width, int height, int no_cap_dev, string save_dir, int avi_max_fr,  int mtmode=3)
         {
             MtMode = mtmode; //3:MT3    2:MT2
             _no_cap_dev = no_cap_dev;
             _save_dir   = save_dir;
             _width      = width;
             _height     = height;
-            SaveDir = save_dir;
+            SaveDir     = save_dir;
+            save_frame_count_max = avi_max_fr;
+            avi_id      = 0;
 
             capacity = Pow2((uint)capacity);
             this.data = new ImageData[capacity];
@@ -418,8 +424,11 @@ namespace MT3
                 {
                     System.IO.Directory.CreateDirectory(fn);
                 }
-                fn += this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".avi";
+                fn += this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev);
+                FileName = fn;
+                fn += ".avi";
                 VideoWriterInit(fn);
+                avi_id = 0;
             }
             // 書き込みチェック
             if (this.data[this.bottom].ImgSaveFlag)
@@ -500,6 +509,14 @@ namespace MT3
         public void VideoWriterFrame()
         {
             if (vw == null || writer == null) return;
+            if (save_frame_count++ > save_frame_count_max)
+            {
+                save_frame_count = 0;
+                VideoWriterRelease();
+
+                string fn = FileName + "_" + (++avi_id).ToString() + ".avi";
+                VideoWriterInit(fn);
+            }
 
             // 画像内にデータ埋め込み
             vd.id = (ushort)this.data[this.bottom].id;

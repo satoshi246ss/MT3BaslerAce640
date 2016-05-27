@@ -319,7 +319,7 @@ namespace MT3
             // set mem 1
             pgr_SetMemory1(pgr_cam);
             pgr_setFrameRate((float)appSettings.Framerate);
-            pgr_setEV((float)(-0.5));
+            pgr_setEV((float)appSettings.ExposureValue);
 
             // Get embedded image info from camera
             EmbeddedImageInfo embeddedInfo = pgr_cam.GetEmbeddedImageInfo();

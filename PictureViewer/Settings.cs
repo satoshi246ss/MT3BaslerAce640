@@ -134,6 +134,8 @@ namespace MT3
             get { return _framerate; }
             set { _framerate = value; }
         }
+        // PGR Auto EV用　露光量設定
+        public double ExposureValue { get; set; }
 
         private double _exposure;
         public double Exposure
@@ -255,6 +257,10 @@ namespace MT3
             get { return _no_cap_dev; }
             set { _no_cap_dev = value; }
         }
+
+        // avi file　の分割記録用上限コマ数　1file 2GB以下になるように設定
+        public int AviMaxFrame { get; set; }
+
         // Save dir
         private string _save_dir;
         public string SaveDir
@@ -300,6 +306,7 @@ namespace MT3
             _pixel_clock = 43;//[MHz] int
             _framerate = 75.0; //[fps]
             _fifo_max_frame = 64;
+            ExposureValue = -0.5; //[EV]
             _exposure = 13; //[ms]
             _gain = 100;
             _use_detect = true;
@@ -315,6 +322,7 @@ namespace MT3
             _udp_port_mtmon = 24415;
             _no_cap_dev = _id;
             _save_dir = @"C:\Users\Public\img_data\";
+            AviMaxFrame = 6000; //[fr] 640x480 -> 50sec 120fr/s
             _pre_save_num = 0;
             _ueye_shutter_mode = uEye_Shutter_Mode.Global;
             //string fn = @"D:\image_data\20151018\20151018_175329_491_10.avi";
