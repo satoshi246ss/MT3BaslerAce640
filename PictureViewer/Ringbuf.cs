@@ -450,9 +450,11 @@ namespace MT3
         public void Saveflag_true_Last(int n)
         {
             //if (n > bottom) n = bottom; //20160529 削除
+            int ii;
             for (int i = 0; i < n; ++i)
             {
-                this.data[this.bottom-i].ImgSaveFlag = true;
+                ii = (this.bottom - i) & this.mask;
+                this.data[ii].ImgSaveFlag = true;
             }
         }
 
