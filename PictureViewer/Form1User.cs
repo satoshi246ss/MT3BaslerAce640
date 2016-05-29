@@ -428,6 +428,7 @@ namespace MT3
             sett.Gain = 1023; // 100-1023  要検討
             sett.UseDetect = true;
             sett.PreSaveNum = 100 ;
+            sett.PostSaveProcess = true;
             sett.AviMaxFrame = 500 ;
             sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)

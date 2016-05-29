@@ -775,6 +775,17 @@ namespace MT3
 
         private void ButtonSaveEnd_Click(object sender, EventArgs e)
         {
+            if (appSettings.PostSaveProcess)
+            {
+                //　カメラ毎の処理
+                if (!pgr_post_save)
+                {
+                    pgr_PostSave_settings();
+                    timerSavePost.Start();
+                    return;
+                }
+                pgr_post_save = false;
+            }
             ImgSaveFlag = FALSE;
             this.States = RUN;
             this.timerSave.Enabled = false;
@@ -782,22 +793,24 @@ namespace MT3
 
         private void timerSavePostTime_Tick(object sender, EventArgs e)
         {
-            timerSave.Stop();
-            timerSaveMainTime.Stop();
+            timerSaveTimeOver.Stop();
+            timerSavePost.Stop();
             Mode = LOST;
+            pgr_Normal_settings();
+            pgr_post_save = true;
             ButtonSaveEnd_Click(sender, e);
         }
         private void timerSave_Tick(object sender, EventArgs e)
         {
             timerSave.Stop();
-            timerSaveMainTime.Stop();
+            timerSaveTimeOver.Stop();
             Mode = LOST;
             ButtonSaveEnd_Click(sender, e);
         }
 
         private void timerSaveMainTime_Tick(object sender, EventArgs e)
         {
-            timerSaveMainTime.Stop();
+            timerSavePost.Stop();
         }
 
         // settingsの作成

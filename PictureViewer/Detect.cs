@@ -197,8 +197,8 @@ namespace MT3
                     {
                         // 保存時間延長
                         //timerSavePostTime.Stop();
-                        timerSaveMainTime.Stop();
-                        timerSaveMainTime.Start();
+                        timerSavePost.Stop();
+                        timerSavePost.Start();
                     }
                 }
 

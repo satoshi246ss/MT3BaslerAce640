@@ -269,12 +269,9 @@ namespace MT3
             set { _save_dir = value; }
         }
         // 過去画像保存枚数　０ならなし。
-        private int _pre_save_num;
-        public int PreSaveNum
-        {
-            get { return _pre_save_num; }
-            set { _pre_save_num = value; }
-        }
+        public int PreSaveNum { get; set; }
+        // 保存後、後処理の有無　例：fisheye2の長時間露光フレーム追加
+        public bool PostSaveProcess { get; set; }
         public string SaveDrive { get; set; }
 
         public string TestFname { get; set; }
@@ -323,7 +320,8 @@ namespace MT3
             _no_cap_dev = _id;
             _save_dir = @"C:\Users\Public\img_data\";
             AviMaxFrame = 6000; //[fr] 640x480 -> 50sec 120fr/s
-            _pre_save_num = 0;
+            PreSaveNum = 0;
+            PostSaveProcess = false;
             _ueye_shutter_mode = uEye_Shutter_Mode.Global;
             //string fn = @"D:\image_data\20151018\20151018_175329_491_10.avi";
             TestFname = @"20151018_224542_615_10.avi";

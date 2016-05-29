@@ -53,7 +53,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timerSaveTimeOver = new System.Windows.Forms.Timer(this.components);
-            this.timerSaveMainTime = new System.Windows.Forms.Timer(this.components);
+            this.timerSavePost = new System.Windows.Forms.Timer(this.components);
             this.timerDisplay = new System.Windows.Forms.Timer(this.components);
             this.timerObsOnOff = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -392,10 +392,10 @@
             this.timerSaveTimeOver.Interval = 10000;
             this.timerSaveTimeOver.Tick += new System.EventHandler(this.timerSaveTimeOver_Tick);
             // 
-            // timerSaveMainTime
+            // timerSavePost
             // 
-            this.timerSaveMainTime.Interval = 2000;
-            this.timerSaveMainTime.Tick += new System.EventHandler(this.timerSaveMainTime_Tick);
+            this.timerSavePost.Interval = 5000;
+            this.timerSavePost.Tick += new System.EventHandler(this.timerSavePostTime_Tick);
             // 
             // timerDisplay
             // 
@@ -433,31 +433,31 @@
             // toolStripStatusLabelFailed
             // 
             this.toolStripStatusLabelFailed.Name = "toolStripStatusLabelFailed";
-            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(114, 17);
+            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabelFailed.Text = "toolStripStatusLabel2";
             // 
             // toolStripStatusLabelID
             // 
             this.toolStripStatusLabelID.Name = "toolStripStatusLabelID";
-            this.toolStripStatusLabelID.Size = new System.Drawing.Size(48, 17);
+            this.toolStripStatusLabelID.Size = new System.Drawing.Size(49, 17);
             this.toolStripStatusLabelID.Text = "FrameID";
             // 
             // toolStripStatusLabelPixelClock
             // 
             this.toolStripStatusLabelPixelClock.Name = "toolStripStatusLabelPixelClock";
-            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(20, 17);
+            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(21, 17);
             this.toolStripStatusLabelPixelClock.Text = "PC";
             // 
             // toolStripStatusLabelExposure
             // 
             this.toolStripStatusLabelExposure.Name = "toolStripStatusLabelExposure";
-            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(79, 17);
+            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(82, 17);
             this.toolStripStatusLabelExposure.Text = "Exp: xx.xx[ms]";
             // 
             // toolStripStatusLabelGain
             // 
             this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
-            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(42, 17);
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(46, 17);
             this.toolStripStatusLabelGain.Text = "Gain:xx";
             // 
             // timerMTmonSend
@@ -528,7 +528,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Timer timerSaveTimeOver;
-        private System.Windows.Forms.Timer timerSaveMainTime;
+        private System.Windows.Forms.Timer timerSavePost;
         private System.Windows.Forms.Timer timerDisplay;
         private System.Windows.Forms.Timer timerObsOnOff;
         private System.Windows.Forms.StatusStrip statusStrip1;

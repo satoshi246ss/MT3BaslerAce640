@@ -24,6 +24,7 @@ namespace MT3
         uint pgr_image_expo;
         uint pgr_image_gain;
         uint pgr_image_frame_count;
+        bool pgr_post_save = false;
 
         ManagedBusManager busMgr ;
         ManagedCamera pgr_cam ;
@@ -31,7 +32,7 @@ namespace MT3
         //        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
         private ManagedImage m_rawImage;
         private ManagedImage m_processedImage;
-       private AutoResetEvent m_grabThreadExited;
+        private AutoResetEvent m_grabThreadExited;
 
         static void PgrPrintBuildInfo()
         {
@@ -327,6 +328,20 @@ namespace MT3
             _cam.WriteRegister(k_cur_mem_ch, k_Val);
         }
 
+        // 通常撮像
+        public void pgr_Normal_settings()
+        {
+            pgr_SetMemory1(pgr_cam);
+            pgr_setFrameRate((float)appSettings.Framerate);
+            pgr_setEV((float)appSettings.ExposureValue);
+            pgr_setBrightness((float)0.0);
+        }
+        // 保存後撮像
+        public void pgr_PostSave_settings()
+        {
+            pgr_setFrameRate((float)1.0);
+        }
+
         void RunSingleCamera(ManagedPGRGuid guid)
         {
             // Connect to a camera
@@ -338,12 +353,9 @@ namespace MT3
             CameraInfo camInfo = pgr_cam.GetCameraInfo();
             PrintCameraInfo(camInfo);
 
-            // set mem 1
-            pgr_SetMemory1(pgr_cam);
-            pgr_setFrameRate((float)appSettings.Framerate);
-            pgr_setEV((float)appSettings.ExposureValue);
-            pgr_setBrightness((float)0.0);
-
+            // 通常撮像
+            pgr_Normal_settings();
+ 
             // Get embedded image info from camera
             EmbeddedImageInfo embeddedInfo = pgr_cam.GetEmbeddedImageInfo();
 
