@@ -180,6 +180,7 @@ namespace MT3
             //Cv.Split(img_dmk3, imgdata.img, null,null,null); // er:1.1%
             cam.Memory.Unlock(s32MemID);
 
+            ++frame_id; 
             detect();
             imgdata_push_FIFO();
         }
@@ -193,7 +194,7 @@ namespace MT3
             Camera.Memory.GetActive(out s32MemID);
 
             Camera.Display.DisplayImage.Set(s32MemID, u32DisplayID, uEye.Defines.DisplayRenderMode.FitToWindow);
-            ++id;
+            ++frame_id;
         }
  
         // 毎フレーム呼び出し(120fr/s)
@@ -216,7 +217,7 @@ namespace MT3
 
                 //Cv.Copy(img_dmk, img2, null);
 
-                ++id;
+                ++frame_id;
                 elapsed0 = sw.ElapsedTicks;
 
                 // 保存用データをキューへ
@@ -280,7 +281,7 @@ namespace MT3
             framerate1 = framerate0;
 
             double sf = (double)Stopwatch.Frequency / 1000; //msec
-            fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2} fr:{4,5:F1}", id, elapsed0 / sf, elapsed1 / sf, elapsed2 / sf, framerate0);
+            fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2} fr:{4,5:F1}", frame_id, elapsed0 / sf, elapsed1 / sf, elapsed2 / sf, framerate0);
         }
 
     }

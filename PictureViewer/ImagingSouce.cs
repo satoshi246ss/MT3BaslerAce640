@@ -55,6 +55,7 @@ namespace MT3
             CurrentBuffer.Unlock();
 
             //検知処理
+            ++frame_id; 
             detect();
             imgdata_push_FIFO();
 

@@ -136,7 +136,7 @@ namespace MT3
         position_mesure pos_mes = new position_mesure();
 
         // 観測開始からのフレーム番号
-        int id = 0;
+        int frame_id = 0;
         int id_mon = 0;
         DateTime LiveStartTime;
         //long timestamp; // [us]
@@ -841,7 +841,8 @@ namespace MT3
                 Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
             }
             elapsed21 = sw2.ElapsedTicks; // 0.1ms
-            
+
+            ++frame_id; 
             detect();            
             imgdata_push_FIFO();
             elapsed22 = sw2.ElapsedTicks; // 0.1ms
@@ -1112,7 +1113,7 @@ namespace MT3
 
             //try
             //{
-            imgdata.id = (int)id;     // (int)imageInfo.FrameNumber;
+            imgdata.id = (int)frame_id;     // (int)imageInfo.FrameNumber;
             imgdata.t = DateTime.Now; //imageInfo.TimestampSystem;   //  LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime);
             imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
             imgdata.gx = gx;

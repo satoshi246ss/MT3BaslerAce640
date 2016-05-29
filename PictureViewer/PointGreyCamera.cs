@@ -16,7 +16,6 @@ namespace MT3
 {
     partial class Form1 //PointGreyCamera
     {
-        static uint imageCnt = 0;
         double pgr_time_pre = 0;
         double pgr_time_now = 0;
         double pgr_frame_rate = 0;
@@ -28,16 +27,11 @@ namespace MT3
 
         ManagedBusManager busMgr ;
         ManagedCamera pgr_cam ;
-        CameraProperty pgr_frameRateProp ;
-        CameraProperty prop ;
 
         //        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
-        private ManagedCameraBase m_camera = null;
         private ManagedImage m_rawImage;
         private ManagedImage m_processedImage;
-        private bool m_grabImages;
-        private AutoResetEvent m_grabThreadExited;
-        private BackgroundWorker m_grabThread;
+       private AutoResetEvent m_grabThreadExited;
 
         static void PgrPrintBuildInfo()
         {
@@ -106,6 +100,7 @@ namespace MT3
              */
             #endregion
 
+            //++frame_id; 
             detect(); // これをはずすと160fps
             imgdata_push_FIFO();
 
@@ -117,6 +112,7 @@ namespace MT3
                 pgr_image_frame_count = pgr_image.imageMetadata.embeddedFrameCounter;
                 timestamp = pgr_image.timeStamp;
             }
+            frame_id = (int)pgr_image_frame_count ;
             pgr_time_now = timestamp.cycleSeconds + timestamp.cycleCount/8000.0 ; // count 8kHz, 1394 cycle timer
             pgr_frame_rate = alpha_pgr_frame_rate * pgr_frame_rate_pre + (1 - alpha_pgr_frame_rate) * 1/(pgr_time_now - pgr_time_pre);
             pgr_frame_rate_pre = pgr_frame_rate;
@@ -187,6 +183,32 @@ namespace MT3
             prop.autoManualMode = false;
             prop.absControl = true;
             prop.absValue = expo_ms;
+            prop.onOff = true;
+
+            pgr_cam.SetProperty(prop);
+        }
+        // set Brightness 
+        public void pgr_setBrightness(float br)
+        {
+            //Declare a Property struct. 
+            CameraProperty prop = new CameraProperty();
+            prop.type = PropertyType.Brightness;
+            prop.autoManualMode = false;
+            prop.absControl = true;
+            prop.absValue = br;
+            prop.onOff = true;
+
+            pgr_cam.SetProperty(prop);
+        }
+        // set ganma 
+        public void pgr_setGamma(float gamma)
+        {
+            //Declare a Property struct. 
+            CameraProperty prop = new CameraProperty();
+            prop.type = PropertyType.Gamma;
+            prop.autoManualMode = false;
+            prop.absControl = true;
+            prop.absValue = gamma;
             prop.onOff = true;
 
             pgr_cam.SetProperty(prop);
@@ -320,6 +342,7 @@ namespace MT3
             pgr_SetMemory1(pgr_cam);
             pgr_setFrameRate((float)appSettings.Framerate);
             pgr_setEV((float)appSettings.ExposureValue);
+            pgr_setBrightness((float)0.0);
 
             // Get embedded image info from camera
             EmbeddedImageInfo embeddedInfo = pgr_cam.GetEmbeddedImageInfo();
@@ -361,15 +384,6 @@ namespace MT3
 
             // Start capturing images
             pgr_cam.StartCapture(OnImageGrabbed);
-
-
-            //while (imageCnt < 1000)
-            //{
-            //    int millisecondsToSleep = (int)(1000 / frameRateProp.absValue);
-            //    Thread.Sleep(millisecondsToSleep);
-            //}
-            // Reset counter for next iteration
-            imageCnt = 0;
         }
 
 
@@ -389,175 +403,176 @@ namespace MT3
             //    cam.Display.DisplayImage.Set(s32MemID, u32DisplayID, uEye.Defines.DisplayRenderMode.Normal);//FitToWindow);
             //}
      //   }
-/*
-      /// <summary>
-        /// シャッターモードをローリングシャッターに設定
-        /// </summary>
-        public void set_uEye_Rolling_shutter_mode()
-        {
-            if (cam.DeviceFeature.ShutterMode.IsSupported(uEye.Defines.Shuttermode.Rolling))
-            {
-                cam.DeviceFeature.ShutterMode.Set(uEye.Defines.Shuttermode.Rolling);
-            }
-
-        }
-        /// <summary>
-        /// シャッターモードをグローバルシャッターに設定
-        /// </summary>
-        public void set_uEye_Global_shutter_mode()
-        {
-            if (cam.DeviceFeature.ShutterMode.IsSupported(uEye.Defines.Shuttermode.Global))
-            {
-                cam.DeviceFeature.ShutterMode.Set(uEye.Defines.Shuttermode.Global);
-            }
-
-        }
-        public void set_PixelFormat_mono8()
-        {
-            // PixelFormat MONO 8
-            uEye.Defines.ColorMode mode;
-            cam.PixelFormat.Get(out mode);
-            cam.PixelFormat.Set(uEye.Defines.ColorMode.MONO8);
-            cam.PixelFormat.Get(out mode);
-        }        //
-        public void set_PixelFormat_mono16()
-        {
-            // PixelFormat MONO 16
-            uEye.Defines.ColorMode mode;
-            cam.PixelFormat.Get(out mode);
-            cam.PixelFormat.Set(uEye.Defines.ColorMode.MONO16);
-            cam.PixelFormat.Get(out mode);
-        }        //
-        // 毎フレーム呼び出し use:2015/9 
-        // IDS event追加
-        private void onFrameEvent(object sender, EventArgs e)
-        {
-            sw.Start();
-            Int32 s32MemID;
-            cam.Memory.GetActive(out s32MemID);
-            System.IntPtr ptr;
-
-            //画像データをバッファにコピー
-            cam.Memory.Lock(s32MemID);
-            cam.Information.GetImageInfo(s32MemID, out imageInfo);
-            cam.Memory.ToIntPtr(s32MemID, out ptr);
-            CopyMemory(imgdata.img.ImageDataOrigin, ptr, imgdata.img.ImageSize);
-            ///CopyMemory(img_dmk.ImageDataOrigin, ptr, img_dmk.ImageSize);
-            ///Cv.Copy(img_dmk, imgdata.img);
-            if (ueye_frame_number == 0) ueye_frame_number = imageInfo.FrameNumber; //frame number初期値
-            elapsed0 = sw.ElapsedTicks; // 0.1ms
-
-            //3  Cv.Copy(img_dmk3, imgdata.img);
-            //Cv.Copy(img_dmk, imgdata.img);
-
-            //img_dmk3.ImageData = ptr;
-            //Cv.CvtColor(img_dmk3, imgdata.img, ColorConversion.BgrToGray); // 遅い er:2.6%
-            //Cv.Split(img_dmk3, imgdata.img, null,null,null); // er:1.1%
-            cam.Memory.Unlock(s32MemID);
-
-            detect();
-            imgdata_push_FIFO();
-        }
-
-        // IDS event追加
-        private void onFrameEvent1(object sender, EventArgs e)
-        {
-            uEye.Camera Camera = sender as uEye.Camera;
-
-            Int32 s32MemID;
-            Camera.Memory.GetActive(out s32MemID);
-
-            Camera.Display.DisplayImage.Set(s32MemID, u32DisplayID, uEye.Defines.DisplayRenderMode.FitToWindow);
-            ++id;
-        }
- 
-        // 毎フレーム呼び出し(120fr/s)
-        // IDS event追加
-        private void onFrameEvent2(object sender, EventArgs e)
-        {
-            sw.Start();
-            double framerate0 = 0, framerate1 = 0;//, alfa_fr = 0.99;
-            Int32 s32MemID;
-            cam.Memory.GetActive(out s32MemID);
-            try
-            {
-                System.IntPtr ptr;
-                cam.Memory.Lock(s32MemID);
-                cam.Information.GetImageInfo(s32MemID, out imageInfo);
-                cam.Memory.ToIntPtr(s32MemID, out ptr);
-                CopyMemory(img_dmk3.ImageDataOrigin, ptr, img_dmk3.ImageSize);
-                Cv.CvtColor(img_dmk3, img_dmk, ColorConversion.BgrToGray);
-                cam.Memory.Unlock(s32MemID);
-
-                //Cv.Copy(img_dmk, img2, null);
-
-                ++id;
-                elapsed0 = sw.ElapsedTicks;
-
-                // 保存用データをキューへ
-                if (ImgSaveFlag == TRUE)
+        /*
+              /// <summary>
+                /// シャッターモードをローリングシャッターに設定
+                /// </summary>
+                public void set_uEye_Rolling_shutter_mode()
                 {
-                    double min_val, max_val;
-                    CvPoint min_loc, max_loc;
-                    int size = 15;
-                    int size2x = size / 2;
-                    int size2y = size / 2;
-                    //int num    = 0;
-                    double sigma = 3;
+                    if (cam.DeviceFeature.ShutterMode.IsSupported(uEye.Defines.Shuttermode.Rolling))
+                    {
+                        cam.DeviceFeature.ShutterMode.Set(uEye.Defines.Shuttermode.Rolling);
+                    }
 
-                    // 位置検出
-                    Cv.Smooth(img_dmk, img2, SmoothType.Gaussian, size, 0, sigma, 0);
-                    CvRect rect = new CvRect(1, 1, appSettings.Width - 2, appSettings.Height - 2);
-                    Cv.SetImageROI(img2, rect);
-                    Cv.MinMaxLoc(img2, out  min_val, out  max_val, out  min_loc, out  max_loc, null);
-                    Cv.ResetImageROI(img2);
-                    max_loc.X += 1; // 基準点が(1,1)のため＋１
-                    max_loc.Y += 1;
+                }
+                /// <summary>
+                /// シャッターモードをグローバルシャッターに設定
+                /// </summary>
+                public void set_uEye_Global_shutter_mode()
+                {
+                    if (cam.DeviceFeature.ShutterMode.IsSupported(uEye.Defines.Shuttermode.Global))
+                    {
+                        cam.DeviceFeature.ShutterMode.Set(uEye.Defines.Shuttermode.Global);
+                    }
 
-                    double m00, m10, m01;
-                    if (max_loc.X - size2x < 0) size2x = max_loc.X;
-                    if (max_loc.Y - size2y < 0) size2y = max_loc.Y;
-                    if (max_loc.X + size2x >= appSettings.Width ) size2x = appSettings.Width  - max_loc.X - 1;
-                    if (max_loc.Y + size2y >= appSettings.Height) size2y = appSettings.Height - max_loc.Y - 1;
-                    rect = new CvRect(max_loc.X - size2x, max_loc.Y - size2y, size, size);
-                    CvMoments moments;
-                    Cv.SetImageROI(img2, rect);
-                    Cv.Moments(img2, out moments, false);
-                    Cv.ResetImageROI(img2);
-                    m00 = Cv.GetSpatialMoment(moments, 0, 0);
-                    m10 = Cv.GetSpatialMoment(moments, 1, 0);
-                    m01 = Cv.GetSpatialMoment(moments, 0, 1);
-                    gx = max_loc.X - size2x + m10 / m00;
-                    gy = max_loc.Y - size2y + m01 / m00;
+                }
+                public void set_PixelFormat_mono8()
+                {
+                    // PixelFormat MONO 8
+                    uEye.Defines.ColorMode mode;
+                    cam.PixelFormat.Get(out mode);
+                    cam.PixelFormat.Set(uEye.Defines.ColorMode.MONO8);
+                    cam.PixelFormat.Get(out mode);
+                }        //
+                public void set_PixelFormat_mono16()
+                {
+                    // PixelFormat MONO 16
+                    uEye.Defines.ColorMode mode;
+                    cam.PixelFormat.Get(out mode);
+                    cam.PixelFormat.Set(uEye.Defines.ColorMode.MONO16);
+                    cam.PixelFormat.Get(out mode);
+                }        //
+                // 毎フレーム呼び出し use:2015/9 
+                // IDS event追加
+                private void onFrameEvent(object sender, EventArgs e)
+                {
+                    sw.Start();
+                    Int32 s32MemID;
+                    cam.Memory.GetActive(out s32MemID);
+                    System.IntPtr ptr;
 
-                    //    Pid_Data_Send();
-                    elapsed1 = sw.ElapsedTicks;
+                    //画像データをバッファにコピー
+                    cam.Memory.Lock(s32MemID);
+                    cam.Information.GetImageInfo(s32MemID, out imageInfo);
+                    cam.Memory.ToIntPtr(s32MemID, out ptr);
+                    CopyMemory(imgdata.img.ImageDataOrigin, ptr, imgdata.img.ImageSize);
+                    ///CopyMemory(img_dmk.ImageDataOrigin, ptr, img_dmk.ImageSize);
+                    ///Cv.Copy(img_dmk, imgdata.img);
+                    if (ueye_frame_number == 0) ueye_frame_number = imageInfo.FrameNumber; //frame number初期値
+                    elapsed0 = sw.ElapsedTicks; // 0.1ms
+
+                    //3  Cv.Copy(img_dmk3, imgdata.img);
+                    //Cv.Copy(img_dmk, imgdata.img);
+
+                    //img_dmk3.ImageData = ptr;
+                    //Cv.CvtColor(img_dmk3, imgdata.img, ColorConversion.BgrToGray); // 遅い er:2.6%
+                    //Cv.Split(img_dmk3, imgdata.img, null,null,null); // er:1.1%
+                    cam.Memory.Unlock(s32MemID);
+
+                    ++frame_id;
+                    detect();
                     imgdata_push_FIFO();
                 }
-            }
-            catch (Exception ex)
-            {
-                //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
-                System.Diagnostics.Trace.WriteLine(ex.Message);
-            }
-            finally
-            {
-            }
-            elapsed2 = sw.ElapsedTicks; sw.Stop(); sw.Reset();
-            // 処理速度
-            //  Double dFramerate;
-            //  cam.Timing.Framerate.GetCurrentFps(out dFramerate);
-            //  toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("00.00");
 
-            //framerate0 = alfa_fr * framerate1 + (1 - alfa_fr) * (Stopwatch.Frequency / (double)elapsed2);
-            //  framerate0 = ++id_fr / (this.icImagingControl1.ReferenceTimeCurrent - this.icImagingControl1.ReferenceTimeStart);
-            framerate1 = framerate0;
+                // IDS event追加
+                private void onFrameEvent1(object sender, EventArgs e)
+                {
+                    uEye.Camera Camera = sender as uEye.Camera;
 
-            double sf = (double)Stopwatch.Frequency / 1000; //msec
-            fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2} fr:{4,5:F1}", id, elapsed0 / sf, elapsed1 / sf, elapsed2 / sf, framerate0);
-        }
-        */
+                    Int32 s32MemID;
+                    Camera.Memory.GetActive(out s32MemID);
+
+                    Camera.Display.DisplayImage.Set(s32MemID, u32DisplayID, uEye.Defines.DisplayRenderMode.FitToWindow);
+                    ++id;
+                }
+ 
+                // 毎フレーム呼び出し(120fr/s)
+                // IDS event追加
+                private void onFrameEvent2(object sender, EventArgs e)
+                {
+                    sw.Start();
+                    double framerate0 = 0, framerate1 = 0;//, alfa_fr = 0.99;
+                    Int32 s32MemID;
+                    cam.Memory.GetActive(out s32MemID);
+                    try
+                    {
+                        System.IntPtr ptr;
+                        cam.Memory.Lock(s32MemID);
+                        cam.Information.GetImageInfo(s32MemID, out imageInfo);
+                        cam.Memory.ToIntPtr(s32MemID, out ptr);
+                        CopyMemory(img_dmk3.ImageDataOrigin, ptr, img_dmk3.ImageSize);
+                        Cv.CvtColor(img_dmk3, img_dmk, ColorConversion.BgrToGray);
+                        cam.Memory.Unlock(s32MemID);
+
+                        //Cv.Copy(img_dmk, img2, null);
+
+                        ++id;
+                        elapsed0 = sw.ElapsedTicks;
+
+                        // 保存用データをキューへ
+                        if (ImgSaveFlag == TRUE)
+                        {
+                            double min_val, max_val;
+                            CvPoint min_loc, max_loc;
+                            int size = 15;
+                            int size2x = size / 2;
+                            int size2y = size / 2;
+                            //int num    = 0;
+                            double sigma = 3;
+
+                            // 位置検出
+                            Cv.Smooth(img_dmk, img2, SmoothType.Gaussian, size, 0, sigma, 0);
+                            CvRect rect = new CvRect(1, 1, appSettings.Width - 2, appSettings.Height - 2);
+                            Cv.SetImageROI(img2, rect);
+                            Cv.MinMaxLoc(img2, out  min_val, out  max_val, out  min_loc, out  max_loc, null);
+                            Cv.ResetImageROI(img2);
+                            max_loc.X += 1; // 基準点が(1,1)のため＋１
+                            max_loc.Y += 1;
+
+                            double m00, m10, m01;
+                            if (max_loc.X - size2x < 0) size2x = max_loc.X;
+                            if (max_loc.Y - size2y < 0) size2y = max_loc.Y;
+                            if (max_loc.X + size2x >= appSettings.Width ) size2x = appSettings.Width  - max_loc.X - 1;
+                            if (max_loc.Y + size2y >= appSettings.Height) size2y = appSettings.Height - max_loc.Y - 1;
+                            rect = new CvRect(max_loc.X - size2x, max_loc.Y - size2y, size, size);
+                            CvMoments moments;
+                            Cv.SetImageROI(img2, rect);
+                            Cv.Moments(img2, out moments, false);
+                            Cv.ResetImageROI(img2);
+                            m00 = Cv.GetSpatialMoment(moments, 0, 0);
+                            m10 = Cv.GetSpatialMoment(moments, 1, 0);
+                            m01 = Cv.GetSpatialMoment(moments, 0, 1);
+                            gx = max_loc.X - size2x + m10 / m00;
+                            gy = max_loc.Y - size2y + m01 / m00;
+
+                            //    Pid_Data_Send();
+                            elapsed1 = sw.ElapsedTicks;
+                            imgdata_push_FIFO();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //匿名デリゲートで表示する
+                        this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                        System.Diagnostics.Trace.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                    }
+                    elapsed2 = sw.ElapsedTicks; sw.Stop(); sw.Reset();
+                    // 処理速度
+                    //  Double dFramerate;
+                    //  cam.Timing.Framerate.GetCurrentFps(out dFramerate);
+                    //  toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("00.00");
+
+                    //framerate0 = alfa_fr * framerate1 + (1 - alfa_fr) * (Stopwatch.Frequency / (double)elapsed2);
+                    //  framerate0 = ++id_fr / (this.icImagingControl1.ReferenceTimeCurrent - this.icImagingControl1.ReferenceTimeStart);
+                    framerate1 = framerate0;
+
+                    double sf = (double)Stopwatch.Frequency / 1000; //msec
+                    fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2} fr:{4,5:F1}", id, elapsed0 / sf, elapsed1 / sf, elapsed2 / sf, framerate0);
+                }
+                */
     }
 }
 

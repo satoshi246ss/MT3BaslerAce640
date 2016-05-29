@@ -507,6 +507,7 @@ namespace MT3
             ccd_defect_correct(624, 252);
             ccd_defect_correct(220, 41);
 
+            ++frame_id; 
             detect();
             imgdata_push_FIFO();
 
@@ -611,7 +612,7 @@ namespace MT3
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
-            Pid_Data_Send_KV1000_SpCam2((short)id, daz, dalt, 1);
+            Pid_Data_Send_KV1000_SpCam2((short)frame_id, daz, dalt, 1);
 
             //OpenIDScamera();
             //AVT
@@ -979,7 +980,7 @@ namespace MT3
                     Point2 = Rotation(OCPoint, k2 * roa, theta_c + 270);
                     Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
 
-                    str = String.Format("ID:{4,7:D1} W: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                    str = String.Format("ID:{4,7:D1} W: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, frame_id, daz, dalt, theta_c);
                 }
                 else
                 {
@@ -1003,7 +1004,7 @@ namespace MT3
                     Cv.Line(img_dmk3, Point1, Point2, new CvColor(0, 205, 0));
                     //Cv.Line(img_dmk3, Point1, Point2, new CvColor(230, 105, 0));
 
-                    str = String.Format("ID:{4,7:D1} E: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, id, daz, dalt, theta_c);
+                    str = String.Format("ID:{4,7:D1} E: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, frame_id, daz, dalt, theta_c);
 
                 }
 
@@ -1016,7 +1017,7 @@ namespace MT3
                 }
                 catch (System.ArgumentException)
                 {
-                    this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, id.ToString() });
+                    this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, frame_id.ToString() });
                     //System.Diagnostics.Trace.WriteLine(ex.Message);
                     //System.Console.WriteLine(ex.Message);
                     return;
@@ -1175,7 +1176,7 @@ namespace MT3
             //Cv.Sub(img_dmk, img_dark8, imgdata.img); // dark減算
             //Cv.Copy(img_dmk, imgdata.img);
             // cam.Information.GetImageInfo(s32MemID, out imageInfo);
-            imgdata.id = (int)id;     // (int)imageInfo.FrameNumber;
+            imgdata.id = (int)frame_id;     // (int)imageInfo.FrameNumber;
             imgdata.t = DateTime.Now; //imageInfo.TimestampSystem;   //  LiveStartTime.AddSeconds(CurrentBuffer.SampleEndTime);
             imgdata.ImgSaveFlag = !(ImgSaveFlag != 0); //int->bool変換
             //statusRet = cam.Timing.Exposure.Get(out exp);
@@ -1236,7 +1237,7 @@ namespace MT3
             //送信するデータを読み込む
             mtmon_data.id = (byte)appSettings.MtMon_ID;
             mtmon_data.diskspace = (int)(diskspace / (1024 * 1024 * 1024));
-            if (id == id_mon)
+            if (frame_id == id_mon)
             {
                 mtmon_data.obs = (byte)STOP;
             }
@@ -1244,7 +1245,7 @@ namespace MT3
             {
                 mtmon_data.obs = (byte)this.States;
             }
-            id_mon = id;
+            id_mon = frame_id;
             //mtmon_data.obs = this.States ; 
             byte[] sendBytes = ToBytes(mtmon_data);
 

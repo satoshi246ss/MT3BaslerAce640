@@ -16,7 +16,7 @@ namespace MT3
         /// </summary>
         public void detect()
         {
-            ++id;
+            //++frame_id;
             if (appSettings.CamPlatform == Platform.MT2)
             {
                 theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, appSettings.FlipOn) - appSettings.Theta;
@@ -189,7 +189,7 @@ namespace MT3
                     }
                     // 観測データ送信
                     //Pid_Data_Send(true);
-                    short id_short = (short)id;
+                    short id_short = (short)frame_id;
                     if (id_short < 0) id_short = (short)(-id_short);
                     Pid_Data_Send_KV1000_SpCam2(id_short, daz, dalt, vk); // 32767->7FFF
 
@@ -236,7 +236,7 @@ namespace MT3
             lap0 = (1 - alpha) * lap0 + alpha * elapsed0 / sf;
             lap1 = (1 - alpha) * lap1 + alpha * elapsed1 / sf;
             lap2 = (1 - alpha) * lap2 + alpha * elapsed2 / sf;
-            fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2}", id, lap0, lap1, lap2);
+            fr_str = String.Format("ID:{0,5:D1} L0:{1,4:F2} L1:{2,4:F2} L2:{3,4:F2}", frame_id, lap0, lap1, lap2);
 
             // ワイドダイナミックレンジ用設定 Exp 100-1-100-1-
             if (checkBox_WideDR.Checked)

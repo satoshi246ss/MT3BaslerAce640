@@ -449,7 +449,7 @@ namespace MT3
         /// </summary>
         public void Saveflag_true_Last(int n)
         {
-            if (n > bottom) n = bottom;
+            //if (n > bottom) n = bottom; //20160529 削除
             for (int i = 0; i < n; ++i)
             {
                 this.data[this.bottom-i].ImgSaveFlag = true;
@@ -498,6 +498,7 @@ namespace MT3
             fn += this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".avi";
             this.writer = new StreamWriter( this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".txt"
 , true, System.Text.Encoding.GetEncoding("shift_jis"));
+            save_frame_count = 0;
         }
 
         /// <summary>

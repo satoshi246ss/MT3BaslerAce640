@@ -165,6 +165,7 @@ namespace MT3
                             Cv.Flip(imgdata.img, imgdata.img, appSettings.Flipmode);
                         }
 
+                        ++frame_id;
                         detect();
                     }
                     catch (KeyNotFoundException)
@@ -173,6 +174,7 @@ namespace MT3
                     }
 
                     try{
+                        ++frame_id;
                         detect();
                         imgdata_push_FIFO();
                     }
