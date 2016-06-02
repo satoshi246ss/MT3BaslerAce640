@@ -389,12 +389,12 @@
             // 
             // timerSaveTimeOver
             // 
-            this.timerSaveTimeOver.Interval = 10000;
+            this.timerSaveTimeOver.Interval = 30000;
             this.timerSaveTimeOver.Tick += new System.EventHandler(this.timerSaveTimeOver_Tick);
             // 
             // timerSavePost
             // 
-            this.timerSavePost.Interval = 5000;
+            this.timerSavePost.Interval = 9000;
             this.timerSavePost.Tick += new System.EventHandler(this.timerSavePostTime_Tick);
             // 
             // timerDisplay
@@ -478,7 +478,7 @@
             // 
             // timerSave
             // 
-            this.timerSave.Interval = 30000;
+            this.timerSave.Interval = 20000;
             this.timerSave.Tick += new System.EventHandler(this.timerSave_Tick);
             // 
             // updateDeviceListTimer

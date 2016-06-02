@@ -511,7 +511,7 @@ namespace MT3
         /// </remarks>
         public void VideoWriterFrame()
         {
-            if (vw == null || writer == null) return;
+            if (vw == null || vw.IsDisposed || writer == null) return;
             if (save_frame_count++ > save_frame_count_max)
             {
                 save_frame_count = 0;

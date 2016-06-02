@@ -175,7 +175,32 @@ namespace MT3
 
             pgr_cam.SetProperty(prop);
         }
-        // Exposure [ms]
+        // Gain Auto
+        public void pgr_setGainAuto()
+        {
+            //Declare a Property struct. 
+            CameraProperty prop = new CameraProperty();
+            prop.type = PropertyType.Gain;
+            prop.autoManualMode = true;
+            prop.absControl = true;
+            //prop.absValue = expo_ms;
+            prop.onOff = true;
+
+            pgr_cam.SetProperty(prop);
+        }
+        // Exposure Auto
+        public void pgr_setShutterAuto()
+        {
+            //Declare a Property struct. 
+            CameraProperty prop = new CameraProperty();
+            prop.type = PropertyType.Shutter;
+            prop.autoManualMode = true;
+            prop.absControl = true;
+            //prop.absValue = expo_ms;
+            prop.onOff = true;
+
+            pgr_cam.SetProperty(prop);
+        }
         public void pgr_setShutter(float expo_ms)
         {
             //Declare a Property struct. 
@@ -188,6 +213,7 @@ namespace MT3
 
             pgr_cam.SetProperty(prop);
         }
+
         // set Brightness 
         public void pgr_setBrightness(float br)
         {
@@ -335,11 +361,15 @@ namespace MT3
             pgr_setFrameRate((float)appSettings.Framerate);
             pgr_setEV((float)appSettings.ExposureValue);
             pgr_setBrightness((float)0.0);
+            pgr_setShutter((float)appSettings.Exposure);
         }
         // 保存後撮像
         public void pgr_PostSave_settings()
         {
             pgr_setFrameRate((float)1.0);
+            pgr_setShutter((float)1000);
+            pgr_setGainAuto();
+            pgr_setShutterAuto();
         }
 
         void RunSingleCamera(ManagedPGRGuid guid)

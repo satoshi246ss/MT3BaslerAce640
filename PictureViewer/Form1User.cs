@@ -424,7 +424,7 @@ namespace MT3
             sett.Framerate = 50;// 100.0; //[fps]
             sett.FifoMaxFrame = 256;
             sett.ExposureValue = -0.5;
-            sett.Exposure = 19.946; //[ms]
+            sett.Exposure = 19.9; //[ms]
             sett.Gain = 1023; // 100-1023  要検討
             sett.UseDetect = true;
             sett.PreSaveNum = 100 ;

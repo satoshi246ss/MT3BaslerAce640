@@ -330,9 +330,11 @@ namespace MT3
                     else if (kmd3.cmd == 18) // mmTruckEnd            18  // 追尾完了
                     {
                         //保存処理終了
-                        timerSaveTimeOver.Stop();
                         Mode = LOST;
-                        ButtonSaveEnd_Click(sender, e);
+                        timerSave.Stop();
+                        timerSave_Tick(sender, e);
+                        //timerSaveTimeOver.Stop();
+                        //ButtonSaveEnd_Click(sender, e);
                     }
                     else if (kmd3.cmd == 20) //mmData  20  // send fish pos data
                     {
@@ -775,20 +777,28 @@ namespace MT3
 
         private void ButtonSaveEnd_Click(object sender, EventArgs e)
         {
-            if (appSettings.PostSaveProcess)
-            {
-                //　カメラ毎の処理
-                if (!pgr_post_save)
-                {
-                    pgr_PostSave_settings();
-                    timerSavePost.Start();
-                    return;
-                }
-                pgr_post_save = false;
-            }
             ImgSaveFlag = FALSE;
             this.States = RUN;
             this.timerSave.Enabled = false;
+        }
+        // settingsの作成
+        private void buttonMakeDark_Click(object sender, EventArgs e)
+        {
+            SettingsMake();
+            //appSettings = SettingsLoad(21);
+        }
+
+        # region TimerTick
+//
+        // Timer Tick
+        private void timerSaveTimeOver_Tick(object sender, EventArgs e)
+        {
+            timerSaveTimeOver.Stop();
+            timerSavePost.Stop();
+            Mode = LOST;
+            pgr_Normal_settings();
+            pgr_post_save = false;
+            ButtonSaveEnd_Click(sender, e);
         }
 
         private void timerSavePostTime_Tick(object sender, EventArgs e)
@@ -797,28 +807,34 @@ namespace MT3
             timerSavePost.Stop();
             Mode = LOST;
             pgr_Normal_settings();
-            pgr_post_save = true;
+            pgr_post_save = false;
             ButtonSaveEnd_Click(sender, e);
         }
         private void timerSave_Tick(object sender, EventArgs e)
         {
+            if (appSettings.PostSaveProcess)
+            {
+                //　カメラ毎の処理
+                if (!pgr_post_save)
+                {
+                    pgr_PostSave_settings();
+                    timerSavePost.Start();
+                    pgr_post_save = true;
+                    timerSave.Stop();
+                    return;
+                }
+            }
+
             timerSave.Stop();
             timerSaveTimeOver.Stop();
             Mode = LOST;
             ButtonSaveEnd_Click(sender, e);
         }
 
-        private void timerSaveMainTime_Tick(object sender, EventArgs e)
-        {
-            timerSavePost.Stop();
-        }
-
-        // settingsの作成
-        private void buttonMakeDark_Click(object sender, EventArgs e)
-        {
-            SettingsMake();
-            //appSettings = SettingsLoad(21);
-        }
+ //       private void timerSaveMainTime_Tick(object sender, EventArgs e)
+ //       {
+ //           timerSavePost.Stop();
+ //       }
 
         private void timerMakeDark_Tick(object sender, EventArgs e)
         {
@@ -852,6 +868,53 @@ namespace MT3
             }
         }
 
+        private void timerWaitShutdown_Tick(object sender, EventArgs e)
+        {
+            shutdown(sender, e);
+        }
+
+        private void timerMTmonSend_Tick(object sender, EventArgs e)
+        {
+            MTmon_Data_Send(sender);
+        }
+
+        private void timer1min_Tick(object sender, EventArgs e)
+        {
+            diskspace = cDrive.TotalFreeSpace;
+
+            if (appSettings.PostSaveProcess)
+            {
+                //　カメラ毎の処理
+                if (!timerSavePost.Enabled)
+                {
+                    if (dFramerate < 2.0)
+                    {
+                        pgr_Normal_settings();
+                    }
+                }
+            }
+        }
+
+        private void checkBoxGainBoost_CheckedChanged(object sender, EventArgs e)
+        {
+            // IDS
+            if (cam_maker == Camera_Maker.IDS)
+            {
+                cam.Gain.Hardware.Boost.SetEnable(checkBoxDispAvg.Checked);
+            }
+        }
+
+        private void timerAutoStarData_Tick(object sender, EventArgs e)
+        {
+            if (checkBox_WideDR.Checked)
+            {
+                buttonMove_Click(sender, e);
+            }
+        }
+
+        #endregion
+
+
         private void checkBoxObsAuto_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxObsAuto.Checked)
@@ -877,11 +940,6 @@ namespace MT3
                     this.ObsEndButton.Enabled = false;
                 }
             }
-        }
-
-        private void timerWaitShutdown_Tick(object sender, EventArgs e)
-        {
-            shutdown(sender, e);
         }
 
         /// <summary>
@@ -1284,31 +1342,6 @@ namespace MT3
             return bytes;
         }
 
-        private void timerMTmonSend_Tick(object sender, EventArgs e)
-        {
-            MTmon_Data_Send(sender);
-        }
-
-        private void timer1min_Tick(object sender, EventArgs e)
-        {
-            diskspace = cDrive.TotalFreeSpace;
-        }
-
-        private void checkBoxGainBoost_CheckedChanged(object sender, EventArgs e)
-        {
-            // IDS
-            if (cam_maker == Camera_Maker.IDS)
-            {
-                cam.Gain.Hardware.Boost.SetEnable(checkBoxDispAvg.Checked);
-            }
-        }
-
-        private void timerSaveTimeOver_Tick(object sender, EventArgs e)
-        {
-            timerSaveTimeOver.Stop();
-            Mode = LOST;
-            ButtonSaveEnd_Click(sender, e);
-        }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1321,8 +1354,6 @@ namespace MT3
             
         }
 
-
-
         private void buttonMove_Click(object sender, EventArgs e)
         {
 
@@ -1333,13 +1364,5 @@ namespace MT3
             buttonMove.Enabled = true;
         }
         
-        private void timerAutoStarData_Tick(object sender, EventArgs e)
-        {
-            if (checkBox_WideDR.Checked)
-            {
-                buttonMove_Click(sender, e);
-            }
-        }
-
     }
 }
