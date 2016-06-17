@@ -355,6 +355,7 @@ namespace MT3
         }
 
         // 通常撮像
+        // fps=50
         public void pgr_Normal_settings()
         {
             pgr_SetMemory1(pgr_cam);
@@ -364,6 +365,7 @@ namespace MT3
             pgr_setShutter((float)appSettings.Exposure);
         }
         // 保存後撮像
+        // for fish2  fps=1
         public void pgr_PostSave_settings()
         {
             pgr_setFrameRate((float)1.0);
@@ -377,7 +379,7 @@ namespace MT3
             // Connect to a camera
             pgr_cam.Connect(guid);
 
-            pgr_PowerOnCamera(pgr_cam);
+            //pgr_PowerOnCamera(pgr_cam);
 
             // Get the camera information
             CameraInfo camInfo = pgr_cam.GetCameraInfo();

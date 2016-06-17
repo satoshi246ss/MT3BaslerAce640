@@ -394,7 +394,7 @@
             // 
             // timerSavePost
             // 
-            this.timerSavePost.Interval = 9000;
+            this.timerSavePost.Interval = 7000;
             this.timerSavePost.Tick += new System.EventHandler(this.timerSavePostTime_Tick);
             // 
             // timerDisplay

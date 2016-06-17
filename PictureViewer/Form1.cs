@@ -890,6 +890,7 @@ namespace MT3
                     if (dFramerate < 2.0)
                     {
                         pgr_Normal_settings();
+                        pgr_post_save = false;
                     }
                 }
             }
