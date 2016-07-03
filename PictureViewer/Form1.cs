@@ -616,6 +616,10 @@ namespace MT3
         {
             Pid_Data_Send_KV1000_SpCam2((short)frame_id, daz, dalt, 1);
 
+            // Obs End test
+            ObsEndButton_Click(sender, e);
+            timerWaitShutdown.Start();
+
             //OpenIDScamera();
             //AVT
             /*
@@ -882,9 +886,9 @@ namespace MT3
         {
             diskspace = cDrive.TotalFreeSpace;
 
-            if (appSettings.PostSaveProcess)
+            //　PGR ポスト処理不具合暫定対応用
+            if (States==RUN && appSettings.PostSaveProcess)
             {
-                //　カメラ毎の処理
                 if (!timerSavePost.Enabled)
                 {
                     if (dFramerate < 2.0)

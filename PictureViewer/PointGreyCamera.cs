@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using OpenCvSharp;
 using FlyCapture2Managed;
-//using FlyCapture2Managed.Gui;
+using FlyCapture2Managed.Gui;
 
 namespace MT3
 {
@@ -29,7 +29,7 @@ namespace MT3
         ManagedBusManager busMgr ;
         ManagedCamera pgr_cam ;
 
-        //        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
+        private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;
         private ManagedImage m_rawImage;
         private ManagedImage m_processedImage;
         private AutoResetEvent m_grabThreadExited;
@@ -128,11 +128,41 @@ namespace MT3
             m_grabThreadExited = new AutoResetEvent(false);
         }
 
-        public void OpenPGRcamera()//(object sender, EventArgs e)
+        public void OpenFirstPGRcamera()
         {
+            //CameraSelectionDialog camSlnDlg = new CameraSelectionDialog();
+            //bool retVal = camSlnDlg.ShowModal();
+            //ManagedPGRGuid[] selectedGuids = camSlnDlg.GetSelectedCameraGuids();
+            //ManagedPGRGuid guidToUse = selectedGuids[0];
+
             busMgr = new ManagedBusManager();
             pgr_cam = new ManagedCamera();
-            //busMgr.RescanBus();
+            busMgr.RescanBus();
+
+            uint numCameras = busMgr.GetNumOfCameras();
+            if (numCameras > 0)
+            {
+                uint pgr_cam_num = 0;
+                ManagedPGRGuid guid = busMgr.GetCameraFromIndex(pgr_cam_num);
+                RunSingleCamera(guid);
+            }
+            else
+            {
+                MessageBox.Show("PGR Camera initializing failed");
+                Environment.Exit(0);
+            }
+        }
+
+        public void OpenPGRcamera()//(object sender, EventArgs e)
+        {
+            //CameraSelectionDialog camSlnDlg = new CameraSelectionDialog();
+            //bool retVal = camSlnDlg.ShowModal();
+            //ManagedPGRGuid[] selectedGuids = camSlnDlg.GetSelectedCameraGuids();
+            //ManagedPGRGuid guidToUse = selectedGuids[0];
+
+            busMgr = new ManagedBusManager();
+            pgr_cam = new ManagedCamera();
+            busMgr.RescanBus();
 
             uint numCameras = busMgr.GetNumOfCameras();
             if (numCameras > 0)
@@ -346,6 +376,7 @@ namespace MT3
                 regVal = _cam.ReadRegister(k_cameraPower);
             } while (regVal != 0);
         }
+        //
         // Memory Set 1
         public void pgr_SetMemory1(ManagedCamera _cam)
         {
@@ -368,7 +399,7 @@ namespace MT3
         // for fish2  fps=1
         public void pgr_PostSave_settings()
         {
-            pgr_setFrameRate((float)1.0);
+            pgr_setFrameRate((float)1.0);//fps 1
             pgr_setShutter((float)1000);
             pgr_setGainAuto();
             pgr_setShutterAuto();

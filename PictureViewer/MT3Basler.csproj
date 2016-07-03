@@ -59,6 +59,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FlyCapture2GUI_Managed">
+      <HintPath>.\FlyCapture2GUI_Managed.dll</HintPath>
+    </Reference>
     <Reference Include="FlyCapture2Managed, Version=2.9.3.11, Culture=neutral, PublicKeyToken=76c6583b4a4585f4, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\PGR\src\FlyCapture2Managed.dll</HintPath>
