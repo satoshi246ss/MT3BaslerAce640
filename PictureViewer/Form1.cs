@@ -616,8 +616,7 @@ namespace MT3
             ObsEndButton_Click(sender, e);
             timerWaitShutdown.Start();
 
-            //OpenIDScamera();
-            //AVT
+           //AVT
             /*
             if (cam_maker == Camera_Maker.AVT)
             {
@@ -737,7 +736,8 @@ namespace MT3
                 statusRet = cam.Acquisition.Capture();
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
-                    MessageBox.Show("Start Live Video failed");
+                    richTextBox1.AppendText("Start Live Video failed. IDS cam.");
+                    cam.Exit();
                     return;
                 }
             }
