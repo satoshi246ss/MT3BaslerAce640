@@ -181,10 +181,6 @@ namespace MT3
             endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
             string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
             richTextBox1.AppendText(s);
-
-
-            // IDS open
-            //ShowButton.PerformClick();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -805,15 +801,6 @@ namespace MT3
             ButtonSaveEnd_Click(sender, e);
         }
 
-        private void timerSavePostTime_Tick(object sender, EventArgs e)
-        {
-            timerSaveTimeOver.Stop();
-            timerSavePost.Stop();
-            Mode = LOST;
-            pgr_Normal_settings();
-            pgr_post_save = false;
-            ButtonSaveEnd_Click(sender, e);
-        }
         private void timerSave_Tick(object sender, EventArgs e)
         {
             if (appSettings.PostSaveProcess)
@@ -832,6 +819,15 @@ namespace MT3
             timerSave.Stop();
             timerSaveTimeOver.Stop();
             Mode = LOST;
+            ButtonSaveEnd_Click(sender, e);
+        }
+        private void timerSavePostTime_Tick(object sender, EventArgs e)
+        {
+            timerSaveTimeOver.Stop();
+            timerSavePost.Stop();
+            Mode = LOST;
+            pgr_Normal_settings();
+            pgr_post_save = false;
             ButtonSaveEnd_Click(sender, e);
         }
 
@@ -887,16 +883,18 @@ namespace MT3
             diskspace = cDrive.TotalFreeSpace;
 
             //　PGR ポスト処理不具合暫定対応用
-            if (States==RUN && appSettings.PostSaveProcess)
+            if (States == RUN && appSettings.PostSaveProcess)
             {
-                if (!timerSavePost.Enabled)
+                if (pgr_post_save == true && !timerSavePost.Enabled)
                 {
-                    if (dFramerate < 2.0)
-                    {
-                        pgr_Normal_settings();
-                        pgr_post_save = false;
-                    }
+                    pgr_Normal_settings();
+                    pgr_post_save = false;
                 }
+                else if (dFramerate < 2.0 && !timerSavePost.Enabled)
+                    {
+                        ObsEndButton_Click(sender, e);
+                    }
+
             }
         }
 
