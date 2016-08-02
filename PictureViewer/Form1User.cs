@@ -414,7 +414,7 @@ namespace MT3
             //sett.IP_GIGE_Camera = "192.168.1.151"; //GIGE Camera only.
             sett.Width = 1920; // 652; //Max 659    4の倍数でメモリ確保される。
             sett.Height = 1200; // 949; //Max 494    約2.2MB／fr
-            sett.FocalLength = 1.8;      //[mm] Fuji 1.8mm f1.8
+            sett.FocalLength = 2.7;      //[mm] Fuji FE185C086HA-1  fl=2.7mm f1.8
             sett.Ccdpx = 0.00586; //[mm] CCD:IMX174
             sett.Ccdpy = 0.00586; //[mm]
             sett.Xoa = 960;// 320;

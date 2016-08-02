@@ -796,13 +796,19 @@ namespace MT3
             timerSaveTimeOver.Stop();
             timerSavePost.Stop();
             Mode = LOST;
-            pgr_Normal_settings();
-            pgr_post_save = false;
+            if (pgr_post_save)
+            {
+                pgr_Normal_settings();
+                pgr_post_save = false;
+            }
             ButtonSaveEnd_Click(sender, e);
         }
 
         private void timerSave_Tick(object sender, EventArgs e)
         {
+            Mode = LOST;
+            timerSave.Stop();
+
             if (appSettings.PostSaveProcess)
             {
                 //　カメラ毎の処理
@@ -811,21 +817,19 @@ namespace MT3
                     pgr_PostSave_settings();
                     timerSavePost.Start();
                     pgr_post_save = true;
-                    timerSave.Stop();
                     return;
                 }
             }
 
-            timerSave.Stop();
+            pgr_post_save = false;
             timerSaveTimeOver.Stop();
-            Mode = LOST;
             ButtonSaveEnd_Click(sender, e);
         }
         private void timerSavePostTime_Tick(object sender, EventArgs e)
         {
+            Mode = LOST;
             timerSaveTimeOver.Stop();
             timerSavePost.Stop();
-            Mode = LOST;
             pgr_Normal_settings();
             pgr_post_save = false;
             ButtonSaveEnd_Click(sender, e);

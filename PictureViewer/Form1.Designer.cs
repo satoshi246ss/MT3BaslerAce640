@@ -389,12 +389,12 @@
             // 
             // timerSaveTimeOver
             // 
-            this.timerSaveTimeOver.Interval = 30000;
+            this.timerSaveTimeOver.Interval = 35000;
             this.timerSaveTimeOver.Tick += new System.EventHandler(this.timerSaveTimeOver_Tick);
             // 
             // timerSavePost
             // 
-            this.timerSavePost.Interval = 7000;
+            this.timerSavePost.Interval = 4000;
             this.timerSavePost.Tick += new System.EventHandler(this.timerSavePostTime_Tick);
             // 
             // timerDisplay
