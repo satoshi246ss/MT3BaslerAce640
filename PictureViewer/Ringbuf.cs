@@ -449,7 +449,7 @@ namespace MT3
         /// </summary>
         public void Saveflag_true_Last(int n)
         {
-            if (n >= Count) n = Count-1; 
+            if (n >= Count-1) n = Count-2; 
             int ii;
             for (int i = 0; i < n; ++i)
             {

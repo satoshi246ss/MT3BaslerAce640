@@ -293,6 +293,11 @@ namespace MT3
                         if (this.States == RUN)
                         {
                             ImgSaveFlag = TRUE;
+                            // 過去データ保存
+                            if (appSettings.PreSaveNum > 0)
+                            {
+                                fifo.Saveflag_true_Last(appSettings.PreSaveNum);  // 1fr=0.2s  -> 5fr=1s 
+                            }
                             this.States = SAVE;
                             kalman_init();
                             pos_mes.init();
