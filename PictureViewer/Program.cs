@@ -74,6 +74,7 @@ namespace MT3
                 catch
                 {
                     Pylon.Terminate();
+
                     throw;
                 }
                 Pylon.Terminate();

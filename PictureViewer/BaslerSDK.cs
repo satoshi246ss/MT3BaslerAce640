@@ -17,6 +17,7 @@ namespace MT3
         {
             //Basler
             m_imageProvider.Open(index);
+            m_imageProvider.UserSetLoad();
             m_imageProvider.Setup(appSettings.Width, appSettings.Height);
             m_imageProvider.SetupExposureTimeAbs(appSettings.Exposure * 1000.0); // [usec]
             m_imageProvider.SetupGain((long)appSettings.Gain); // 100-1023
@@ -73,7 +74,7 @@ namespace MT3
             /* Close the image provider. */
             CloseTheImageProvider();
             /* Since one device is gone, the list needs to be updated. */
-            UpdateDeviceList();
+            //UpdateDeviceList();
         }
 
         /* Handles the event related to a device being open. */
@@ -113,7 +114,7 @@ namespace MT3
             }
 
             /* Do not update device list while grabbing to avoid jitter because the GUI-Thread is blocked for a short time when enumerating. */
-            updateDeviceListTimer.Stop();
+            //updateDeviceListTimer.Stop();
 
             /* The image provider is grabbing. Disable the grab buttons. Enable the stop button. */
             EnableButtons(false, true);
@@ -134,23 +135,31 @@ namespace MT3
                 /* Acquire the image from the image provider. Only show the latest image. The camera may acquire images faster than images can be displayed*/
                 ImageProvider.Image image = m_imageProvider.GetCurrentImage(); // m_imageProvider.GetLatestImage();
 
-                 /* Check if the image has been removed in the meantime. */
+                /* Check if the image has been removed in the meantime. */
                 if (image != null)
                 {
-                    try { 
-                    /* Display image */
-                    //Pylon.ImageWindowDisplayImage<Byte>(0, image.Buffer, grabResult);
+                    try
+                    {
+                        /* Display image */
+                        //Pylon.ImageWindowDisplayImage<Byte>(0, image);//.Buffer, PylonC.NET.EPylonPixelType.PixelType_Mono8 ,1920,1200,0,0);
+          
+                        System.Object lockThis = new System.Object();
+                        lock (lockThis)
+                        {
+                            // img_dmk は使わず、直接imgdata.imgにコピー
+                            //
+                            // マネージド配列の中身をアンマネージド配列にコピーする
+                            // Marshal.Copyの引数
+                            // 第一引数には、コピー元、第二引数にはstartIndex、
+                            // 第三引数には、コピー先、第四引数にはコピーする長さ
+                   //         Marshal.Copy(image.Buffer, 0, imgdata.img.ImageDataOrigin, image.Buffer.Length);
+                            Marshal.Copy(image.Buffer, 0, imgdata.img.ImageDataOrigin, image.Buffer.Length -1 );
+                   //         Console.WriteLine(" image[0]:{0} {1}",image.Buffer[0], image.Buffer[1]);
+                        }
 
-                    //System.Object lockThis = new System.Object();
-                    //lock (lockThis)
-                   // {
-                        //img_dmk は使わず、直接imgdata.imgにコピー
-                        Marshal.Copy(image.Buffer, 0, imgdata.img.ImageDataOrigin, image.Buffer.Length);
-                  //  }
-
-                    /* The processing of the image is done. Release the image buffer. */
-                    m_imageProvider.ReleaseImage();
-                    /* The buffer can be used for the next image grabs. */
+                        /* The processing of the image is done. Release the image buffer. */
+                        m_imageProvider.ReleaseImage();
+                        /* The buffer can be used for the next image grabs. */
                     }
                     catch (KeyNotFoundException)
                     {
@@ -165,8 +174,8 @@ namespace MT3
                             Cv.Flip(imgdata.img, imgdata.img, appSettings.Flipmode);
                         }
 
-                        ++frame_id;
-                        detect();
+                        //++frame_id;
+                        //detect();
                     }
                     catch (KeyNotFoundException)
                     {
@@ -203,7 +212,7 @@ namespace MT3
             try
             {
                 /* Enable device list update again */
-                updateDeviceListTimer.Start();
+                //updateDeviceListTimer.Start();
 
                 /* The image provider stopped grabbing. Enable the grab buttons. Disable the stop button. */
                 EnableButtons(m_imageProvider.IsOpen, false);
@@ -410,6 +419,66 @@ namespace MT3
             UpdateDeviceList();
         }
         /// <summary>
+        ///  There are camera features, such as AcquisitionStart, that represent a command.
+        ///  This function that loads the default set, illustrates how to execute a command feature.
+        /// </summary>
+        private static void demonstrateCommandFeature(PYLON_DEVICE_HANDLE hDev)
+        {
+            /* Before executing the user set load command, the user set selector must be
+               set to the default set. Since we are focusing on the command feature,
+               we skip the recommended steps for checking the availability of the user set
+               related features and values. */
+
+            /* Choose the default set (which includes one of the factory setups). */
+            //Pylon.DeviceFeatureFromString(hDev, "UserSetSelector", "Default");
+
+            /* Execute the user set load command. */
+            Console.WriteLine("Loading the default settings.");
+            Pylon.DeviceExecuteCommandFeature(hDev, "UserSetLoad");
+        }
+        /// <summary>
+        /// UserSet Load
+        /// </summary>
+        public void ExeCommand(string featureName = "UserSetLoad" )
+        {
+            try
+            {
+                NODE_HANDLE hNode;
+                EGenApiNodeType nodeType;
+                //string featureName = "UserSetLoad";
+
+                hNode = m_imageProvider.GetNodeFromDevice(featureName);
+                if (!hNode.IsValid)
+                {
+                    Console.WriteLine("There is no feature named '" + featureName + "'.");
+                    return ;
+                }
+                /* We want a command node. */
+                nodeType = GenApi.NodeGetType(hNode);
+
+                if (EGenApiNodeType.CommandNode != nodeType)
+                {
+                    Console.WriteLine("'" + featureName + "' is not an command feature.");
+                    return ;
+                }
+
+                GenApi.CommandExecute(hNode);
+            }
+            catch
+            {
+                // UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
         /// フレームレート値読み出し
         /// </summary>
         public double GetFrameRate()
@@ -418,9 +487,9 @@ namespace MT3
             {
                 NODE_HANDLE hNode;
                 EGenApiNodeType nodeType;
-                bool bval;                     /* Is the feature available? */
+                bool bval;           /* Is the feature available? */
                 string featureName;  /* Name of the feature used in this sample: AOI Width. */
-                //bool isAvailable;              /* Is the feature available? */
+                //bool isAvailable;    /* Is the feature available? */
                 double val = 0;      /* Properties of the feature. */
 
                 featureName = "ResultingFrameRateAbs";

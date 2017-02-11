@@ -50,7 +50,7 @@ namespace MT3
             {
                 cam_maker = Camera_Maker.Basler;
                 // cam_color = Camera_Color.mono;
-                updateDeviceListTimer.Enabled = true;
+                //updateDeviceListTimer.Enabled = true;
             }
             if (cmds[1].StartsWith("/AV") || cmds[1].StartsWith("/av")) // AVT
             {
@@ -143,7 +143,7 @@ namespace MT3
                 */
 
                 /* Update the list of available devices in the upper left area. */
-                UpdateDeviceList();
+                //UpdateDeviceList();
             }
             Pid_Data_Send_Init();
         }
@@ -364,6 +364,7 @@ namespace MT3
         }
         //メインスレッドでの処理
         private void worker_udp_ProgressChanged(object sender, ProgressChangedEventArgs e)
+
         {
             // 画面表示
             //MOTOR_DATA_KV_SP kmd3 = (MOTOR_DATA_KV_SP)e.UserState;
@@ -510,7 +511,7 @@ namespace MT3
             ccd_defect_correct(624, 252);
             ccd_defect_correct(220, 41);
 
-            ++frame_id; 
+            ++frame_id;
             detect();
             imgdata_push_FIFO();
 
@@ -621,7 +622,7 @@ namespace MT3
             ObsEndButton_Click(sender, e);
             timerWaitShutdown.Start();
 
-           //AVT
+            //AVT
             /*
             if (cam_maker == Camera_Maker.AVT)
             {
@@ -793,8 +794,8 @@ namespace MT3
             //appSettings = SettingsLoad(21);
         }
 
-        # region TimerTick
-//
+        #region TimerTick
+        //
         // Timer Tick
         private void timerSaveTimeOver_Tick(object sender, EventArgs e)
         {
@@ -840,10 +841,10 @@ namespace MT3
             ButtonSaveEnd_Click(sender, e);
         }
 
- //       private void timerSaveMainTime_Tick(object sender, EventArgs e)
- //       {
- //           timerSavePost.Stop();
- //       }
+        //       private void timerSaveMainTime_Tick(object sender, EventArgs e)
+        //       {
+        //           timerSavePost.Stop();
+        //       }
 
         private void timerMakeDark_Tick(object sender, EventArgs e)
         {
@@ -900,9 +901,9 @@ namespace MT3
                     pgr_post_save = false;
                 }
                 else if (dFramerate < 2.0 && !timerSavePost.Enabled)
-                    {
-                        ObsEndButton_Click(sender, e);
-                    }
+                {
+                    ObsEndButton_Click(sender, e);
+                }
 
             }
         }
@@ -1159,16 +1160,16 @@ namespace MT3
             // PGR
             if (cam_maker == Camera_Maker.PointGreyCamera)
             {
-                dFramerate = pgr_frame_rate ; // frame rate [fps]
-                dExpo = pgr_image_expo ; // [us]
-                igain = pgr_image_gain ;
+                dFramerate = pgr_frame_rate; // frame rate [fps]
+                dExpo = pgr_image_expo; // [us]
+                igain = pgr_image_gain;
                 //uEye.Types.CaptureStatus captureStatus;
                 //cam.Information.GetCaptureStatus(out captureStatus); //IDS ueye
                 //frame_error = (long)captureStatus.Total;
-                frame_total = (long)( pgr_image_frame_count );
+                frame_total = (long)(pgr_image_frame_count);
                 reqFramerate = pgr_getFrameRate();
-                frame_underrun = (int)( 100 * pgr_getEV() ) ;
-                label_frame_rate.Text = pgr_BusSpeed().ToString() +" "+ ((pgr_Temperature(pgr_cam)-2732)/10.0).ToString() ; 
+                frame_underrun = (int)(100 * pgr_getEV());
+                label_frame_rate.Text = pgr_BusSpeed().ToString() + " " + ((pgr_Temperature(pgr_cam) - 2732) / 10.0).ToString();
             }
             // Basler
             if (cam_maker == Camera_Maker.Basler)
@@ -1201,7 +1202,7 @@ namespace MT3
                 frame_dropped = StatFrameDropped();
                 frame_error = frame_underrun + frame_dropped;
             }
-            toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0") +" "+ reqFramerate.ToString("000.0");
+            toolStripStatusLabelFramerate.Text = "Fps: " + dFramerate.ToString("000.0") + " " + reqFramerate.ToString("000.0");
             toolStripStatusLabelExposure.Text = "Expo: " + (dExpo / 1000.0).ToString("00.00") + "[ms]";
             toolStripStatusLabelGain.Text = "Gain: " + igain.ToString("000");
             toolStripStatusLabelFailed.Text = "Failed U:" + frame_underrun.ToString("0000") + " S:" + frame_shoved.ToString("0000") + " D:" + frame_dropped.ToString("0000");
@@ -1363,7 +1364,7 @@ namespace MT3
 
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
-            
+
         }
 
         private void buttonMove_Click(object sender, EventArgs e)
@@ -1375,6 +1376,7 @@ namespace MT3
 
             buttonMove.Enabled = true;
         }
-        
+
     }
 }
+

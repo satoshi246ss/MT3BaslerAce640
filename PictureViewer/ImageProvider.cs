@@ -106,6 +106,15 @@ namespace PylonC.NETSupportLibrary
         /* Open using index. Before ImageProvider can be opened using the index, Pylon.EnumerateDevices() needs to be called. */
         public void Open(uint index)
         {
+            /* Enumerate all camera devices. You must call
+            PylonEnumerateDevices() before creating a device. */
+            uint numDevices = Pylon.EnumerateDevices();
+
+            if (0 == numDevices)
+            {
+                throw new Exception("No devices found.");
+            }
+
             /* Get a handle for the device and proceed. */
             Open(Pylon.CreateDeviceByIndex(index));
         }
@@ -127,7 +136,6 @@ namespace PylonC.NETSupportLibrary
                 /* Try to close the stream grabber. */
                 try
                 {
-
                     Pylon.StreamGrabberClose(m_hGrabber);
                 }
                 catch (Exception e) { lastException = e; UpdateLastError(); }
@@ -369,7 +377,6 @@ namespace PylonC.NETSupportLibrary
                     /* ... The device supports the packet size feature. Set a value. */
                     //            Pylon.DeviceSetIntegerFeature(m_hDevice, "Height", 2058);
                 }
-
 
                 /* Image grabbing is done using a stream grabber.  
                   A device may be able to provide different streams. A separate stream grabber must 
@@ -834,30 +841,30 @@ namespace PylonC.NETSupportLibrary
                 max = Pylon.DeviceGetIntegerFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
                 incr = Pylon.DeviceGetIntegerFeatureInc(m_hDevice, featureName);  /* Get the increment value. */
                 val = Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
-                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, 0);      /* Set the Width to its maximum allowed value. */
+              //  Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, 0);      /* Set the Width to its maximum allowed value. */
 
                 featureName = "OffsetY";  /* Name of the feature used in this sample: AOI Width. */
-                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, 0);      /* Set the Width to its maximum allowed value. */
+              //  Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, 0);      /* Set the Width to its maximum allowed value. */
 
                 featureName = "BinningVertical";  /* Name of the feature used in this sample: AOI Width. */
-                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, 1);      /* Set the Width to its maximum allowed value. */
+              //  Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, 1);      /* Set the Width to its maximum allowed value. */
 
                 featureName = "BinningHorizontal";  /* Name of the feature used in this sample: AOI Width. */
-                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, 1);      /* Set the Width to its maximum allowed value. */
+              //  Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, 1);      /* Set the Width to its maximum allowed value. */
 
                 featureName = "Width";  /* Name of the feature used in this sample: AOI Width. */
-                min = Pylon.DeviceGetIntegerFeatureMin(m_hDevice, featureName);  /* Get the minimum value. */
-                max = Pylon.DeviceGetIntegerFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
+                min  = Pylon.DeviceGetIntegerFeatureMin(m_hDevice, featureName);  /* Get the minimum value. */
+                max  = Pylon.DeviceGetIntegerFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
                 incr = Pylon.DeviceGetIntegerFeatureInc(m_hDevice, featureName);  /* Get the increment value. */
-                val = Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
-                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, width);      /* Set the Width to its maximum allowed value. */
+                val  = Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
+                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, width);     /* Set the Width to its maximum allowed value. */
 
                 featureName = "Height";  /* Name of the feature used in this sample: AOI Width. */
-                min = Pylon.DeviceGetIntegerFeatureMin(m_hDevice, featureName);  /* Get the minimum value. */
-                max = Pylon.DeviceGetIntegerFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
+                min  = Pylon.DeviceGetIntegerFeatureMin(m_hDevice, featureName);  /* Get the minimum value. */
+                max  = Pylon.DeviceGetIntegerFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
                 incr = Pylon.DeviceGetIntegerFeatureInc(m_hDevice, featureName);  /* Get the increment value. */
-                val = Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
-                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, height);      /* Set the Width to its maximum allowed value. */
+                val  = Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
+                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, height);    /* Set the Width to its maximum allowed value. */
             }
             catch
             {
@@ -879,6 +886,34 @@ namespace PylonC.NETSupportLibrary
             //OnDeviceOpenedEvent();
         }
         /// <summary>
+        /// ユーザーセットのロード
+        /// </summary>
+        public void UserSetLoad()
+        {
+            try
+            {
+                /* Choose the default set (which includes one of the factory setups). */
+              //  Pylon.DeviceFeatureFromString(m_hDevice, "UserSetSelector", "Default");
+
+                /* Execute the user set load command. */
+                Console.WriteLine("Loading the default settings.");
+                Pylon.DeviceExecuteCommandFeature(m_hDevice, "UserSetLoad");
+            }
+            catch
+            {
+                UpdateLastError();   /* Get the last error message here, because it could be overwritten by cleaning up. */
+                try
+                {
+                    Close(); /* Try to close any open handles. */
+                }
+                catch
+                {
+                    /* Another exception cannot be handled. */
+                }
+                throw;
+            }
+        }
+        /// <summary>
         /// ゲインの設定
         /// </summary>
         public long SetupGain(long gain)
@@ -886,19 +921,32 @@ namespace PylonC.NETSupportLibrary
             try
             {
                 string featureName;  /* Name of the feature used in this sample: AOI Width. */
+                bool isAvailable;              /* Is the feature available? */
+                bool isWritable;               /* Is the feature writable? */
                 long val, min, max, incr;      /* Properties of the feature. */
 
                 featureName = "GainRaw";
-                min = Pylon.DeviceGetIntegerFeatureMin(m_hDevice, featureName);  /* Get the minimum value. */
-                max = Pylon.DeviceGetIntegerFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
-                incr = Pylon.DeviceGetIntegerFeatureInc(m_hDevice, featureName);  /* Get the increment value. */
-                val = Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
-                val = gain;
-                if (val < min) val = min;
-                if (val > max) val = max;
-                Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, val);      /* Set allowed value. */
 
-                return Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
+                isAvailable = Pylon.DeviceFeatureIsAvailable(m_hDevice, featureName);
+                if (isAvailable)
+                {
+                    min = Pylon.DeviceGetIntegerFeatureMin(m_hDevice, featureName);  /* Get the minimum value. */
+                    max = Pylon.DeviceGetIntegerFeatureMax(m_hDevice, featureName);  /* Get the maximum value. */
+                    incr = Pylon.DeviceGetIntegerFeatureInc(m_hDevice, featureName);  /* Get the increment value. */
+                    val = Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
+                    val = gain;
+                    if (val < min) val = min;
+                    if (val > max) val = max;
+
+                    /* Set a new value. */
+                    isWritable = Pylon.DeviceFeatureIsWritable(m_hDevice, featureName);
+                    if (isWritable)
+                    {
+                        Pylon.DeviceSetIntegerFeature(m_hDevice, featureName, val);      /* Set allowed value. */
+                    }
+                    return Pylon.DeviceGetIntegerFeature(m_hDevice, featureName);     /* Get the current value. */
+                }
+                return 0;
             }
             catch
             {
