@@ -181,6 +181,7 @@ namespace MT3
             endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
             string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
             richTextBox1.AppendText(s);
+            timer_thingspeak_Tick( sender, e);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -1374,6 +1375,13 @@ namespace MT3
             star_auto_check();
 
             buttonMove.Enabled = true;
+        }
+
+        private void timer_thingspeak_Tick(object sender, EventArgs e)
+        {
+            string s = string.Format("{0} {1}", 2, frame_id); // 2:FishEye2
+            //コマンドライン引数に「"C:\test\1.txt"」を指定してメモ帳を起動する
+            System.Diagnostics.Process.Start(@"""C:\tool\bin\thingspeak_send_frame_id_cs.exe""", s);
         }
         
     }
