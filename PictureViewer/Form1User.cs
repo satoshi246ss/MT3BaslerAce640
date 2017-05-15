@@ -166,6 +166,7 @@ namespace MT3
         IplImage img_dmk3, img_dmk, img2, imgLabel , imgAvg;
         CvBlobs blobs = new CvBlobs();
         CvFont font = new CvFont(FontFace.HersheyComplex, 0.50, 0.50);
+        CvFont font_big = new CvFont(FontFace.HersheyComplex, 1.0, 1.0);
 
         double gx, gy, max_val, kgx, kgy, kvx, kvy, sgx, sgy;
         CvPoint2D64f max_centroid;
@@ -208,8 +209,8 @@ namespace MT3
         string mmLocalIP = "";
         string mmLocalHost = "";
         System.Net.Sockets.UdpClient udpc3 = null;
-        //DriveInfo cDrive = new DriveInfo("D");
-        DriveInfo cDrive = new DriveInfo("C");
+        DriveInfo cDrive = new DriveInfo("D");
+        //DriveInfo cDrive = new DriveInfo("C");
         long diskspace;
         System.IO.StreamWriter log_writer; //= new System.IO.StreamWriter(@"D:\img_data\log.txt", true);
         
@@ -325,6 +326,7 @@ namespace MT3
             sett.UdpPortSend    = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             sett.SaveDrive = "C:";
+            sett.AviMaxFrame = 6000;
             SettingsSave(sett);
 
             // MT2 Basler Guide
@@ -360,6 +362,7 @@ namespace MT3
             sett.UdpPortSend = 24431;
             sett.SaveDir = @"D:\img_data\";
             sett.SaveDrive = "D:";
+            sett.AviMaxFrame = 2400;
             SettingsSave(sett);
 
             // MT3 7 IDS
@@ -399,6 +402,7 @@ namespace MT3
             sett.UdpPortKV1000SpCam2 = 24426;
             sett.SaveDir = @"F:\img_data\";
             sett.SaveDrive = "F:";
+            sett.AviMaxFrame = 750;
             SettingsSave(sett);
 
 
@@ -411,8 +415,8 @@ namespace MT3
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.GIGE;
             sett.CamPlatform = Platform.Fish1;
-            //sett.FlipOn = true;
-            sett.Flipmode = OpenCvSharp.FlipMode.X;
+            sett.FlipOn = true; // false;
+            sett.Flipmode = OpenCvSharp.FlipMode.XY;
             sett.IP_GIGE_Camera = "192.168.1.153"; //GIGE Camera only.
             sett.Width  = 1920; // Max 1920    4の倍数でメモリ確保される。
             sett.Height = 1200; // Max 1200
@@ -435,6 +439,7 @@ namespace MT3
             sett.UdpPortSend = 24437;
             sett.SaveDir = @"D:\img_data\";
             sett.SaveDrive = "D:";
+            sett.AviMaxFrame = 450;
             SettingsSave(sett);
 
             // FishEye2 PointGreyCamera (2016-2017/1)
@@ -466,7 +471,6 @@ namespace MT3
             sett.UseDetect = true;
             sett.PreSaveNum = 100 ;
             sett.PostSaveProcess = true;
-            sett.AviMaxFrame = 500 ;
             sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410; // Broadcast0
@@ -474,6 +478,7 @@ namespace MT3
             sett.UdpPortSend = 24431;
             sett.SaveDir = @"E:\img_data\";
             sett.SaveDrive = "E:";
+            sett.AviMaxFrame = 500;
             SettingsSave(sett);
 
             // MT3Wide2 PointGreyCamera
@@ -509,6 +514,7 @@ namespace MT3
             sett.UdpPortSend = 24431;
             sett.SaveDir = @"E:\img_data\";
             sett.SaveDrive = "E:";
+            sett.AviMaxFrame = 1000;
             SettingsSave(sett);
 
             // MT3SuperFine2 PointGreyCamera
@@ -544,6 +550,7 @@ namespace MT3
             sett.UdpPortSend = 24432;
             sett.SaveDir = @"E:\img_data\";
             sett.SaveDrive = "E:";
+            sett.AviMaxFrame = 3200;
             SettingsSave(sett);
 
             // MT3Fine ImagingSouce
@@ -579,6 +586,7 @@ namespace MT3
             sett.UdpPortSend = 24431;
             sett.SaveDir = @"F:\img_data\";
             sett.SaveDrive = "F:";
+            sett.AviMaxFrame = 6000;
             SettingsSave(sett);
 
             // MT2 Echelle
@@ -611,6 +619,7 @@ namespace MT3
             sett.UdpPortSend    = 24433;
             sett.SaveDir = @"D:\img_data\";
             sett.SaveDrive = "D:";
+            sett.AviMaxFrame = 500;
             SettingsSave(sett);
 
             // Wat100N Cam ID 20

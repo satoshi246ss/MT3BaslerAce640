@@ -23,6 +23,8 @@ namespace MT3
             }
 
             if (!appSettings.UseDetect) return;
+         int id = System.Threading.Thread.CurrentThread.ManagedThreadId; Console.WriteLine("detect ThreadID : " + id);
+            if (appSettings.UseDetect) return;
 
             #region 位置検出2  //Blob
             try
@@ -30,8 +32,8 @@ namespace MT3
                 //Cv.Smooth(imgdata.img, img2, SmoothType.Median, 5, 0, 0, 0);
                 //Cv.Threshold(img2, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
                 Cv.Threshold(imgdata.img, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
-                blobs.Label(img2); //1.4ms
-            }
+                blobs.Label(img2); //3ms
+            }//8ms
             catch (KeyNotFoundException)
             {
                 MessageBox.Show("KeyNotFoundException:211");
@@ -39,7 +41,7 @@ namespace MT3
             try
             {
                 maxBlob = blobs.LargestBlob();
-            }
+            }//1ms
             catch (KeyNotFoundException)
             {
                 MessageBox.Show("KeyNotFoundException:212");
@@ -50,14 +52,14 @@ namespace MT3
                 if (blobs.Count > 0)
                 {
                     int min_area = Math.Max(2, (int)(appSettings.ThresholdMinArea * maxBlob.Area));
-                    blobs.FilterByArea(min_area, int.MaxValue); //0.001ms   面積がmin_area未満のblobを削除
+                    blobs.FilterByArea(min_area, int.MaxValue); //2ms 面積がmin_area未満のblobを削除
                 }
                 max_label = 0;
                 if (blobs.Count > 0)
                 {
-                    max_label = pos_mes.mesure(blobs);
+                    max_label = pos_mes.mesure(blobs); //4ms
                 } 
-            }
+            }//1ms
             catch (KeyNotFoundException)
             {
                 MessageBox.Show("KeyNotFoundException:213");
@@ -92,8 +94,8 @@ namespace MT3
                 }
 
                 // 観測値(kalman)
-                measurement.Set2D(0, 0, (float)(gx - xoa));
-                measurement.Set2D(1, 0, (float)(gy - yoa));
+                measurement.Set2D(0, 0, (float)(gx - xoa)); //2ms
+                measurement.Set2D(1, 0, (float)(gy - yoa)); //7ms
                 if (kalman_id++ == 0)
                 {
                     // 初期値設定
@@ -101,7 +103,7 @@ namespace MT3
                     kalman.StatePost.Set1D(0, measurement.Get1D(0));
                     kalman.StatePost.Set1D(1, measurement.Get1D(1));
                     Cv.SetIdentity(kalman.ErrorCovPost, Cv.RealScalar(errcov));
-                }
+                }//2ms
                 // 修正フェーズ(kalman)
                 try
                 {
@@ -120,7 +122,7 @@ namespace MT3
                     kgy = prediction.DataArraySingle[1] + yoa;
                     kvx = prediction.DataArraySingle[2];
                     kvy = prediction.DataArraySingle[3];
-                }
+                } //1ms
                 catch (KeyNotFoundException)
                 {
                     MessageBox.Show("KeyNotFoundException:215");

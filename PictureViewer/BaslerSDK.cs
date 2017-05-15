@@ -18,10 +18,11 @@ namespace MT3
             //Basler
             m_imageProvider.Open(index);
             m_imageProvider.UserSetLoad();
-            m_imageProvider.Setup(appSettings.Width, appSettings.Height);
-            m_imageProvider.SetupExposureTimeAbs(appSettings.Exposure * 1000.0); // [usec]
-            m_imageProvider.SetupGain((long)appSettings.Gain); // 100-1023
-            m_imageProvider.SetupFrameRate(appSettings.Framerate);
+            /*            m_imageProvider.Setup(appSettings.Width, appSettings.Height);
+                        m_imageProvider.SetupExposureTimeAbs(appSettings.Exposure * 1000.0); // [usec]
+                        m_imageProvider.SetupGain((long)appSettings.Gain); // 100-1023
+                        m_imageProvider.SetupFrameRate(appSettings.Framerate);
+            */
         }
         /* Handles the click on the single frame button. */
         public void BaslerEnd()
@@ -142,7 +143,7 @@ namespace MT3
                     {
                         /* Display image */
                         //Pylon.ImageWindowDisplayImage<Byte>(0, image);//.Buffer, PylonC.NET.EPylonPixelType.PixelType_Mono8 ,1920,1200,0,0);
-          
+
                         System.Object lockThis = new System.Object();
                         lock (lockThis)
                         {
@@ -152,9 +153,17 @@ namespace MT3
                             // Marshal.Copyの引数
                             // 第一引数には、コピー元、第二引数にはstartIndex、
                             // 第三引数には、コピー先、第四引数にはコピーする長さ
-                   //         Marshal.Copy(image.Buffer, 0, imgdata.img.ImageDataOrigin, image.Buffer.Length);
-                            Marshal.Copy(image.Buffer, 0, imgdata.img.ImageDataOrigin, image.Buffer.Length -1 );
-                   //         Console.WriteLine(" image[0]:{0} {1}",image.Buffer[0], image.Buffer[1]);
+                            Marshal.Copy(image.Buffer, 0, imgdata.img.ImageDataOrigin, image.Buffer.Length);
+                            //Marshal.Copy(image.Buffer, 0, imgdata.img.ImageDataOrigin, image.Buffer.Length - 1);
+                            //Console.WriteLine(" image[0]:{0} {1}",image.Buffer[0], image.Buffer[1]);
+
+                            /* unsafe
+                            {
+                                fixed (byte* pbytes = image.Buffer)
+                                {
+                                    CopyMemory(imgdata.img.ImageDataOrigin, (IntPtr)pbytes, imgdata.img.ImageSize);
+                                }
+                            }*/
                         }
 
                         /* The processing of the image is done. Release the image buffer. */
@@ -166,6 +175,7 @@ namespace MT3
                         MessageBox.Show("KeyNotFoundException:20");
                     }
 
+
                     try
                     {
                         // 表示画像反転 実装場所　要検討
@@ -173,9 +183,6 @@ namespace MT3
                         {
                             Cv.Flip(imgdata.img, imgdata.img, appSettings.Flipmode);
                         }
-
-                        //++frame_id;
-                        //detect();
                     }
                     catch (KeyNotFoundException)
                     {
@@ -186,7 +193,7 @@ namespace MT3
                         ++frame_id;
                         detect();
                         imgdata_push_FIFO();
-                    }
+                    }//7ms
                     catch (KeyNotFoundException)
                     {
                         MessageBox.Show("KeyNotFoundException:22");

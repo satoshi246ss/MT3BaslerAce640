@@ -49,12 +49,11 @@ namespace MT3
                         max_label = item.Key;
                         pos_ans = item.Value.Centroid;
 
-                        Console.WriteLine("{0} | Centroid:{1} Area:{2} eval:{3}", item.Key, item.Value.Centroid, item.Value.Area, eval);
-
+                        ///Console.WriteLine("{0} | Centroid:{1} Area:{2} eval:{3}", item.Key, item.Value.Centroid, item.Value.Area, eval);
                         //w.WriteLine("{0} {1} {2} {3} {4}", dis, dv, i, item.Key, item.Value.Area);
                     }
                     //sw.Stop(); t5 = 1000.0 * sw.ElapsedTicks / Stopwatch.Frequency; sw.Reset(); sw.Start();  
-                    Console.WriteLine(" pos_ans:{0}", pos_ans);
+                    ///Console.WriteLine(" pos_ans:{0}", pos_ans);
                 }
             }
             double dis = Cal_distance(pos_ans, pos_pre);

@@ -400,7 +400,7 @@
             // timerDisplay
             // 
             this.timerDisplay.Enabled = true;
-            this.timerDisplay.Interval = 200;
+            this.timerDisplay.Interval = 500;
             this.timerDisplay.Tick += new System.EventHandler(this.timerDisplay_Tick);
             // 
             // timerObsOnOff

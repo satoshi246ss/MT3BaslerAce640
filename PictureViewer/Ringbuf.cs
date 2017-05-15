@@ -163,6 +163,7 @@ namespace MT3
             _save_dir = @"C:\Users\Public\img_data\";
             _width = width;
             _height = height;
+            save_frame_count_max = 100;
 
             capacity = Pow2((uint)capacity);
             this.data = new ImageData[capacity];
@@ -584,6 +585,7 @@ namespace MT3
 
             vw.WriteFrame(imgR);
             writer.WriteLine("{0} {1} {2}  ", vd.id, vd.kgx, vd.kgy);
+            int id = System.Threading.Thread.CurrentThread.ManagedThreadId; Console.WriteLine("RingBuf ThreadID : " + id);
         }
 
         /// <summary>

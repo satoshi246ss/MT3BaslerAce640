@@ -1009,7 +1009,8 @@ namespace MT3
         private void timerDisplay_Tick(object sender, EventArgs e)
         {
             if (this.States == STOP) return;
-            //if (img_dmk3 == null) return;
+
+            int id = System.Threading.Thread.CurrentThread.ManagedThreadId; Console.WriteLine("timerDisplay_Tick ThreadID : " + id);
 
             //OpenCV　表示ルーチン
             if (imgdata.img != null)
@@ -1091,9 +1092,14 @@ namespace MT3
                     str = String.Format("ID:{4,7:D1} E: dAz({5,6:F1},{6,6:F1}) dPix({0,6:F1},{1,6:F1})({2,6:F0})({3,0:00}), th:{7,6:F1}", gx, gy, max_val, max_label, frame_id, daz, dalt, theta_c);
 
                 }
-
-                img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
-                img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), 15, new CvColor(0, 100, 255));
+                if (img_dmk3.Width >= 1600)
+                {
+                    img_dmk3.PutText(str, new CvPoint(6, 24), font_big, new CvColor(0, 150, 250));
+                } else
+                {
+                    img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
+                }
+                img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), (int)(roa*max_val/1000), new CvColor(0, 100, 255));
 
                 try
                 {
@@ -1113,7 +1119,7 @@ namespace MT3
                     //匿名デリゲートで表示する
                     this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
                     //System.Diagnostics.Trace.WriteLine(ex.Message);
-                    //System.Console.WriteLine(ex.Message);
+                    System.Console.WriteLine(ex.Message);
                     return;
                 }
             }
