@@ -69,6 +69,7 @@
             this.timerSave = new System.Windows.Forms.Timer(this.components);
             this.updateDeviceListTimer = new System.Windows.Forms.Timer(this.components);
             this.timerAutoStarData = new System.Windows.Forms.Timer(this.components);
+            this.timer_thingspeak = new System.Windows.Forms.Timer(this.components);
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -492,6 +493,12 @@
             this.timerAutoStarData.Interval = 1200000;
             this.timerAutoStarData.Tick += new System.EventHandler(this.timerAutoStarData_Tick);
             // 
+            // timer_thingspeak
+            // 
+            this.timer_thingspeak.Enabled = true;
+            this.timer_thingspeak.Interval = 600000;
+            this.timer_thingspeak.Tick += new System.EventHandler(this.timer_thingspeak_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -564,6 +571,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownStarCount;
         private System.Windows.Forms.Timer timerAutoStarData;
         private TIS.Imaging.ICImagingControl icImagingControl1;
+        private System.Windows.Forms.Timer timer_thingspeak;
     }
 }
 

@@ -187,6 +187,20 @@ namespace MT3
             pgr_cam.Disconnect();           
         }
 
+        // Set Video Property
+        // Video Mode: Custom(Format 7)
+        public void pgr_setVideoMode_Format7_1600(float frameRate)
+        {
+            pgr_cam.SetVideoModeAndFrameRate(VideoMode.VideoModeFormat7, FrameRate.FrameRateFormat7);
+            Format7ImageSettings imgSettings = new Format7ImageSettings();
+            imgSettings.offsetX =  160;
+            imgSettings.offsetY =    0;
+            imgSettings.width   = 1600;
+            imgSettings.height  = 1200;
+            imgSettings.pixelFormat = PixelFormat.PixelFormatMono8;
+            pgr_cam.SetFormat7Configuration(imgSettings, frameRate);
+        }
+
         // リクエストフレームレート
         public float pgr_getFrameRate()
         {
