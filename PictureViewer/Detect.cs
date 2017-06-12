@@ -23,8 +23,8 @@ namespace MT3
             }
 
             if (!appSettings.UseDetect) return;
-         int id = System.Threading.Thread.CurrentThread.ManagedThreadId; Console.WriteLine("detect ThreadID : " + id);
-            if (appSettings.UseDetect) return;
+         int th_id = System.Threading.Thread.CurrentThread.ManagedThreadId; Console.WriteLine("detect ThreadID : " + th_id);
+            //if (appSettings.UseDetect) return;
 
             #region 位置検出2  //Blob
             try
@@ -38,6 +38,7 @@ namespace MT3
             {
                 MessageBox.Show("KeyNotFoundException:211");
             }
+          if (appSettings.UseDetect) return;//必ずreturn
             try
             {
                 maxBlob = blobs.LargestBlob();

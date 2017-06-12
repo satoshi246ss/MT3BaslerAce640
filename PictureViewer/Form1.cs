@@ -518,7 +518,7 @@ namespace MT3
 
             if (checkBoxDispAvg.Checked == true)
             {
-                Cv.RunningAvg(imgdata.img, imgAvg, 0.1);
+                ////Cv.RunningAvg(imgdata.img, imgAvg, 0.1);
                 //Cv.ShowImage("Video", imgAvg);
             }
         }
@@ -1023,7 +1023,8 @@ namespace MT3
                     {
                         // 移動平均画像の表示
                         double scale = 1.0;
-                        Cv.ConvertScale(imgAvg, img_dmk, scale);
+                       // Cv.ConvertScale(imgAvg, img_dmk, scale);
+                        Cv.ConvertScale(fifo.backgroundImageF(), img_dmk, scale);
                         Cv.CvtColor(img_dmk, img_dmk3, ColorConversion.GrayToBgr);
                     }
                     else
@@ -1388,7 +1389,7 @@ namespace MT3
         {
             string s = string.Format("{0} {1}", 2, frame_id); // 2:FishEye2
             //コマンドライン引数に「"C:\test\1.txt"」を指定してメモ帳を起動する
-            System.Diagnostics.Process.Start(@"""C:\tool\bin\thingspeak_send_frame_id_cs.exe""", s);
+         //   System.Diagnostics.Process.Start(@"""C:\tool\bin\thingspeak_send_frame_id_cs.exe""", s);
         }
         
     }

@@ -139,6 +139,13 @@ namespace MT3
             set { _save_dir = value; }
         }
 
+        // Sub image
+        IplImage sub_image;
+        public int Sub_width { get; set; } // sub image width
+        public int Sub_height{ get; set; } // sub image heigth
+
+        public IplImage background_image;
+        public int bg_interval { get; set; } // background image interval 1:all frame 2:一つおき
 
         IplImage imgR;
         //IplImage imgBGR = new IplImage(640, 480, BitDepth.U8, 3);
@@ -176,6 +183,13 @@ namespace MT3
             this.top = this.bottom = 0;
             this.mask = capacity - 1;
             this.imgR = new IplImage(width, height, BitDepth.U8, 1);
+
+            //this.rect = new CvRect(new CvPoint( 256, 256);
+            Sub_height = 256;
+            Sub_width = 256;
+            this.sub_image = new IplImage(Sub_width, Sub_height, BitDepth.U8, 1);
+            bg_interval = 25;
+            this.background_image = new IplImage(width, height, BitDepth.F32, 1);
         }
 
         /// <summary>
@@ -201,6 +215,12 @@ namespace MT3
             this.top = this.bottom = 0;
             this.mask = capacity - 1;
             this.imgR = new IplImage(width, height, BitDepth.U8, 1);
+
+            Sub_height = 256;
+            Sub_width = 256;
+            this.sub_image = new IplImage(Sub_width, Sub_height, BitDepth.U8, 1);
+            bg_interval = 25;
+            this.background_image = new IplImage(width, height, BitDepth.F32, 1);
         }
 
 
@@ -284,6 +304,27 @@ namespace MT3
         {
             return this.img[(this.top) & this.mask];
         }
+
+        /// <summary>
+        /// 背景画像を読み出し。
+        /// </summary>
+        /// <param name="elem">読み出した要素</param>
+        public IplImage backgroundImageF()
+        {
+            return this.background_image;
+        }
+
+        /// <summary>
+        /// 背景画像を読み出し。
+        /// </summary>
+        /// <param name="elem">読み出した要素</param>
+        public IplImage backgroundImage()
+        {
+            double scale = 1.0;
+            Cv.ConvertScale(background_image, imgR, scale);
+            return this.imgR;
+        }
+
         #endregion
         #region 挿入・削除
 
@@ -317,7 +358,17 @@ namespace MT3
             this.img = img;
             this.mask = data.Length - 1;
         }
-
+        /// <summary>
+        /// ランニングアベレージ操作　（新しい要素を追加時に実行）
+        /// </summary>
+        /// <param name="elem">追加する要素</param>
+        void run_ave(ImageData elem)
+        {
+            if (elem.id % bg_interval == 0)
+            {
+                Cv.RunningAvg(elem.img, background_image, 0.1);
+            }
+        }
         /// <summary>
         /// i 番目の位置に新しい要素を追加。
         /// </summary>
@@ -325,6 +376,7 @@ namespace MT3
         /// <param name="elem">追加する要素</param>
         public void Insert(int i, ImageData elem)
         {
+            run_ave(elem);
             if (this.Count >= this.data.Length - 1)
                 this.Extend();
 
@@ -354,6 +406,7 @@ namespace MT3
         /// <param name="elem">追加する要素</param>
         public void InsertFirst(ImageData elem)
         {
+            run_ave(elem);
             if (this.Count >= this.data.Length - 1)
                 this.Extend();
 
@@ -367,6 +420,7 @@ namespace MT3
         /// <param name="elem">追加する要素</param>
         public void InsertFirst(ImageData elem, byte [] buf)
         {
+            run_ave(elem);
             if (this.Count >= this.data.Length - 1)
                 this.Extend();
 
@@ -381,6 +435,7 @@ namespace MT3
         /// <param name="elem">追加する要素</param>
         public void InsertLast(ImageData elem)
         {
+            run_ave(elem);
             if (this.Count >= this.data.Length - 1)
                 this.Extend();
 
@@ -598,6 +653,9 @@ namespace MT3
         {
             if (vw != null)
             {
+                double scale = 1.0;
+                Cv.ConvertScale(background_image, imgR, scale);
+                vw.WriteFrame(imgR);
                 vw.Dispose();
             }
             if (writer != null)
