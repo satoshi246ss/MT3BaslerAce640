@@ -1,0 +1,11 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "native",
+      "name": "C:\\Users\\root\\Source\\Repos\\MT3BaslerAce640",
+      "project": ""
+    }
+  ]
+}

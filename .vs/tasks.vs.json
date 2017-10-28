@@ -1,0 +1,15 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "タスク-MT3BaslerAce640",
+      "appliesTo": "/",
+      "type": "launch"
+    },
+    {
+      "taskName": "タスク-MT3BaslerAce640",
+      "appliesTo": "/",
+      "type": "launch"
+    }
+  ]
+}
