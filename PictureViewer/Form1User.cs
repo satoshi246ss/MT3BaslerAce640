@@ -12,7 +12,7 @@ using OpenCvSharp;
 using OpenCvSharp.Blob;
 using PylonC.NETSupportLibrary;
 using uEye;
-using MtLibrary;
+using MtLibrary2;
 
 namespace MT3
 {
@@ -204,7 +204,8 @@ namespace MT3
         int mmUdpPortBroadCast     = 24410;            // （受信）
         int mmUdpPortBroadCastSent = 24411;            // （送信）
         int mmFsiUdpPortMTmonitor  = 24415;
-        string mmFsiCore_i5 = "192.168.1.211"; // for MTmon
+        //string mmFsiCore_i5 = "192.168.1.211"; // for MTmon
+        string mmFsiCore_i5 = "192.168.1.222"; // for MTmon
         string mmFsiKV1000  = "192.168.1.10" ; // KV1000 UDP data 送信アドレス
         string mmLocalIP = "";
         string mmLocalHost = "";
@@ -320,7 +321,7 @@ namespace MT3
             sett.Exposure = 13; //[ms]
             sett.Gain = 100;
             sett.UseDetect = true;
-            sett.ThresholdBlob = 128;     // 検出閾値（０－２５５）
+            sett.ThresholdBlob = 128;    // 検出閾値（０－２５５）
             sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
             sett.UdpPortRecieve = 24410;
             sett.UdpPortSend    = 24429;
@@ -406,10 +407,50 @@ namespace MT3
             SettingsSave(sett);
 
 
-            // Fisheye2 Basler Ace(GIGE 50fps)
+            // Fisheye2v2 IDS UI-3370CP-NIR(USB3 80fps)
+            sett.Text = "IDS UI-3370CP-NIR";
+            sett.ID = 1;                 //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 1;
+            sett.CameraType = "IDS";     //カメラタイプ： IDS Basler AVT IS analog
+            sett.CameraID = 10;          //カメラタイプ毎のID
+            sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
+            sett.CameraInterface = Camera_Interface.USB3;
+            sett.CamPlatform = Platform.Fish1;
+            sett.FlipOn = true; // false;
+            sett.Flipmode = OpenCvSharp.FlipMode.XY;
+            //sett.IP_GIGE_Camera = "192.168.1.153"; //GIGE Camera only.
+            sett.Width  = 2048; // Max 2048    4の倍数でメモリ確保される。
+            sett.Height = 2048; // Max 2048
+            sett.FocalLength = 2.7;      //[mm] Fuji FE185C086HA-1  fl=2.7mm f1.8
+            sett.Ccdpx = 0.0055; //[mm] CCD:CMV4000 CMOSIS
+            sett.Ccdpy = 0.0055; //[mm]
+            sett.Xoa = 1024;// 320;
+            sett.Yoa = 1024;// 240;            
+            //sett.Roa = 2.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
+            sett.Roa = (185.0 / 2.0) * sett.FocalLength * (Math.PI / 180) / sett.Ccdpx;
+            sett.Theta = 0;
+            sett.PixelClock = 344;//[MHz]
+            sett.Framerate = 60.0; //[fps]
+            sett.FifoMaxFrame = 128;
+            sett.Exposure = 16.586; //[ms]
+            sett.Gain = 360; // 100-360  要検討
+            sett.UseDetect = true;
+            sett.PreSaveNum = 90;
+            sett.PostSaveProcess = true;
+            sett.ThresholdBlob = 64;    // 検出閾値（０－２５５）
+            sett.ThresholdMinArea = 0.25;// 最小エリア閾値（最大値ｘ_threshold_min_area)
+            sett.UdpPortRecieve = 24410; // Broadcast0
+            //sett.UdpPortRecieve = 24442; //Broadcast2
+            sett.UdpPortSend = 24431;
+            sett.SaveDir = @"D:\img_data\";
+            sett.SaveDrive = "D:";
+            sett.AviMaxFrame = 500;
+            SettingsSave(sett);
+
+            // Fisheye2v1 Basler Ace(GIGE 50fps)
             sett.Text = "Basler acA1920-50gm";
-            sett.ID = 19;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.NoCapDev = 19;
+            sett.ID = 190;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 190;
             sett.CameraType = "Basler"; //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 3;          //カメラタイプ毎のID
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
@@ -425,7 +466,8 @@ namespace MT3
             sett.Ccdpy = 0.00586; //[mm]
             sett.Xoa = 960;// 320;
             sett.Yoa = 600;// 240;            
-            sett.Roa = 2.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
+            //sett.Roa = 2.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
+            sett.Roa = (185.0/2.0)*sett.FocalLength * (Math.PI / 180) / sett.Ccdpx ;
             sett.Theta = 0;
             sett.Framerate = 45.0; //[fps]
             sett.FifoMaxFrame = 128;
@@ -444,8 +486,9 @@ namespace MT3
 
             // FishEye2 PointGreyCamera (2016-2017/1)
             sett.Text = "FishEye2 PGC GS3-U3-23S6M";
-            sett.ID = 1;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
-            sett.NoCapDev = 1;
+            sett.ID = 191;               //ID 全カメラの中のID　保存ファルイの識別にも使用。FishEye:0  MT3Wide:4  MT3Fine:8  MT3SF:12 等々
+            sett.NoCapDev = 191;
+            sett.MtMon_ID = 1;
             sett.CameraType = "PG";    //カメラタイプ： IDS Basler AVT IS analog
             sett.CameraID = 3;         //カメラタイプ毎のID
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
@@ -458,11 +501,11 @@ namespace MT3
             sett.Height = 1200; // 949; //Max 494    約2.2MB／fr
             sett.FocalLength = 2.7;      //[mm] Fuji FE185C086HA-1  fl=2.7mm f1.8
             sett.Ccdpx = 0.00586; //[mm] CCD:IMX174
-            sett.Ccdpy = 0.00586; //[mm]
+            sett.Ccdpy = 0.00586; //[mm] CCD:IMX174
             sett.Xoa = 960;// 320;
             sett.Yoa = 600;// 240;            
             sett.Roa = 10.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
-            sett.Theta = 0;
+            sett.Theta = 180;
             sett.Framerate = 50;// 100.0; //[fps]
             sett.FifoMaxFrame = 256;
             sett.ExposureValue = -0.5;
@@ -476,8 +519,8 @@ namespace MT3
             sett.UdpPortRecieve = 24410; // Broadcast0
             //sett.UdpPortRecieve = 24442; //Broadcast2
             sett.UdpPortSend = 24431;
-            sett.SaveDir = @"E:\img_data\";
-            sett.SaveDrive = "E:";
+            sett.SaveDir = @"D:\img_data\";
+            sett.SaveDrive = "D:";
             sett.AviMaxFrame = 500;
             SettingsSave(sett);
 
@@ -1335,6 +1378,50 @@ namespace MT3
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
             }
         }
+        /// <summary>
+        /// display表示用星位置
+        /// </summary>
+        //
+        //   CCD座標(cx,cy):CCD中心からの誤差座標[pix]    Std. Cam が基準(cx = x-xc, cy = y-yc)
+        //   中心位置(az_c,alt_c)と視野回転(theta_c)
+        //   fl:焦点距離[mm],　ccdpx,ccdpy:ピクセル間隔[mm]
+
+        // display表示用星位置
+        private void get_star_disp_pos(int id, 
+               double az_c, double alt_c, double theta_c,
+               double fl, double ccdpx, double ccdpy, 
+               out int cx, out int cy, out int r_mag)
+        {
+            double az, alt, mag;
+            double cx2=0, cy2=0;
+            int r_base = 10;
+            int r_p = 2;
+
+            get_star_pos(id, out az, out alt, out mag);
+            if (alt >= 0)
+            {
+                udpkv.azalt2cxcy_fish2(az, alt, az_c, alt_c, theta_c, fl, ccdpx, ccdpy, ref cx2, ref cy2);
+            } else
+            {
+                cx2 = -99999; cy2 = -99999;
+            }
+            r_mag = (int)(r_base - r_p * mag);
+            cx = (int)cx2;
+            cy = (int)cy2;
+        }
+
+        private void get_star_pos(int id, out double az, out double alt, out double mag)
+        {
+            star.ID = id;
+            star.cal_azalt();
+
+            az = star.Az;
+            alt = star.Alt;
+            mag = star.Mag;
+
+            //string s = string.Format("Star count:{0} {1} Az:{2} {3}\n", Star.ID, Star.Name, Star.Az, Star.Alt);
+            //richTextBox1.Focus(); richTextBox1.AppendText(s);
+        }
 
         private async void star_auto_check()
         {
@@ -1348,7 +1435,7 @@ namespace MT3
             double az_t = 90, alt_t = 90, vmag = 0;
             double min_alt = 5.0; //最低高度
 
-            Star.init();
+            star.init();
             //Star.ID = (int)numericUpDownStarNum.Value; // 0-5 月、惑星  6:シリウス　7:ベガ
             //Star.cal_azalt();
             //s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", Star.Count, Star.ID, Star.Name, Star.Az, Star.Alt);
@@ -1359,17 +1446,17 @@ namespace MT3
             List<StarAzAlt> star_azalt = new List<StarAzAlt>();
             for (int i = star_id_min; i < star_id_max; i++)
             {
-                Star.ID = i;
-                Star.cal_azalt();
-                if (Star.Alt > min_alt)
+                star.ID = i;
+                star.cal_azalt();
+                if (star.Alt > min_alt)
                 {
                     StarAzAlt sta = new StarAzAlt();
-                    sta.Az = Star.Az;
-                    sta.Alt = Star.Alt;
-                    sta.Vmag = Star.Mag;
-                    sta.Name = Star.Name;
+                    sta.Az = star.Az;
+                    sta.Alt = star.Alt;
+                    sta.Vmag = star.Mag;
+                    sta.Name = star.Name;
                     star_azalt.Add(sta);
-                    s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", i, Star.ID, Star.Name, Star.Az, Star.Alt);
+                    s = string.Format("Star count:{0} {1} {2} Az:{3} {4}\n", i, sta.ID, sta.Name, sta.Az, sta.Alt);
                     richTextBox1.Focus(); richTextBox1.AppendText(s);
                 }
             }

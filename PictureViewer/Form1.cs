@@ -17,12 +17,16 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.IO;
 using PylonC.NETSupportLibrary;
-using MtLibrary;
+//using MtLibrary;
+using MtLibrary2;
 
 namespace MT3
 {
     public partial class Form1 : Form
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        Star star = new Star();
+
         public Form1()
         {
             InitializeComponent();
@@ -45,6 +49,7 @@ namespace MT3
             {
                 cam_maker = Camera_Maker.PointGreyCamera;
                 PgrPrintBuildInfo();
+                logger.Info("PointGrayCamera start.");
             }
             if (cmds[1].StartsWith("/BA") || cmds[1].StartsWith("/ba") || cmds[1].StartsWith("/Ba")) // Basler
             {
@@ -146,6 +151,7 @@ namespace MT3
                 //UpdateDeviceList();
             }
             Pid_Data_Send_Init();
+            star.init(); // starデータ初期化
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -518,7 +524,7 @@ namespace MT3
 
             if (checkBoxDispAvg.Checked == true)
             {
-                ////Cv.RunningAvg(imgdata.img, imgAvg, 0.1);
+                Cv.RunningAvg(imgdata.img, imgAvg, 0.1);
                 //Cv.ShowImage("Video", imgAvg);
             }
         }
@@ -614,6 +620,25 @@ namespace MT3
         }
         #endregion
 
+        void star_setup()
+        {
+            double azc = 0;
+            double altc = 90;
+            double theta = 178.3;
+            double fl = 2.670;
+            double xc = 960 - 25;
+            double yc = 600 + 15;
+            int fov = 170; //[deg]    690; //pixel
+
+            // 初期化　CCD上の星位置計算
+            DateTime t = new DateTime(2018, 3, 14, 1, 30, 1);
+            //star.init(t);
+            //star.init_BSC(t, @"S:\satoshi\Lib\bsc5.dat");
+            star.init_BSC(t, @"bsc5.dat");
+            star.cam.init(azc, altc, theta, fl, 0, 0, 0, xc, yc);
+            star.cal_ccd_xy();
+            star.cam.EFOV = fov;
+        }
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
@@ -1022,9 +1047,9 @@ namespace MT3
                     if (checkBoxDispAvg.Checked == true)
                     {
                         // 移動平均画像の表示
-                        double scale = 1.0;
-                       // Cv.ConvertScale(imgAvg, img_dmk, scale);
-                        Cv.ConvertScale(fifo.backgroundImageF(), img_dmk, scale);
+                        double scale = 4.0;
+                        Cv.ConvertScale(imgAvg, img_dmk, scale);
+                        //Cv.ConvertScale(fifo.backgroundImageF(), img_dmk, scale);
                         Cv.CvtColor(img_dmk, img_dmk3, ColorConversion.GrayToBgr);
                     }
                     else
@@ -1042,7 +1067,7 @@ namespace MT3
                 double roa = appSettings.Roa;
 
                 CvPoint2D64f OCPoint = new CvPoint2D64f(appSettings.Xoa, appSettings.Yoa);
-                Cv.Circle(img_dmk3, OCPoint, (int)appSettings.Roa, new CvColor(0, 255, 0));
+                Cv.Circle(img_dmk3, OCPoint, (int)roa, new CvColor(200, 0, 255));
 
                 CvPoint2D64f Point1;
                 CvPoint2D64f Point2;
@@ -1096,22 +1121,31 @@ namespace MT3
                 }
                 if (img_dmk3.Width >= 1600)
                 {
-                    img_dmk3.PutText(str, new CvPoint(6, 24), font_big, new CvColor(0, 150, 250));
+                    img_dmk3.PutText(str, new CvPoint(12, 24), font_big, new CvColor(0, 150, 250));
                 } else
                 {
                     img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
                 }
                 img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), (int)(roa*max_val/1000), new CvColor(0, 100, 255));
 
+                // Star display for Fish2
+                int cx, cy, r_mag;
+                for (int i = 0; i < star.Count; ++i)
+                {
+                    get_star_disp_pos(i, 0, 0, appSettings.Theta, appSettings.FocalLength, appSettings.Ccdpx, appSettings.Ccdpx, out cx, out cy, out r_mag);
+                    OCPoint.X = appSettings.Xoa + cx;
+                    OCPoint.Y = appSettings.Yoa + cy;
+                    Cv.Circle(img_dmk3, OCPoint, r_mag, new CvColor(0, 255, 0));
+                }
+
                 try
                 {
                     pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(img_dmk3);
                 }
-                catch (System.ArgumentException)
+                catch (System.ArgumentException ex_a)
                 {
                     this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, frame_id.ToString() });
-                    //System.Diagnostics.Trace.WriteLine(ex.Message);
-                    //System.Console.WriteLine(ex.Message);
+                    logger.Error(ex_a.Message);
                     return;
                 }
                 catch (System.Exception ex)
@@ -1120,7 +1154,7 @@ namespace MT3
                     //例外の説明を表示する
                     //匿名デリゲートで表示する
                     this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
-                    //System.Diagnostics.Trace.WriteLine(ex.Message);
+                    logger.Error(ex.Message);
                     System.Console.WriteLine(ex.Message);
                     return;
                 }
@@ -1294,6 +1328,10 @@ namespace MT3
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
                 System.Diagnostics.Trace.WriteLine(ex.Message);
             }*/
+            if (checkBoxDispAvg.Checked == true)
+            {
+                Cv.RunningAvg(imgdata.img, imgAvg, 0.1);
+            }
         }
 
 

@@ -428,37 +428,37 @@
             // toolStripStatusLabelFramerate
             // 
             this.toolStripStatusLabelFramerate.Name = "toolStripStatusLabelFramerate";
-            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(27, 17);
+            this.toolStripStatusLabelFramerate.Size = new System.Drawing.Size(24, 17);
             this.toolStripStatusLabelFramerate.Text = "Fps";
             // 
             // toolStripStatusLabelFailed
             // 
             this.toolStripStatusLabelFailed.Name = "toolStripStatusLabelFailed";
-            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(133, 17);
+            this.toolStripStatusLabelFailed.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabelFailed.Text = "toolStripStatusLabel2";
             // 
             // toolStripStatusLabelID
             // 
             this.toolStripStatusLabelID.Name = "toolStripStatusLabelID";
-            this.toolStripStatusLabelID.Size = new System.Drawing.Size(59, 17);
+            this.toolStripStatusLabelID.Size = new System.Drawing.Size(49, 17);
             this.toolStripStatusLabelID.Text = "FrameID";
             // 
             // toolStripStatusLabelPixelClock
             // 
             this.toolStripStatusLabelPixelClock.Name = "toolStripStatusLabelPixelClock";
-            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(22, 17);
+            this.toolStripStatusLabelPixelClock.Size = new System.Drawing.Size(21, 17);
             this.toolStripStatusLabelPixelClock.Text = "PC";
             // 
             // toolStripStatusLabelExposure
             // 
             this.toolStripStatusLabelExposure.Name = "toolStripStatusLabelExposure";
-            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(97, 17);
+            this.toolStripStatusLabelExposure.Size = new System.Drawing.Size(82, 17);
             this.toolStripStatusLabelExposure.Text = "Exp: xx.xx[ms]";
             // 
             // toolStripStatusLabelGain
             // 
             this.toolStripStatusLabelGain.Name = "toolStripStatusLabelGain";
-            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(52, 17);
+            this.toolStripStatusLabelGain.Size = new System.Drawing.Size(46, 17);
             this.toolStripStatusLabelGain.Text = "Gain:xx";
             // 
             // timerMTmonSend

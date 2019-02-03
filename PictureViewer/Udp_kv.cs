@@ -227,8 +227,8 @@ namespace MT3
         /// </remarks>
         public void cal_mt2()
         {
-            xpos = ((kd.x1 << 8) + kd.x0 ) << 4; // <<16 ->256*256  <<8 ->256
-            ypos = ((kd.y1 << 8) + kd.y0 ) << 4; // <<16 ->256*256  <<8 ->256
+            xpos = ((kd.x1 << 8) + kd.x0) << 4; // <<16 ->256*256  <<8 ->256
+            ypos = ((kd.y1 << 8) + kd.y0) << 4; // <<16 ->256*256  <<8 ->256
             x1v = ((kd.v11 << 8) + kd.v10) << 6;
             y1v = ((kd.v13 << 8) + kd.v12) << 6;
             kv_status = (UInt16)((kd.y3 << 8) + kd.y2);      //KV1000 DM503
@@ -390,7 +390,7 @@ namespace MT3
         public void MT2Pos2AzAlt()
         {
             if (ypos > 180000) { mt2mode = mmEast; }
-            else if(ypos <=180000){mt2mode=mmWest; }
+            else if (ypos <= 180000) { mt2mode = mmWest; }
             // Normal
             if (xpos >= 0 && xpos < 360000)
             {
@@ -518,7 +518,7 @@ namespace MT3
         //   CCD座標(cx,cy):CCD中心からの誤差座標[pix]    Std. Cam が基準(cx = x-xc, cy = y-yc)
         //   中心位置(az_c,alt_c)と視野回転(theta_c)
         //   fl:焦点距離[mm],　ccdpx,ccdpy:ピクセル間隔[mm]
-      
+
         public void cxcy2azalt(double cx, double cy,
                double az_c, double alt_c, int mode, double theta_c,
                double fl, double ccdpx, double ccdpy,
@@ -540,7 +540,7 @@ namespace MT3
             }
             CvMat v1 = new CvMat(3, 1, MatrixType.F64C1);
             v1.Set2D(0, 0, fl);
-            v1.Set2D(1, 0,-cxmm);
+            v1.Set2D(1, 0, -cxmm);
             v1.Set2D(2, 0, cymm);
             v1.Normalize(v1);// 方向余弦化
 
@@ -577,14 +577,14 @@ namespace MT3
             if (az < 0) az += 360;
             alt = Math.Asin(v2.Get2D(2, 0)) / rad;
 
-        //    //Az_Cとの距離が近い値を採用
-        //    double az2 = az - 360;
-        //    double az3 = az + 360;
-        //    double dis1 = Math.Abs(az - az_c);
-        //    double dis2 = Math.Abs(az2 - az_c);
-        //    double dis3 = Math.Abs(az3 - az_c);
-        //    if (dis1 > dis2) az = az2;
-        //    if (dis1 > dis3) az = az3;
+            //    //Az_Cとの距離が近い値を採用
+            //    double az2 = az - 360;
+            //    double az3 = az + 360;
+            //    double dis1 = Math.Abs(az - az_c);
+            //    double dis2 = Math.Abs(az2 - az_c);
+            //    double dis3 = Math.Abs(az3 - az_c);
+            //    if (dis1 > dis2) az = az2;
+            //    if (dis1 > dis3) az = az3;
         }
         /// <summary>
         /// MT2 CCD座標(cx,cy)->(az,alt)に変換
@@ -625,8 +625,8 @@ namespace MT3
             CvMat Ry = new CvMat(3, 3, MatrixType.F64C1);
 
             //Rx.rotX(theta_c * rad); // 回転マトリクスをセット
-            double sin = Math.Sin((-90+theta_c) * rad);
-            double cos = Math.Cos((-90+theta_c) * rad);
+            double sin = Math.Sin((-90 + theta_c) * rad);
+            double cos = Math.Cos((-90 + theta_c) * rad);
             Rx.Set2D(0, 0, 1); Rx.Set2D(0, 1, 0); Rx.Set2D(0, 2, 0);
             Rx.Set2D(1, 0, 0); Rx.Set2D(1, 1, cos); Rx.Set2D(1, 2, -sin);
             Rx.Set2D(2, 0, 0); Rx.Set2D(2, 1, sin); Rx.Set2D(2, 2, cos);
@@ -662,6 +662,161 @@ namespace MT3
             //    if (dis1 > dis3) az = az3;
         }
 
+        /// <summary>
+        /// FishEye2 CCD座標(cx,cy)->(az,alt)に変換 作業中
+        /// </summary>
+        //
+        //   CCD座標(cx,cy):CCD中心からの誤差座標[pix]    Std. Cam が基準(cx = x-xc, cy = y-yc)
+        //   中心位置(az_c,alt_c)と視野回転(theta_c)
+        //   fl:焦点距離[mm],　ccdpx,ccdpy:ピクセル間隔[mm]
 
+        public void cxcy2azalt_fish2(double cx, double cy,
+               double az_c, double alt_c, int mode, double theta_c,
+               double fl, double ccdpx, double ccdpy,
+               ref double az, ref double alt)
+        {
+            double rad = Math.PI / 180.0;
+            double cxmm, cymm;
+
+            //ターゲットの方向余弦
+            if (mode == mmEast)
+            {
+                cxmm = -cx * ccdpx; // +ccd -az
+                cymm = +cy * ccdpy; // +ccd +alt
+            }
+            else
+            { //mmWest
+                cxmm = +cx * ccdpx; // +ccd +az
+                cymm = -cy * ccdpy; // +ccd -alt
+            }
+            CvMat v1 = new CvMat(3, 1, MatrixType.F64C1);
+            v1.Set2D(0, 0, fl);
+            v1.Set2D(1, 0, -cxmm);
+            v1.Set2D(2, 0, cymm);
+            v1.Normalize(v1);// 方向余弦化
+
+            CvMat v2 = new CvMat(3, 1, MatrixType.F64C1);
+            CvMat Rx = new CvMat(3, 3, MatrixType.F64C1);
+            CvMat Rz = new CvMat(3, 3, MatrixType.F64C1);
+            CvMat Ry = new CvMat(3, 3, MatrixType.F64C1);
+
+            //Rx.rotX(theta_c * rad); // 回転マトリクスをセット
+            double sin = Math.Sin((-90 + theta_c) * rad);
+            double cos = Math.Cos((-90 + theta_c) * rad);
+            Rx.Set2D(0, 0, 1); Rx.Set2D(0, 1, 0); Rx.Set2D(0, 2, 0);
+            Rx.Set2D(1, 0, 0); Rx.Set2D(1, 1, cos); Rx.Set2D(1, 2, -sin);
+            Rx.Set2D(2, 0, 0); Rx.Set2D(2, 1, sin); Rx.Set2D(2, 2, cos);
+
+
+            //Rz.rotZ(-az_c   *rad ); // 天球座標系と回転方向が逆なのでマイナス
+            sin = Math.Sin(-az_c * rad);
+            cos = Math.Cos(-az_c * rad);
+            Rz.Set2D(0, 0, cos); Rz.Set2D(0, 1, -sin); Rz.Set2D(0, 2, 0);
+            Rz.Set2D(1, 0, sin); Rz.Set2D(1, 1, cos); Rz.Set2D(1, 2, 0);
+            Rz.Set2D(2, 0, 0); Rz.Set2D(2, 1, 0); Rz.Set2D(2, 2, 1);
+
+            //Ry.rotY(-alt_c  *rad ); // 回転マトリクスをセット
+            sin = Math.Sin(-alt_c * rad);
+            cos = Math.Cos(-alt_c * rad);
+            Ry.Set2D(0, 0, cos); Ry.Set2D(0, 1, 0); Ry.Set2D(0, 2, sin);
+            Ry.Set2D(1, 0, 0); Ry.Set2D(1, 1, 1); Ry.Set2D(1, 2, 0);
+            Ry.Set2D(2, 0, -sin); Ry.Set2D(2, 1, 0); Ry.Set2D(2, 2, cos);
+            v2 = Rz * (Ry * (Rx * v1)); // 順番注意（画像中心をx軸に一致させている状態がスタート）
+
+            // Retrun Val
+            az = Math.Atan2(-v2.Get2D(1, 0), v2.Get2D(0, 0)) / rad;
+            if (az < 0) az += 360;
+            alt = Math.Asin(v2.Get2D(2, 0)) / rad;
+
+        }
+        /// <summary>
+        /// ｆΘ魚眼の中心がZ方向（天頂）を向いている場合の　FishEye2 (az,alt) -> CCD座標(cx,cy)に変換
+        /// </summary>
+        //
+        //   CCD座標(cx,cy):CCD中心からの誤差座標[pix]    Std. Cam が基準(cx = x-xc, cy = y-yc)
+        //   中心位置(az_c,alt_c＝90deg)と視野回転(theta_c)
+        //   fl:焦点距離[mm],　ccdpx,ccdpy:ピクセル間隔[mm]
+        //    20170702
+        //
+        public void Zfish_azalt2cxcy(double az, double alt,
+               double theta_c,
+               double fl, double ccdpx, double ccdpy,
+               ref double cx, ref double cy)
+        {
+            double rad = Math.PI / 180.0;
+            double r, th;
+
+            r = fl * (90 - alt) * rad;
+            th = (az - theta_c) * rad;
+            cx = r * Math.Sin(th) / ccdpx;
+            cy = r * Math.Cos(th) / ccdpy;
+        }
+        /// <summary>
+        /// FishEye2 (az,alt) -> CCD座標(cx,cy)に変換
+        /// </summary>
+        //
+        //   CCD座標(cx,cy):CCD中心からの誤差座標[pix]    Std. Cam が基準(cx = x-xc, cy = y-yc)
+        //   中心位置(az_c,alt_c)と視野回転(theta_c)
+        //   fl:焦点距離[mm],　ccdpx,ccdpy:ピクセル間隔[mm]
+
+        public void azalt2cxcy_fish2(double az, double alt,
+               double az_c, double alt_c, double theta_c,
+               double fl, double ccdpx, double ccdpy,
+               ref double cx, ref double cy)
+        {
+            double rad = Math.PI / 180.0;
+            double sin, cos;
+
+            //ターゲットの方向余弦
+            CvMat v1 = new CvMat(3, 1, MatrixType.F64C1);
+            v1.Set2D(0, 0, Math.Cos(alt * rad) * Math.Cos(az * rad));
+            v1.Set2D(1, 0, -Math.Cos(alt * rad) * Math.Sin(az * rad));
+            v1.Set2D(2, 0, Math.Sin(alt * rad));
+
+            CvMat v2 = new CvMat(3, 1, MatrixType.F64C1);
+            //CvMat Rx = new CvMat(3, 3, MatrixType.F64C1);
+            CvMat Rz = new CvMat(3, 3, MatrixType.F64C1);
+            CvMat Rz2 = new CvMat(3, 3, MatrixType.F64C1);
+            CvMat Ry = new CvMat(3, 3, MatrixType.F64C1);
+
+            //Rx.rotX(theta_c * rad); // 回転マトリクスをセット
+            //  sin = Math.Sin((-90 + theta_c) * rad);
+            //  cos = Math.Cos((-90 + theta_c) * rad);
+            //  Rx.Set2D(0, 0, 1); Rx.Set2D(0, 1, 0); Rx.Set2D(0, 2, 0);
+            //  Rx.Set2D(1, 0, 0); Rx.Set2D(1, 1, cos); Rx.Set2D(1, 2, -sin);
+            //  Rx.Set2D(2, 0, 0); Rx.Set2D(2, 1, sin); Rx.Set2D(2, 2, cos);
+
+
+            //Rz.rotZ(-az_c   *rad ); // 天球座標系と回転方向が逆なのでマイナス
+            sin = Math.Sin(-az_c * rad);
+            cos = Math.Cos(-az_c * rad);
+            Rz.Set2D(0, 0, cos); Rz.Set2D(0, 1, -sin); Rz.Set2D(0, 2, 0);
+            Rz.Set2D(1, 0, sin); Rz.Set2D(1, 1, cos); Rz.Set2D(1, 2, 0);
+            Rz.Set2D(2, 0, 0); Rz.Set2D(2, 1, 0); Rz.Set2D(2, 2, 1);
+            //Rz.rotZ(+az_c   *rad ); // Rzの戻し
+            sin = Math.Sin(az_c * rad);
+            cos = Math.Cos(az_c * rad);
+            Rz2.Set2D(0, 0, cos); Rz2.Set2D(0, 1, -sin); Rz2.Set2D(0, 2, 0);
+            Rz2.Set2D(1, 0, sin); Rz2.Set2D(1, 1, cos); Rz2.Set2D(1, 2, 0);
+            Rz2.Set2D(2, 0, 0); Rz2.Set2D(2, 1, 0); Rz2.Set2D(2, 2, 1);
+
+            //Ry.rotY(-alt_c  *rad ); // 回転マトリクスをセット
+            sin = Math.Sin(-alt_c * rad);
+            cos = Math.Cos(-alt_c * rad);
+            Ry.Set2D(0, 0, cos); Ry.Set2D(0, 1, 0); Ry.Set2D(0, 2, sin);
+            Ry.Set2D(1, 0, 0); Ry.Set2D(1, 1, 1); Ry.Set2D(1, 2, 0);
+            Ry.Set2D(2, 0, -sin); Ry.Set2D(2, 1, 0); Ry.Set2D(2, 2, cos);
+            v2 = Rz2 * (Ry * (Rz * v1)); // 順番注意（画像中心をx軸に一致させている状態がスタート）
+
+            // Cal. Zfish Az,Alt
+            double zfish_az, zfish_alt;
+            zfish_az = Math.Atan2(-v2.Get2D(1, 0), v2.Get2D(0, 0)) / rad;
+            //if (zfish_az < 0) zfish_az += 360;
+            zfish_alt = Math.Asin(v2.Get2D(2, 0)) / rad;
+
+            Zfish_azalt2cxcy(zfish_az, zfish_alt, theta_c,
+               fl, ccdpx, ccdpy,
+               ref cx, ref cy);
+        }
     }
 }
