@@ -554,8 +554,7 @@ namespace MT3
             //this.vw = new CvVideoWriter(fn, codec, 29.97, new CvSize(this.width, this.height), true); //color
             this.vw = new CvVideoWriter(fn, codec, 29.97, new CvSize(Width, Height), false); //mono
             fn += this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".avi";
-            this.writer = new StreamWriter( this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".txt"
-, true, System.Text.Encoding.GetEncoding("shift_jis"));
+            //this.writer = new StreamWriter( this.data[(this.bottom - 1) & this.mask].t.ToString("yyyyMMdd_HHmmss_fff") + string.Format("_{00}", NoCapDev) + ".txt", true, System.Text.Encoding.GetEncoding("shift_jis"));
             save_frame_count = 0;
         }
 
@@ -567,7 +566,7 @@ namespace MT3
         /// </remarks>
         public void VideoWriterFrame()
         {
-            if (vw == null || vw.IsDisposed || writer == null) return;
+            if (vw == null || vw.IsDisposed /* || writer == null */) return;
             if (save_frame_count++ > save_frame_count_max)
             {
                 save_frame_count = 0;
@@ -639,7 +638,7 @@ namespace MT3
             //imgGBR.Circle(new CvPoint((int)(gx+0.5),(int)(gy+0.5)), 15, new CvColor(0, 100, 255));
 
             vw.WriteFrame(imgR);
-            writer.WriteLine("{0} {1} {2}  ", vd.id, vd.kgx, vd.kgy);
+            //writer.WriteLine("{0} {1} {2}  ", vd.id, vd.kgx, vd.kgy);
             int id = System.Threading.Thread.CurrentThread.ManagedThreadId; Console.WriteLine("RingBuf ThreadID : " + id);
         }
 
@@ -658,10 +657,10 @@ namespace MT3
                 vw.WriteFrame(imgR);
                 vw.Dispose();
             }
-            if (writer != null)
-            {
-                writer.Close();
-            }
+       //     if (writer != null)
+       //     {
+       //         writer.Close();
+       //     }
         }
 
         /// <summary>

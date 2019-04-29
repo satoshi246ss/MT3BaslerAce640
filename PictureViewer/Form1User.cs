@@ -163,11 +163,14 @@ namespace MT3
         double set_exposure  = 3;   // [ms]            F1.8:F4  exp 8ms:3ms  gain 1024: 100  約106倍
         double set_exposure1 = 0.2; // [ms]
  
-        IplImage img_dmk3, img_dmk, img2, imgLabel , imgAvg;
+        IplImage img_dmk3, img_dmk, img2, imgLabel , imgAvg, img_ueye_aoi, img_mask, img_mask2, img_dark8;
         CvBlobs blobs = new CvBlobs();
         CvFont font = new CvFont(FontFace.HersheyComplex, 0.50, 0.50);
         CvFont font_big = new CvFont(FontFace.HersheyComplex, 1.0, 1.0);
+        CvWindow cvwin = new CvWindow("AVR Win");
+        CvWindow cvwin2 = new CvWindow("StarMask Win");
 
+        int star_adaptive_threshold = 8;
         double gx, gy, max_val, kgx, kgy, kvx, kvy, sgx, sgy;
         CvPoint2D64f max_centroid;
         int max_label;
@@ -213,7 +216,6 @@ namespace MT3
         DriveInfo cDrive = new DriveInfo("D");
         //DriveInfo cDrive = new DriveInfo("C");
         long diskspace;
-        System.IO.StreamWriter log_writer; //= new System.IO.StreamWriter(@"D:\img_data\log.txt", true);
         
         [DllImport("kernel32.dll")]
         static extern unsafe void CopyMemory(void* dst, void* src, int size);        
@@ -230,28 +232,43 @@ namespace MT3
         public void IplImageInit()
         {
             int wi = appSettings.Width;
+            int he = appSettings.Height;
             if (appSettings.CameraColor == Camera_Color.mono12packed)
             {
                 wi = appSettings.Width + (appSettings.Width / 2 ); 
             }
+            //FishEye2用のAOI処理　ｘ方向は全画素読み出し後、部分コピーとする。
+            if(appSettings.CameraType == "IDS" &&  appSettings.uEye_AOI_use)
+            {
+                wi = appSettings.uEye_AOI_w;
+                he = appSettings.uEye_AOI_h;
+            }
                 
-            img_dmk3 = new IplImage(wi, appSettings.Height, BitDepth.U8, 3);
-            img_dmk  = new IplImage(wi, appSettings.Height, BitDepth.U8, 1);
-            // IplImage img_dark8 = Cv.LoadImage(@"C:\Users\Public\piccolo\dark00.bmp", LoadMode.GrayScale);
-            img2     = new IplImage(wi, appSettings.Height, BitDepth.U8, 1);
-            imgLabel = new IplImage(wi, appSettings.Height, CvBlobLib.DepthLabel, 1);
-            
-            imgAvg   = new IplImage(wi, appSettings.Height, BitDepth.F32, 1);
+            img_dmk3 = new IplImage(wi, he, BitDepth.U8, 3);
+            img_dmk  = new IplImage(wi, he, BitDepth.U8, 1);
+            img_mask = new IplImage(wi, he, BitDepth.U8, 1);
+            img_ueye_aoi = new IplImage(appSettings.Width, he, BitDepth.U8, 1);
+            string filePath = @"dark00.png";
+            if (File.Exists(filePath))
+            {
+                img_dark8 = Cv.LoadImage(filePath, LoadMode.GrayScale);
+            }
 
-            imgdata.init(wi, appSettings.Height);
+            img2 = new IplImage(wi, he, BitDepth.U8, 1);
+            imgLabel = new IplImage(wi, he, CvBlobLib.DepthLabel, 1);
+            
+            imgAvg   = new IplImage(wi, he, BitDepth.F32, 1);
+            img_mask2 = new IplImage(wi, he, BitDepth.U8, 1);
+
+            imgdata.init(wi, he);
             // FIFO init
             if (appSettings.CamPlatform == Platform.MT2)
             {
-                fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir,appSettings.AviMaxFrame, 2);
+                fifo.init(appSettings.FifoMaxFrame, wi, he, appSettings.NoCapDev, appSettings.SaveDir,appSettings.AviMaxFrame, 2);
             }
             else
             {
-                fifo.init(appSettings.FifoMaxFrame, wi, appSettings.Height, appSettings.NoCapDev, appSettings.SaveDir, appSettings.AviMaxFrame);
+                fifo.init(appSettings.FifoMaxFrame, wi, he, appSettings.NoCapDev, appSettings.SaveDir, appSettings.AviMaxFrame);
             }
         }
 
@@ -328,6 +345,7 @@ namespace MT3
             sett.SaveDir = @"C:\Users\Public\img_data\";
             sett.SaveDrive = "C:";
             sett.AviMaxFrame = 6000;
+            sett.uEye_AOI_use = false;
             SettingsSave(sett);
 
             // MT2 Basler Guide
@@ -404,6 +422,7 @@ namespace MT3
             sett.SaveDir = @"F:\img_data\";
             sett.SaveDrive = "F:";
             sett.AviMaxFrame = 750;
+            sett.uEye_AOI_use = false;
             SettingsSave(sett);
 
 
@@ -415,20 +434,20 @@ namespace MT3
             sett.CameraID = 10;          //カメラタイプ毎のID
             sett.CameraColor = Camera_Color.mono;    // 0:mono(mono8)  1:color 2:mono12packed
             sett.CameraInterface = Camera_Interface.USB3;
-            sett.CamPlatform = Platform.Fish1;
-            sett.FlipOn = true; // false;
+            sett.CamPlatform = Platform.Fish2;
+            sett.FlipOn = false; // true; // false;
             sett.Flipmode = OpenCvSharp.FlipMode.XY;
             //sett.IP_GIGE_Camera = "192.168.1.153"; //GIGE Camera only.
-            sett.Width  = 2048; // Max 2048    4の倍数でメモリ確保される。
-            sett.Height = 2048; // Max 2048
+            sett.Width =  2048;//2048; // Max 2048    4の倍数でメモリ確保される。
+            sett.Height = 2048;// 2048; // Max 2048
             sett.FocalLength = 2.7;      //[mm] Fuji FE185C086HA-1  fl=2.7mm f1.8
             sett.Ccdpx = 0.0055; //[mm] CCD:CMV4000 CMOSIS
             sett.Ccdpy = 0.0055; //[mm]
-            sett.Xoa = 1024;// 320;
-            sett.Yoa = 1024;// 240;            
+            sett.Xoa = 848;// 320;
+            sett.Yoa = 848;// 240;            
             //sett.Roa = 2.0 / (Math.Atan(sett.Ccdpx / sett.FocalLength) * 180 / Math.PI); //半径1deg    // 255x192:ace640の縦視野
             sett.Roa = (185.0 / 2.0) * sett.FocalLength * (Math.PI / 180) / sett.Ccdpx;
-            sett.Theta = 0;
+            sett.Theta = 180;
             sett.PixelClock = 344;//[MHz]
             sett.Framerate = 60.0; //[fps]
             sett.FifoMaxFrame = 128;
@@ -445,6 +464,11 @@ namespace MT3
             sett.SaveDir = @"D:\img_data\";
             sett.SaveDrive = "D:";
             sett.AviMaxFrame = 500;
+            sett.uEye_AOI_use = true;
+            sett.uEye_AOI_x = 228;// 0;//228;
+            sett.uEye_AOI_y = 154;
+            sett.uEye_AOI_w = 1696;// 2048;//1696;
+            sett.uEye_AOI_h = 1696;
             SettingsSave(sett);
 
             // Fisheye2v1 Basler Ace(GIGE 50fps)
@@ -753,6 +777,7 @@ namespace MT3
             sett.UdpPortSend = 24429;
             sett.SaveDir = @"C:\Users\Public\img_data\";
             sett.SaveDrive = "C:";
+            sett.uEye_AOI_use = false;
             SettingsSave(sett);
 
             /*

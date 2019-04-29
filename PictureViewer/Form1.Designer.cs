@@ -47,8 +47,8 @@
             this.checkBox_WideDR = new System.Windows.Forms.CheckBox();
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
             this.checkBoxDispAvg = new System.Windows.Forms.CheckBox();
-            this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_ID = new System.Windows.Forms.Label();
+            this.label_frame_rate = new System.Windows.Forms.Label();
             this.label_X2Y2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -98,7 +98,7 @@
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.918927F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 59F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(646, 619);
+            tableLayoutPanel1.Size = new System.Drawing.Size(794, 985);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // pictureBox1
@@ -108,7 +108,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(640, 480);
+            this.pictureBox1.Size = new System.Drawing.Size(788, 810);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -131,13 +131,13 @@
             this.flowLayoutPanel1.Controls.Add(this.checkBox_WideDR);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxObsAuto);
             this.flowLayoutPanel1.Controls.Add(this.checkBoxDispAvg);
-            this.flowLayoutPanel1.Controls.Add(this.label_frame_rate);
             this.flowLayoutPanel1.Controls.Add(this.label_ID);
+            this.flowLayoutPanel1.Controls.Add(this.label_frame_rate);
             this.flowLayoutPanel1.Controls.Add(this.label_X2Y2);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 489);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 819);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(640, 47);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(788, 83);
             this.flowLayoutPanel1.TabIndex = 2;
             this.flowLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel1_Paint);
             // 
@@ -146,7 +146,7 @@
             this.ShowButton.AutoSize = true;
             this.ShowButton.Location = new System.Drawing.Point(3, 3);
             this.ShowButton.Name = "ShowButton";
-            this.ShowButton.Size = new System.Drawing.Size(42, 23);
+            this.ShowButton.Size = new System.Drawing.Size(59, 28);
             this.ShowButton.TabIndex = 0;
             this.ShowButton.Text = "Show";
             this.ShowButton.UseVisualStyleBackColor = true;
@@ -155,9 +155,9 @@
             // CloseButton
             // 
             this.CloseButton.AutoSize = true;
-            this.CloseButton.Location = new System.Drawing.Point(51, 3);
+            this.CloseButton.Location = new System.Drawing.Point(68, 3);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(44, 23);
+            this.CloseButton.Size = new System.Drawing.Size(60, 28);
             this.CloseButton.TabIndex = 3;
             this.CloseButton.Text = "Close";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -165,7 +165,7 @@
             // 
             // ObsStart
             // 
-            this.ObsStart.Location = new System.Drawing.Point(101, 3);
+            this.ObsStart.Location = new System.Drawing.Point(134, 3);
             this.ObsStart.Name = "ObsStart";
             this.ObsStart.Size = new System.Drawing.Size(58, 23);
             this.ObsStart.TabIndex = 4;
@@ -176,9 +176,9 @@
             // ObsEndButton
             // 
             this.ObsEndButton.AutoSize = true;
-            this.ObsEndButton.Location = new System.Drawing.Point(165, 3);
+            this.ObsEndButton.Location = new System.Drawing.Point(198, 3);
             this.ObsEndButton.Name = "ObsEndButton";
-            this.ObsEndButton.Size = new System.Drawing.Size(58, 23);
+            this.ObsEndButton.Size = new System.Drawing.Size(81, 28);
             this.ObsEndButton.TabIndex = 1;
             this.ObsEndButton.Text = "Obs End";
             this.ObsEndButton.UseVisualStyleBackColor = true;
@@ -188,9 +188,9 @@
             // 
             this.buttonSave.AutoSize = true;
             this.buttonSave.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.buttonSave.Location = new System.Drawing.Point(229, 3);
+            this.buttonSave.Location = new System.Drawing.Point(285, 3);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(62, 23);
+            this.buttonSave.Size = new System.Drawing.Size(76, 27);
             this.buttonSave.TabIndex = 5;
             this.buttonSave.Text = "SaveStart";
             this.buttonSave.UseVisualStyleBackColor = true;
@@ -200,9 +200,9 @@
             // 
             this.ButtonSaveEnd.AutoSize = true;
             this.ButtonSaveEnd.Font = new System.Drawing.Font("MS UI Gothic", 8F);
-            this.ButtonSaveEnd.Location = new System.Drawing.Point(297, 3);
+            this.ButtonSaveEnd.Location = new System.Drawing.Point(367, 3);
             this.ButtonSaveEnd.Name = "ButtonSaveEnd";
-            this.ButtonSaveEnd.Size = new System.Drawing.Size(55, 23);
+            this.ButtonSaveEnd.Size = new System.Drawing.Size(77, 26);
             this.ButtonSaveEnd.TabIndex = 2;
             this.ButtonSaveEnd.Text = "SaveEnd";
             this.ButtonSaveEnd.UseVisualStyleBackColor = true;
@@ -210,7 +210,7 @@
             // 
             // buttonMakeSettings
             // 
-            this.buttonMakeSettings.Location = new System.Drawing.Point(358, 3);
+            this.buttonMakeSettings.Location = new System.Drawing.Point(450, 3);
             this.buttonMakeSettings.Name = "buttonMakeSettings";
             this.buttonMakeSettings.Size = new System.Drawing.Size(57, 23);
             this.buttonMakeSettings.TabIndex = 6;
@@ -221,9 +221,9 @@
             // buttonMove
             // 
             this.buttonMove.AutoSize = true;
-            this.buttonMove.Location = new System.Drawing.Point(421, 3);
+            this.buttonMove.Location = new System.Drawing.Point(513, 3);
             this.buttonMove.Name = "buttonMove";
-            this.buttonMove.Size = new System.Drawing.Size(42, 23);
+            this.buttonMove.Size = new System.Drawing.Size(58, 28);
             this.buttonMove.TabIndex = 14;
             this.buttonMove.Text = "Move";
             this.buttonMove.UseVisualStyleBackColor = true;
@@ -231,7 +231,7 @@
             // 
             // numericUpDownStarMin
             // 
-            this.numericUpDownStarMin.Location = new System.Drawing.Point(469, 3);
+            this.numericUpDownStarMin.Location = new System.Drawing.Point(577, 3);
             this.numericUpDownStarMin.Maximum = new decimal(new int[] {
             98,
             0,
@@ -245,10 +245,11 @@
             0,
             0,
             0});
+            this.numericUpDownStarMin.ValueChanged += new System.EventHandler(this.numericUpDownStarMin_ValueChanged);
             // 
             // numericUpDownStarCount
             // 
-            this.numericUpDownStarCount.Location = new System.Drawing.Point(508, 3);
+            this.numericUpDownStarCount.Location = new System.Drawing.Point(616, 3);
             this.numericUpDownStarCount.Maximum = new decimal(new int[] {
             98,
             0,
@@ -271,7 +272,7 @@
             // numericUpDown_daz
             // 
             this.numericUpDown_daz.Font = new System.Drawing.Font("MS UI Gothic", 8F);
-            this.numericUpDown_daz.Location = new System.Drawing.Point(547, 3);
+            this.numericUpDown_daz.Location = new System.Drawing.Point(655, 3);
             this.numericUpDown_daz.Maximum = new decimal(new int[] {
             99,
             0,
@@ -290,7 +291,7 @@
             // numericUpDown_dalt
             // 
             this.numericUpDown_dalt.Font = new System.Drawing.Font("MS UI Gothic", 8F);
-            this.numericUpDown_dalt.Location = new System.Drawing.Point(589, 3);
+            this.numericUpDown_dalt.Location = new System.Drawing.Point(697, 3);
             this.numericUpDown_dalt.Maximum = new decimal(new int[] {
             99,
             0,
@@ -311,7 +312,7 @@
             this.checkBox_WideDR.AutoSize = true;
             this.checkBox_WideDR.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBox_WideDR.CheckAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.checkBox_WideDR.Location = new System.Drawing.Point(3, 32);
+            this.checkBox_WideDR.Location = new System.Drawing.Point(3, 37);
             this.checkBox_WideDR.Name = "checkBox_WideDR";
             this.checkBox_WideDR.Size = new System.Drawing.Size(95, 16);
             this.checkBox_WideDR.TabIndex = 1;
@@ -324,7 +325,7 @@
             this.checkBoxObsAuto.AutoSize = true;
             this.checkBoxObsAuto.Checked = true;
             this.checkBoxObsAuto.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxObsAuto.Location = new System.Drawing.Point(104, 32);
+            this.checkBoxObsAuto.Location = new System.Drawing.Point(104, 37);
             this.checkBoxObsAuto.Name = "checkBoxObsAuto";
             this.checkBoxObsAuto.Size = new System.Drawing.Size(68, 16);
             this.checkBoxObsAuto.TabIndex = 7;
@@ -335,35 +336,36 @@
             // checkBoxDispAvg
             // 
             this.checkBoxDispAvg.AutoSize = true;
-            this.checkBoxDispAvg.Location = new System.Drawing.Point(178, 32);
+            this.checkBoxDispAvg.Location = new System.Drawing.Point(178, 37);
             this.checkBoxDispAvg.Name = "checkBoxDispAvg";
             this.checkBoxDispAvg.Size = new System.Drawing.Size(67, 16);
             this.checkBoxDispAvg.TabIndex = 11;
             this.checkBoxDispAvg.Text = "DispAvg";
             this.checkBoxDispAvg.UseVisualStyleBackColor = true;
-            // 
-            // label_frame_rate
-            // 
-            this.label_frame_rate.AutoSize = true;
-            this.label_frame_rate.Location = new System.Drawing.Point(251, 29);
-            this.label_frame_rate.Name = "label_frame_rate";
-            this.label_frame_rate.Size = new System.Drawing.Size(35, 12);
-            this.label_frame_rate.TabIndex = 9;
-            this.label_frame_rate.Text = "label1";
+            this.checkBoxDispAvg.CheckedChanged += new System.EventHandler(this.checkBoxDispAvg_CheckedChanged);
             // 
             // label_ID
             // 
             this.label_ID.AutoSize = true;
-            this.label_ID.Location = new System.Drawing.Point(292, 29);
+            this.label_ID.Location = new System.Drawing.Point(251, 34);
             this.label_ID.Name = "label_ID";
             this.label_ID.Size = new System.Drawing.Size(44, 12);
             this.label_ID.TabIndex = 10;
             this.label_ID.Text = "label_ID";
             // 
+            // label_frame_rate
+            // 
+            this.label_frame_rate.AutoSize = true;
+            this.label_frame_rate.Location = new System.Drawing.Point(301, 34);
+            this.label_frame_rate.Name = "label_frame_rate";
+            this.label_frame_rate.Size = new System.Drawing.Size(35, 12);
+            this.label_frame_rate.TabIndex = 9;
+            this.label_frame_rate.Text = "label1";
+            // 
             // label_X2Y2
             // 
             this.label_X2Y2.AutoSize = true;
-            this.label_X2Y2.Location = new System.Drawing.Point(342, 29);
+            this.label_X2Y2.Location = new System.Drawing.Point(342, 34);
             this.label_X2Y2.Name = "label_X2Y2";
             this.label_X2Y2.Size = new System.Drawing.Size(85, 12);
             this.label_X2Y2.TabIndex = 13;
@@ -373,18 +375,18 @@
             // 
             tableLayoutPanel1.SetColumnSpan(this.textBox1, 2);
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(3, 601);
+            this.textBox1.Location = new System.Drawing.Point(3, 967);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(640, 19);
+            this.textBox1.Size = new System.Drawing.Size(788, 19);
             this.textBox1.TabIndex = 3;
             // 
             // richTextBox1
             // 
             tableLayoutPanel1.SetColumnSpan(this.richTextBox1, 2);
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(3, 542);
+            this.richTextBox1.Location = new System.Drawing.Point(3, 908);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(640, 53);
+            this.richTextBox1.Size = new System.Drawing.Size(788, 53);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
@@ -412,6 +414,7 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelFramerate,
             this.toolStripStatusLabelFailed,
@@ -419,9 +422,9 @@
             this.toolStripStatusLabelPixelClock,
             this.toolStripStatusLabelExposure,
             this.toolStripStatusLabelGain});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 597);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 963);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(646, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(794, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -503,7 +506,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(646, 619);
+            this.ClientSize = new System.Drawing.Size(794, 985);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

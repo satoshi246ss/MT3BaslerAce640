@@ -62,7 +62,7 @@ namespace MT3
         public bool FlipOn { get; set; }
 
         private OpenCvSharp.FlipMode _flip_mode;
-        public  OpenCvSharp.FlipMode Flipmode
+        public OpenCvSharp.FlipMode Flipmode
         {
             get { return _flip_mode; }
             set { _flip_mode = value; }
@@ -94,7 +94,7 @@ namespace MT3
         }
 
         private double _xoa;
-        public  double Xoa
+        public double Xoa
         {
             get { return _xoa; }
             set { _xoa = value; }
@@ -150,6 +150,12 @@ namespace MT3
             get { return _gain; }
             set { _gain = value; }
         }
+
+        public bool uEye_AOI_use { get; set; }
+        public int uEye_AOI_x { get; set; }
+        public int uEye_AOI_y { get; set; }
+        public int uEye_AOI_w { get; set; }
+        public int uEye_AOI_h { get; set; }
 
         private uEye_Shutter_Mode _ueye_shutter_mode;
         public uEye_Shutter_Mode uEyeShutterMode
@@ -327,6 +333,13 @@ namespace MT3
             TestFname = @"20151018_224542_615_10.avi";
             TestMode = false;
             SaveDrive = "D:";
+
+            //uEye
+            uEye_AOI_use = false;
+            uEye_AOI_x = 0;
+            uEye_AOI_y = 0;
+            uEye_AOI_w = Width;
+            uEye_AOI_h = Height;
         }
 
      }

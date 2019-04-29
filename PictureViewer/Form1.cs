@@ -66,6 +66,7 @@ namespace MT3
             {
                 cam_maker = Camera_Maker.IDS;
                 // cam_color = Camera_Color.mono;
+                logger.Info("IDS camera start.");
             }
             if (cmds[1].StartsWith("/IS") || cmds[1].StartsWith("/Im")) // Imaging Souce
             {
@@ -187,6 +188,7 @@ namespace MT3
             endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
             string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
             richTextBox1.AppendText(s);
+            logger.Info(s);
             timer_thingspeak_Tick( sender, e);
         }
 
@@ -235,6 +237,7 @@ namespace MT3
             {
                 //匿名デリゲートで表示する
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                logger.Error(ex.ToString());
             }
 
             // ベースブロードバンドポートなら転送
@@ -326,8 +329,6 @@ namespace MT3
                     else if (kmd3.cmd == 16) //mmLost:16
                     {
                         //Mode = LOST;
-                        //ButtonSaveEnd_Click(sender, e);
-                        //匿名デリゲートで表示する
                         //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSaveMainTime, STOP });
                         //this.Invoke(new dlgSetColor(SetTimer), new object[] { timerSavePostTime, RUN });
                     }
@@ -339,10 +340,11 @@ namespace MT3
                     {
                         //保存処理終了
                         Mode = LOST;
-                        timerSave.Stop();
-                        timerSave_Tick(sender, e);
-                        //timerSaveTimeOver.Stop();
-                        //ButtonSaveEnd_Click(sender, e);
+                        this.Invoke(new dlgTimer(ButtonSaveEnd_Click), new object[] { sender, e });
+                        //timerSave.Stop() x;
+                        //timerSave_Tick(sender, e) x;
+                        //timerSaveTimeOver.Stop() x;
+                        //ButtonSaveEnd_Click(sender, e) x;
                     }
                     else if (kmd3.cmd == 20) //mmData  20  // send fish pos data
                     {
@@ -353,6 +355,7 @@ namespace MT3
 
                     str = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " UDP " + kmd3.cmd.ToString("CMD:00") + " Az:" + kmd3.az + " Alt:" + kmd3.alt + " VAz:" + kmd3.vaz + " VAlt:" + kmd3.valt + "\n";
                     this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
+                    logger.Info(str);
                     //bw.ReportProgress(0, kmd3);
                 }
                 else
@@ -360,6 +363,7 @@ namespace MT3
                     string rcvMsg = enc.GetString(rcvBytes);
                     str = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "受信したデータ:[" + rcvMsg + "]\n";
                     this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
+                    logger.Info(str);
                 }
 
                 //str = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "送信元アドレス:{0}/ポート番号:{1}/Size:{2}\n" + remoteEP.Address + "/" + remoteEP.Port + "/" + rcvBytes.Length;
@@ -555,6 +559,7 @@ namespace MT3
         delegate void dlgSetString(object lbl, string text);
         //ボタンのカラー変更に使用されるデリゲート
         delegate void dlgSetColor(object lbl, int state);
+        delegate void dlgTimer(object sender, EventArgs e);
 
         //デリゲートで別スレッドから呼ばれてラベルに現在の時間又は
         //ストップウオッチの時間を表示する
@@ -642,7 +647,9 @@ namespace MT3
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
-            Pid_Data_Send_KV1000_SpCam2((short)frame_id, daz, dalt, 1);
+            uEye_PostSave_settings();
+            /*
+             Pid_Data_Send_KV1000_SpCam2((short)frame_id, daz, dalt, 1);
 
             // Obs End test
             ObsEndButton_Click(sender, e);
@@ -768,7 +775,9 @@ namespace MT3
                 statusRet = cam.Acquisition.Capture();
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
-                    richTextBox1.AppendText("Start Live Video failed. IDS cam.");
+                    string s = "Start Live Video failed. IDS cam.";
+                    richTextBox1.AppendText(s);
+                    logger.Info(s);
                     cam.Exit();
                     return;
                 }
@@ -794,6 +803,10 @@ namespace MT3
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
+            Save_proc();
+        }
+        private void Save_proc()
+        {
             if (this.States == RUN)
             {
                 ImgSaveFlag = TRUE;
@@ -804,20 +817,28 @@ namespace MT3
                 {
                     fifo.Saveflag_true_Last(appSettings.PreSaveNum);  // 1fr=0.2s  -> 5fr=1s 
                 }
+                logger.Info("Save_proc:Start.");
             }
         }
 
         private void ButtonSaveEnd_Click(object sender, EventArgs e)
         {
+            SaveEnd_proc();
+        }
+        private void SaveEnd_proc()
+        {
             ImgSaveFlag = FALSE;
             this.States = RUN;
             this.timerSave.Enabled = false;
+            logger.Info("Save_proc:End.");
         }
         // settingsの作成
         private void buttonMakeDark_Click(object sender, EventArgs e)
         {
             SettingsMake();
             //appSettings = SettingsLoad(21);
+            SaveAvgImage();
+            star_adaptive_threshold = (int)numericUpDownStarMin.Value; // kenyou  0-5 月、惑星  6:シリウス　7:ベガ
         }
 
         #region TimerTick
@@ -831,6 +852,7 @@ namespace MT3
             if (pgr_post_save)
             {
                 pgr_Normal_settings();
+                uEye_Normal_settings();
                 pgr_post_save = false;
             }
             ButtonSaveEnd_Click(sender, e);
@@ -847,6 +869,7 @@ namespace MT3
                 if (!pgr_post_save)
                 {
                     pgr_PostSave_settings();
+                    uEye_PostSave_settings();
                     timerSavePost.Start();
                     pgr_post_save = true;
                     return;
@@ -863,6 +886,7 @@ namespace MT3
             timerSaveTimeOver.Stop();
             timerSavePost.Stop();
             pgr_Normal_settings();
+            uEye_Normal_settings();
             pgr_post_save = false;
             ButtonSaveEnd_Click(sender, e);
         }
@@ -921,16 +945,19 @@ namespace MT3
             //　PGR ポスト処理不具合暫定対応用
             if (States == RUN && appSettings.PostSaveProcess)
             {
+                if (!check_uEye_normal_mode()) uEye_Normal_settings();
+
                 if (pgr_post_save == true && !timerSavePost.Enabled)
                 {
                     pgr_Normal_settings();
+                    uEye_Normal_settings();
                     pgr_post_save = false;
                 }
-                else if (dFramerate < 2.0 && !timerSavePost.Enabled)
+               /* else if (dFramerate < 2.0 && !timerSavePost.Enabled)
                 {
                     ObsEndButton_Click(sender, e);
                 }
-
+                */
             }
         }
 
@@ -1047,7 +1074,7 @@ namespace MT3
                     if (checkBoxDispAvg.Checked == true)
                     {
                         // 移動平均画像の表示
-                        double scale = 4.0;
+                        double scale = 8.0;
                         Cv.ConvertScale(imgAvg, img_dmk, scale);
                         //Cv.ConvertScale(fifo.backgroundImageF(), img_dmk, scale);
                         Cv.CvtColor(img_dmk, img_dmk3, ColorConversion.GrayToBgr);
@@ -1127,6 +1154,8 @@ namespace MT3
                     img_dmk3.PutText(str, new CvPoint(6, 12), font, new CvColor(0, 150, 250));
                 }
                 img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), (int)(roa*max_val/1000), new CvColor(0, 100, 255));
+                img_dmk3.Circle(new CvPoint((int)Math.Round(gx), (int)Math.Round(gy)), (int)(10), new CvColor(0, 100, 255));
+                //cvwin.Image = imgAvg;
 
                 // Star display for Fish2
                 int cx, cy, r_mag;
@@ -1165,7 +1194,7 @@ namespace MT3
                 //string s = string.Format("KV:[x2:{0:D6} y2:{1:D6} x2v:{2:D5} y2v:{3:D5} {4} {5}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.x2v, udpkv.y2v, udpkv.binStr_status, udpkv.binStr_request);
                 s = string.Format("KV:[x1:{0:D6} y1:{1:D6} Az1:{2,6:F1} Alt1:{3,6:F1}]\n", udpkv.xpos, udpkv.ypos, udpkv.az1_c, udpkv.alt1_c);
             }
-            if (appSettings.CamPlatform == Platform.MT3)
+            if (appSettings.CamPlatform == Platform.MT3 || appSettings.CamPlatform == Platform.Fish2)
             {
                 s = string.Format("KV:[x2:{0:D6} y2:{1:D6} Az2:{2,6:F1} Alt2:{3,6:F1}]\n", udpkv.x2pos, udpkv.y2pos, udpkv.az2_c, udpkv.alt2_c);
             }
@@ -1328,9 +1357,9 @@ namespace MT3
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
                 System.Diagnostics.Trace.WriteLine(ex.Message);
             }*/
-            if (checkBoxDispAvg.Checked == true)
+            if (frame_id % 4 == 0) // mabiki
             {
-                Cv.RunningAvg(imgdata.img, imgAvg, 0.1);
+                Cv.RunningAvg(imgdata.img, imgAvg, 0.05); // 6ms
             }
         }
 
@@ -1429,7 +1458,16 @@ namespace MT3
             //コマンドライン引数に「"C:\test\1.txt"」を指定してメモ帳を起動する
          //   System.Diagnostics.Process.Start(@"""C:\tool\bin\thingspeak_send_frame_id_cs.exe""", s);
         }
-        
+
+        private void numericUpDownStarMin_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBoxDispAvg_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

@@ -31,7 +31,7 @@ namespace MT3
     [StructLayout(LayoutKind.Sequential)]
     public struct MOTOR_DATA_KV_SP
     {
-        public Int32 cmd;      // コマンド  １：検出  16: Meteor Lost
+        public Int32 cmd;      // コマンド  １：検出  16: Meteor Lost 17:move end
         public Double t;       // 送信時刻
         public Single az;      // 目標方位、南が０度、西回り
         public Single alt;     // 目標高度、天頂が90度、地平が0度

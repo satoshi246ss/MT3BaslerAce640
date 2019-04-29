@@ -26,7 +26,7 @@ namespace MT3
             //{
             //    cam.Display.DisplayImage.Set(s32MemID, u32DisplayID, uEye.Defines.DisplayRenderMode.Normal);//FitToWindow);
             //}
-        }        
+        }
 
         public void OpenIDScamera()//(object sender, EventArgs e)
         {
@@ -63,7 +63,7 @@ namespace MT3
                 statusRet = cam.Init(appSettings.CameraID);
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
-                    //MessageBox.Show("IDS Camera initializing failed");
+                    MessageBox.Show("IDS Camera initializing failed");
                     Environment.Exit(0);
                 }
 
@@ -76,7 +76,7 @@ namespace MT3
                 {
                     // PixelFormat MONO 16
                     set_PixelFormat_mono16();
-                }                  
+                }
 
                 // Allocate Memory
                 statusRet = cam.Memory.Allocate(out s32MemID, true);
@@ -89,32 +89,83 @@ namespace MT3
                 cam.EventFrame += onFrameEvent;
 
                 // Set PC,Fr,Exp
-                statusRet = cam.Timing.PixelClock.Set(appSettings.PixelClock);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    MessageBox.Show("IDS Camera Set PixelClock failed");
-                }
-
-                statusRet = cam.Timing.Exposure.Set(appSettings.Exposure);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    MessageBox.Show("IDS Camera Set Exposure failed");
-                }
-
-                statusRet = cam.Timing.Framerate.Set(appSettings.Framerate);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    MessageBox.Show("IDS Camera Set FrameRate failed");
-                }
+                set_uEye_PixcelClock(appSettings.PixelClock);
+                set_uEye_Exposure(appSettings.Exposure);
+                set_uEye_Framerate(appSettings.Framerate);
 
                 cam.Gain.Hardware.Scaled.SetMaster((int)appSettings.Gain);
 
                 if (appSettings.uEyeShutterMode == uEye_Shutter_Mode.Rolling)
                 {
                     set_uEye_Rolling_shutter_mode();
-                } 
+                }
+
+                if (appSettings.uEye_AOI_use)
+                {
+                    //set_uEye_AOI(appSettings.uEye_AOI_x, appSettings.uEye_AOI_y, appSettings.uEye_AOI_w, appSettings.uEye_AOI_h);
+                    set_uEye_AOI(0, appSettings.uEye_AOI_y, appSettings.Width, appSettings.uEye_AOI_h);
+                    set_uEye_GainBoost(true);   // fish2 default
+                    set_uEye_AutoGain(true);    //fish2
+                    set_uEye_AutoShutter(true); //fish2
+                    set_uEye_Framerate(appSettings.Framerate);
+
+                    using (IplImage org_mask = new IplImage("20190211-mask.bmp", LoadMode.GrayScale))
+                    {
+                        org_mask.SetROI(new CvRect(appSettings.uEye_AOI_x, appSettings.uEye_AOI_y, appSettings.uEye_AOI_w, appSettings.uEye_AOI_h));
+                        Cv.Copy(org_mask, img_mask);
+                        org_mask.ResetROI();
+                    }
+                }
             }
         }
+        public void set_uEye_PixcelClock(int pc)
+        {
+            statusRet = cam.Timing.PixelClock.Set(pc);
+            if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("IDS Camera Set PixelClock failed");
+        }
+        public void set_uEye_Exposure(double exp_ms)
+        {
+            statusRet = cam.Timing.Exposure.Set(exp_ms);
+            if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("IDS Camera Set Exposure failed");
+        }
+        public void set_uEye_Framerate(double fr)
+        {
+            statusRet = cam.Timing.Framerate.Set(fr);
+            if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("IDS Camera Set FrameRate failed");
+        }
+        public void set_uEye_AutoGain(bool flag)
+        {
+            bool bs;
+            //statusRet = cam.AutoFeatures.Software.GetEnableAutoGain(out bs);
+            //if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("IDS AutoGain support failed");
+            //if (bs)
+            {
+                statusRet = cam.AutoFeatures.Software.SetAutoReference(32); // average level (0-255) def 128
+                if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye AutoRef failed");
+                statusRet = cam.AutoFeatures.Software.SetAutoSpeed(1); // correction speed (0-100)
+                if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye AutoSpeed failed");
+                statusRet = cam.AutoFeatures.Software.SetAutoGainMax(100);
+                if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye AutoGainMax failed");
+                statusRet = cam.AutoFeatures.Software.SetEnableAutoGain(flag);
+                if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye AutoGainEnable failed");
+            }
+        }
+        public void set_uEye_AutoShutter(bool flag)
+        {
+            bool bs;
+            //statusRet = cam.AutoFeatures.Software.GetEnableAutoShutter(out bs);
+            //if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("IDS AutoShutter support failed");
+            //if (bs)
+            {
+                statusRet = cam.AutoFeatures.Software.SetAutoReference(32); // average level (0-255) def 128
+                if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye AutoRef failed");
+                statusRet = cam.AutoFeatures.Software.SetAutoSpeed(1); // correction speed (0-100)
+                if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye AutoSpeed failed");
+                statusRet = cam.AutoFeatures.Software.SetEnableAutoShutter(flag);
+                if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye AutoShutter failed");
+            }
+        }
+
         /// <summary>
         /// シャッターモードをローリングシャッターに設定
         /// </summary>
@@ -152,9 +203,79 @@ namespace MT3
             cam.PixelFormat.Get(out mode);
             cam.PixelFormat.Set(uEye.Defines.ColorMode.MONO16);
             cam.PixelFormat.Get(out mode);
-        }        //
-        // 毎フレーム呼び出し use:2015/9 
-        // IDS event追加
+        }
+        public void set_uEye_GainBoost(bool bgb)
+        {
+            bool bs;
+            statusRet = cam.Gain.Hardware.Boost.GetSupported(out bs);
+            if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye GainBoost failed");
+
+            if (bs)
+            {
+                statusRet = cam.Gain.Hardware.Boost.SetEnable(bgb);
+                if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye GainBoost failed");
+            }
+        }
+        public void set_uEye_AOI(int px, int py, int w, int h)
+        {
+            statusRet = cam.Size.AOI.Set(px, py, w, h);
+            if (statusRet != uEye.Defines.Status.SUCCESS) MessageBox.Show("set uEye AOI failed");
+        }
+        public bool check_uEye_normal_mode()
+        {
+            bool ans = true;
+            if (appSettings.NoCapDev == 1 && appSettings.CameraType == "IDS")
+            {
+                double fr;
+                cam.Timing.Framerate.GetCurrentFps(out fr); //IDS
+                if (fr < 3.0)
+                {
+                    ans = false;
+                }
+            }
+            return ans;
+        }
+        // 通常撮像
+        // fish2 fps=60
+        public void uEye_Normal_settings()
+        {
+            if (appSettings.NoCapDev == 1 && appSettings.CameraType == "IDS")
+            {
+                set_uEye_AutoGain(true);    //fish2
+                set_uEye_AutoShutter(true); //fish2
+                set_uEye_Framerate(appSettings.Framerate);
+                //double expomin, expomax, expoinc;
+                //cam.Timing.Exposure.GetRange(out expomin, out expomax, out expoinc);
+                //set_uEye_Exposure(expomax);
+                //pgr_SetMemory1(pgr_cam);
+                //pgr_setFrameRate((float)appSettings.Framerate);
+                //pgr_setEV((float)appSettings.ExposureValue);
+                //pgr_setBrightness((float)0.0);
+                //pgr_setShutter((float)appSettings.Exposure);
+            }
+        }
+        
+        // 保存後撮像
+        // for fish2  fps=2
+        public void uEye_PostSave_settings()
+        {
+            double post_framerate = 2.0;
+            if (appSettings.NoCapDev == 1 && appSettings.CameraType == "IDS")
+            {
+                set_uEye_Framerate(post_framerate);//fps 2
+                double expomin, expomax, expoinc;
+                cam.Timing.Exposure.GetRange(out expomin, out expomax, out expoinc);
+                set_uEye_Exposure(expomax);
+                //pgr_setGainAuto();
+                //pgr_setShutterAuto();
+            }
+        }
+
+
+        /// <summary>
+        /// 毎フレーム呼び出し use:2015/9 
+        /// IDS event追加
+        /// </summary>
         private void onFrameEvent(object sender, EventArgs e)
         {
             sw.Start();
@@ -166,13 +287,27 @@ namespace MT3
             cam.Memory.Lock(s32MemID);
             cam.Information.GetImageInfo(s32MemID, out imageInfo);
             cam.Memory.ToIntPtr(s32MemID, out ptr);
-            CopyMemory(imgdata.img.ImageDataOrigin, ptr, imgdata.img.ImageSize);
+            //CopyMemory(imgdata.img.ImageDataOrigin, ptr, imgdata.img.ImageSize);
+            // /*
+            if (appSettings.uEye_AOI_use)
+            {
+                // AOI x axis cut
+                CopyMemory(img_ueye_aoi.ImageDataOrigin, ptr, img_ueye_aoi.ImageSize);
+                img_ueye_aoi.SetROI(new CvRect(appSettings.uEye_AOI_x, 0, appSettings.uEye_AOI_w, appSettings.uEye_AOI_h));
+                Cv.Copy(img_ueye_aoi, imgdata.img);
+                img_ueye_aoi.ResetROI();
+            }
+            else
+            {
+                CopyMemory(imgdata.img.ImageDataOrigin, ptr, imgdata.img.ImageSize);
+            }
+            // */
             ///CopyMemory(img_dmk.ImageDataOrigin, ptr, img_dmk.ImageSize);
             ///Cv.Copy(img_dmk, imgdata.img);
             if (ueye_frame_number == 0) ueye_frame_number = imageInfo.FrameNumber; //frame number初期値
             elapsed0 = sw.ElapsedTicks; // 0.1ms
 
-            //3  Cv.Copy(img_dmk3, imgdata.img);
+
             //Cv.Copy(img_dmk, imgdata.img);
 
             //img_dmk3.ImageData = ptr;
@@ -180,7 +315,7 @@ namespace MT3
             //Cv.Split(img_dmk3, imgdata.img, null,null,null); // er:1.1%
             cam.Memory.Unlock(s32MemID);
 
-            ++frame_id; 
+            ++frame_id;
             detect();
             imgdata_push_FIFO();
         }

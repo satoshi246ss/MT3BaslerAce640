@@ -16,22 +16,78 @@ namespace MT3
         /// </summary>
         public void detect()
         {
-            //++frame_id;
             if (appSettings.CamPlatform == Platform.MT2)
             {
                 theta_c = -udpkv.cal_mt2_theta(appSettings.Flipmode, appSettings.FlipOn) - appSettings.Theta;
             }
 
             if (!appSettings.UseDetect) return;
-         int th_id = System.Threading.Thread.CurrentThread.ManagedThreadId; Console.WriteLine("detect ThreadID : " + th_id);
-            //if (appSettings.UseDetect) return;
+            int th_id = System.Threading.Thread.CurrentThread.ManagedThreadId; Console.WriteLine("detect ThreadID : " + th_id);
 
-            #region 位置検出2  //Blob
+            #region 位置検出1(MaxMin)
+            // Mask update
+            if (imgdata.img.ID % 30 == 0)
+            {
+                using (IplImage img_avg = img_mask.Clone())
+                { 
+                try
+                {
+                        double gain = 1.0;
+                        double offset = 0;//-8;
+                        double star_thres = 32;
+                        Cv.Min(imgdata.img, img_mask, img2); //fixed Mask
+                                                             //Cv.Sub(imgdata.img, img_dark8, img2);
+                        //Cv.ConvertScale(imgAvg, img_avg, gain, offset);
+                        Cv.ConvertScale(imgAvg, img_mask2, gain, offset);
+                        Cv.Sub(img_mask2, img_dark8, img_avg); //AOI
+                        using (IplImage binary = img_mask2.Clone())
+                        using (IplImage binaryAdaptive = img_mask2.Clone())
+                        {
+                            Cv.Threshold(img_avg, binary, star_thres, 255, ThresholdType.BinaryInv);
+                            Cv.AdaptiveThreshold(img_avg, binaryAdaptive, 255,
+                                AdaptiveThresholdType.GaussianC, ThresholdType.Binary, 19, star_adaptive_threshold);// 9x9 16ms
+
+                            //cvwin.Image = binaryAdaptive;
+                            Cv.Min(binaryAdaptive, binary, binaryAdaptive);
+                            //cvwin.Image = binary;
+                            Cv.Min(img_mask, binaryAdaptive, img_mask2);
+                            cvwin.Image = img_mask2;
+                            Cv.Sub(imgdata.img, img_avg, img2);
+                            cvwin2.Image = img2;
+                        }
+                    
+                } //  ms
+                catch (KeyNotFoundException)
+                {
+                    MessageBox.Show("KeyNotFoundException:211a");
+                }
+            }
+
+            try
+            {
+                double minv;
+                CvPoint minloc, maxloc;
+                //Cv.Smooth(imgdata.img, img2, SmoothType.Median, 5, 0, 0, 0);
+                //Cv.Threshold(img2, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
+                Cv.MinMaxLoc(img2, out minv, out max_val, out minloc, out maxloc, img_mask2);
+                gx = maxloc.X; gy = maxloc.Y;
+                //Cv.Threshold(imgdata.img, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms  fishはマスクが必要
+                //blobs.Label(img2); //3ms
+            }//8ms
+            catch (KeyNotFoundException)
+            {
+                MessageBox.Show("KeyNotFoundException:211");
+            }
+            }
+            #endregion
+
+            #region 位置検出2(Blob)
             try
             {
                 //Cv.Smooth(imgdata.img, img2, SmoothType.Median, 5, 0, 0, 0);
                 //Cv.Threshold(img2, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
-                Cv.Threshold(imgdata.img, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms
+                //Cv.Min(imgdata.img, img_mask, img2);
+                Cv.Threshold(imgdata.img, img2, appSettings.ThresholdBlob, 255, ThresholdType.Binary); //2ms  fishはマスクが必要
                 blobs.Label(img2); //3ms
             }//8ms
             catch (KeyNotFoundException)
@@ -76,14 +132,16 @@ namespace MT3
                 {
                     MessageBox.Show("KeyNotFoundException:2171");
                 }
-                try{
+                try
+                {
                     max_centroid = maxBlob.Centroid;
                 }
                 catch (KeyNotFoundException)
                 {
                     MessageBox.Show("KeyNotFoundException:2172");
                 }
-                try{
+                try
+                {
                     gx = max_centroid.X;
                     gy = max_centroid.Y;
                     max_val = maxBlob.Area;
@@ -185,7 +243,7 @@ namespace MT3
                 if (ImgSaveFlag == TRUE)
                 {
                     // 観測目標移動速作成
-                    double vk=1000;  // [pixel/frame]
+                    double vk = 1000;  // [pixel/frame]
                     if (kalman_id > 3)
                     {
                         vk = Math.Sqrt(kvx * kvx + kvy * kvy);
@@ -222,13 +280,10 @@ namespace MT3
             // ｋｖデータのチェック用
             if (ImgSaveFlag == TRUE)
             {
-                if (log_writer != null)
-                {
                     //xpos = ((kd.x1 << 8) + kd.x0) << 4; // <<16 ->256*256  <<8 ->256
                     //ypos = ((kd.y1 << 8) + kd.y0) << 4; // <<16 ->256*256  <<8 ->256
                     string st = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff ") +"("+ udpkv.xpos + " " + udpkv.ypos + ")( " + udpkv.x2pos + " " + udpkv.y2pos + ") " + udpkv.kd.x1 + " " + udpkv.kd.x0 + " " + udpkv.kd.y1 + " " + udpkv.kd.y0 + "\n";
-                    log_writer.WriteLine(st);
-                }
+                    logger.Info(st);
             }
 
             #endregion
@@ -254,6 +309,14 @@ namespace MT3
                     else
                         statusRet = cam.Timing.Exposure.Set(set_exposure);
                 }
+            }
+        }
+        public void SaveAvgImage()
+        {
+            using (IplImage img_avg = img_mask.Clone())
+            {
+                Cv.ConvertScale(imgAvg, img_avg, 1.0, 0.0);
+                img_avg.SaveImage("AvgImage.png");
             }
         }
 
